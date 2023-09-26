@@ -24,6 +24,11 @@
 		6AB2B8992AC3407D00830760 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AB2B8902AC3407D00830760 /* Pretendard-Bold.otf */; };
 		6AB2B89A2AC3407D00830760 /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AB2B8912AC3407D00830760 /* Pretendard-ExtraLight.otf */; };
 		6AB2B89C2AC3418D00830760 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B89B2AC3418D00830760 /* UIFont+Extension.swift */; };
+		6AB2B8A22AC3461A00830760 /* ReusableViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8A12AC3461A00830760 /* ReusableViewProtocol.swift */; };
+		6AB2B8A52AC3463B00830760 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8A42AC3463B00830760 /* BaseViewController.swift */; };
+		6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8A62AC3465A00830760 /* BaseView.swift */; };
+		6AB2B8A92AC3467000830760 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8A82AC3467000830760 /* BaseCollectionViewCell.swift */; };
+		6AB2B8AC2AC346A300830760 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6AB2B8AB2AC346A300830760 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +51,10 @@
 		6AB2B8902AC3407D00830760 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		6AB2B8912AC3407D00830760 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
 		6AB2B89B2AC3418D00830760 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
+		6AB2B8A12AC3461A00830760 /* ReusableViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableViewProtocol.swift; sourceTree = "<group>"; };
+		6AB2B8A42AC3463B00830760 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		6AB2B8A62AC3465A00830760 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
+		6AB2B8A82AC3467000830760 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AB2B8AC2AC346A300830760 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +88,8 @@
 		6AB2B8702AC3355700830760 /* QoukkaTodo */ = {
 			isa = PBXGroup;
 			children = (
+				6AB2B8A32AC3462C00830760 /* Base */,
+				6AB2B89E2AC345CD00830760 /* Protocol */,
 				6AB2B8852AC337F500830760 /* Extension */,
 				6AB2B89D2AC3419500830760 /* Utils */,
 				6AB2B8882AC3404200830760 /* Font */,
@@ -124,6 +136,24 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		6AB2B89E2AC345CD00830760 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				6AB2B8A12AC3461A00830760 /* ReusableViewProtocol.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		6AB2B8A32AC3462C00830760 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				6AB2B8A42AC3463B00830760 /* BaseViewController.swift */,
+				6AB2B8A62AC3465A00830760 /* BaseView.swift */,
+				6AB2B8A82AC3467000830760 /* BaseCollectionViewCell.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,6 +170,9 @@
 			dependencies = (
 			);
 			name = QoukkaTodo;
+			packageProductDependencies = (
+				6AB2B8AB2AC346A300830760 /* SnapKit */,
+			);
 			productName = QoukkaTodo;
 			productReference = 6AB2B86E2AC3355700830760 /* QoukkaTodo.app */;
 			productType = "com.apple.product-type.application";
@@ -168,6 +201,9 @@
 				Base,
 			);
 			mainGroup = 6AB2B8652AC3355700830760;
+			packageReferences = (
+				6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 6AB2B86F2AC3355700830760 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -206,9 +242,13 @@
 			files = (
 				6AB2B8762AC3355700830760 /* ViewController.swift in Sources */,
 				6AB2B8722AC3355700830760 /* AppDelegate.swift in Sources */,
+				6AB2B8A92AC3467000830760 /* BaseCollectionViewCell.swift in Sources */,
 				6AB2B8742AC3355700830760 /* SceneDelegate.swift in Sources */,
 				6AB2B89C2AC3418D00830760 /* UIFont+Extension.swift in Sources */,
 				6AB2B8872AC3380A00830760 /* Color.swift in Sources */,
+				6AB2B8A52AC3463B00830760 /* BaseViewController.swift in Sources */,
+				6AB2B8A22AC3461A00830760 /* ReusableViewProtocol.swift in Sources */,
+				6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +466,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6AB2B8AB2AC346A300830760 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6AB2B8662AC3355700830760 /* Project object */;
 }
