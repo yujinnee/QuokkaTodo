@@ -20,8 +20,8 @@ enum QColor{
 }
 
 enum QColorPallete {
-    static let white = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
-    static let black = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    static let white = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    static let black = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
     static let brown = UIColor(red: 147/255, green: 85/255, blue: 59/255, alpha: 1)
     static let lightGray = UIColor(red: 237/255, green: 237/255, blue: 237/255, alpha: 1)
     static let deepGreen = UIColor(red: 1/255, green: 71/255, blue: 0/255, alpha: 1)

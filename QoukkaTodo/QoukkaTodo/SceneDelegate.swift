@@ -13,10 +13,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene:  scene)
+        
+        let nav1 = UINavigationController(rootViewController: TodoViewController())
+        nav1.tabBarItem = UITabBarItem(title: "투두", image: UIImage(systemName: "checkmark.square"), selectedImage: UIImage(systemName: "checkmark.square.fill"))
+        let nav2 = UINavigationController(rootViewController: TimerViewController())
+        nav2.tabBarItem = UITabBarItem(title: "타이머", image: UIImage(systemName: "timer"), selectedImage: UIImage(systemName: "timer"))
+        let nav3 = UINavigationController(rootViewController: QuokkaViewController())
+        nav3.tabBarItem = UITabBarItem(title: "쿼카", image: UIImage(systemName: "leaf"), selectedImage: UIImage(systemName: "leaf.fill"))
+    
+
+        let tabbarController = UITabBarController()
+        tabbarController.viewControllers = [nav1,nav2,nav3]
+        tabbarController.tabBar.backgroundColor = QColor.backgroundColor
+        tabbarController.tabBar.tintColor = QColor.accentColor
+        
+        window?.rootViewController = tabbarController
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

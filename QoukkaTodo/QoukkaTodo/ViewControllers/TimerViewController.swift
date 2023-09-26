@@ -11,6 +11,8 @@ class TimerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = QColor.backgroundColor
+
 
         // Do any additional setup after loading the view.
     }
