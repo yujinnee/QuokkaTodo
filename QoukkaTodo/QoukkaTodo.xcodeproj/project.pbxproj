@@ -13,6 +13,7 @@
 		6AB2B8792AC3355700830760 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AB2B8772AC3355700830760 /* Main.storyboard */; };
 		6AB2B87B2AC3355B00830760 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AB2B87A2AC3355B00830760 /* Assets.xcassets */; };
 		6AB2B87E2AC3355B00830760 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AB2B87C2AC3355B00830760 /* LaunchScreen.storyboard */; };
+		6AB2B8872AC3380A00830760 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8862AC3380A00830760 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		6AB2B87A2AC3355B00830760 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6AB2B87D2AC3355B00830760 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6AB2B87F2AC3355B00830760 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AB2B8862AC3380A00830760 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		6AB2B8702AC3355700830760 /* QoukkaTodo */ = {
 			isa = PBXGroup;
 			children = (
+				6AB2B8852AC337F500830760 /* Extension */,
 				6AB2B8712AC3355700830760 /* AppDelegate.swift */,
 				6AB2B8732AC3355700830760 /* SceneDelegate.swift */,
 				6AB2B8752AC3355700830760 /* ViewController.swift */,
@@ -65,6 +68,14 @@
 				6AB2B87F2AC3355B00830760 /* Info.plist */,
 			);
 			path = QoukkaTodo;
+			sourceTree = "<group>";
+		};
+		6AB2B8852AC337F500830760 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6AB2B8862AC3380A00830760 /* Color.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +152,7 @@
 				6AB2B8762AC3355700830760 /* ViewController.swift in Sources */,
 				6AB2B8722AC3355700830760 /* AppDelegate.swift in Sources */,
 				6AB2B8742AC3355700830760 /* SceneDelegate.swift in Sources */,
+				6AB2B8872AC3380A00830760 /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
