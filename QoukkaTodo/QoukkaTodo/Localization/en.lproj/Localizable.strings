@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  QoukkaTodo
+
+  Created by 이유진 on 2023/09/27.
+  
+*/
+
+"date_text" = "%d.%d";
+"language" = "Language";

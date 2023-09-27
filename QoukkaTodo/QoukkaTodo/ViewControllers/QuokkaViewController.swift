@@ -7,7 +7,7 @@
 
 import UIKit
 
-class QuokkaViewController: UIViewController {
+class QuokkaViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -7,24 +7,35 @@
 
 import UIKit
 
-class TodoViewController: UIViewController {
+class TodoViewController: BaseViewController {
+    
+    private let dateLabel = {
+        let label = UILabel()
+        label.textColor = QColor.accentColor
+        label.font = Pretendard.size20.bold()
+        return label
+    }()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
+        let month = 1
+        let day = 16
+        
+        dateLabel.text = "date_text".localized(num1: month, num2: day)
 
-        // Do any additional setup after loading the view.
+        
+    }
+    
+    override func setConstraints() {
+        view.addSubview(dateLabel)
+        
+        dateLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
