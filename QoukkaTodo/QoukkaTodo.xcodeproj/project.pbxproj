@@ -32,6 +32,9 @@
 		6AB2B8B32AC349F000830760 /* QuokkaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */; };
 		6ACADDFD2AC4728E00382143 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6ACADDFF2AC4728E00382143 /* Localizable.strings */; };
 		6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACADE012AC479AD00382143 /* String+Extension.swift */; };
+		6ACADE062AC4958400382143 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 6ACADE052AC4958400382143 /* FSCalendar */; };
+		6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */; };
+		6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +66,8 @@
 		6ACADDFE2AC4728E00382143 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE002AC4729200382143 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE012AC479AD00382143 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFromatter+Extension.swift"; sourceTree = "<group>"; };
+		6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +76,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AB2B8AC2AC346A300830760 /* SnapKit in Frameworks */,
+				6ACADE062AC4958400382143 /* FSCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				6AB2B89B2AC3418D00830760 /* UIFont+Extension.swift */,
+				6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -165,7 +172,7 @@
 		6AB2B8AD2AC349A300830760 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				6AB2B8AE2AC349B900830760 /* TodoViewController.swift */,
+				6AEE64E52AC5B08400C502E4 /* Todo */,
 				6AB2B8B02AC349CE00830760 /* TimerViewController.swift */,
 				6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */,
 			);
@@ -179,6 +186,15 @@
 				6ACADDFF2AC4728E00382143 /* Localizable.strings */,
 			);
 			path = Localization;
+			sourceTree = "<group>";
+		};
+		6AEE64E52AC5B08400C502E4 /* Todo */ = {
+			isa = PBXGroup;
+			children = (
+				6AB2B8AE2AC349B900830760 /* TodoViewController.swift */,
+				6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */,
+			);
+			path = Todo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,6 +215,7 @@
 			name = QoukkaTodo;
 			packageProductDependencies = (
 				6AB2B8AB2AC346A300830760 /* SnapKit */,
+				6ACADE052AC4958400382143 /* FSCalendar */,
 			);
 			productName = QoukkaTodo;
 			productReference = 6AB2B86E2AC3355700830760 /* QoukkaTodo.app */;
@@ -231,6 +248,7 @@
 			mainGroup = 6AB2B8652AC3355700830760;
 			packageReferences = (
 				6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */,
 			);
 			productRefGroup = 6AB2B86F2AC3355700830760 /* Products */;
 			projectDirPath = "";
@@ -274,12 +292,14 @@
 				6AB2B8742AC3355700830760 /* SceneDelegate.swift in Sources */,
 				6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */,
 				6AB2B89C2AC3418D00830760 /* UIFont+Extension.swift in Sources */,
+				6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */,
 				6AB2B8872AC3380A00830760 /* Color.swift in Sources */,
 				6AB2B8A52AC3463B00830760 /* BaseViewController.swift in Sources */,
 				6AB2B8B32AC349F000830760 /* QuokkaViewController.swift in Sources */,
 				6AB2B8A22AC3461A00830760 /* ReusableViewProtocol.swift in Sources */,
 				6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */,
 				6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */,
+				6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,6 +537,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -524,6 +552,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		6ACADE052AC4958400382143 /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
