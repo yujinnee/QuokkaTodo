@@ -15,6 +15,11 @@
 		<string>Pretendard-Regular.otf</string>
 		<string>Pretendard-SemiBold.otf</string>
 		<string>Pretendare-Thin.otf</string>
+		<string>DINPro-Black.otf</string>
+		<string>DINPro-Bold.otf</string>
+		<string>DINPro-Light.otf</string>
+		<string>DINPro-Medium.otf</string>
+		<string>DINPro-Regular.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

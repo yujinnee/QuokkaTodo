@@ -12,7 +12,7 @@ class TodoViewController: BaseViewController{
     private let headerLabel = {
         let view  = UILabel()
         view.textColor = QColor.accentColor
-        view.font = Pretendard.size23.bold()
+        view.font = DINPro.size23.bold()
         let now = Date()
         view.text = DateFormatter.getYearMonth(date: now)
         return view
@@ -28,7 +28,7 @@ class TodoViewController: BaseViewController{
     private let dateLabel = {
         let label = UILabel()
         label.textColor = QColor.accentColor
-        label.font = Pretendard.size20.bold()
+        label.font = Pretendard.size20.semibold()
         let now = Date()
 //        let currentMonth = Calendar.current.component(.month, from:now)
 //        let currentDay = Calendar.current.component(.day, from:now)
@@ -70,11 +70,8 @@ class TodoViewController: BaseViewController{
    
     
     override func setConstraints() {
-        view.addSubview(headerLabel)
-        view.addSubview(calendarView)
-        view.addSubview(dateLabel)
-        view.addSubview(todoCollectionView)
-        
+        view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView])
+
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalToSuperview().inset(20)
@@ -117,10 +114,10 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         calendarView.scrollEnabled = true
         calendarView.scrollDirection = .horizontal
         
-        calendarView.appearance.weekdayFont = Pretendard.size13.medium()
+        calendarView.appearance.weekdayFont = DINPro.size13.medium()
         calendarView.appearance.weekdayTextColor = QColor.accentColor
         
-        calendarView.appearance.titleFont = Pretendard.size11.light()
+        calendarView.appearance.titleFont = DINPro.size11.regular()
         
         calendarView.headerHeight = 0
 //        calendarView.appearance.headerMinimumDissolvedAlpha = 0.0

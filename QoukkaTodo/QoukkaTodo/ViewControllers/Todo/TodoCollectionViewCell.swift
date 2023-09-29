@@ -19,6 +19,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     private let todoLabel = {
         let view = UILabel()
         view.font = Pretendard.size15.semibold()
+        view.numberOfLines = 1
         return view
     }()
     
