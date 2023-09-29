@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let nav1 = UINavigationController(rootViewController: TodoViewController())
         nav1.tabBarItem = UITabBarItem(title: "투두", image: UIImage(systemName: "checkmark.square"), selectedImage: UIImage(systemName: "checkmark.square.fill"))
+//        let vc1 = TodoViewController()
+//        vc1.tabBarItem = UITabBarItem(title: "투두", image: UIImage(systemName: "checkmark.square"), selectedImage: UIImage(systemName: "checkmark.square.fill"))
         let nav2 = UINavigationController(rootViewController: TimerViewController())
         nav2.tabBarItem = UITabBarItem(title: "타이머", image: UIImage(systemName: "timer"), selectedImage: UIImage(systemName: "timer"))
         let nav3 = UINavigationController(rootViewController: QuokkaViewController())

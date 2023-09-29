@@ -11,14 +11,14 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     
     private let checkboxImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "checkmark.square")
-        view.tintColor = QColor.grayColor
-//        view.image = UIImage(systemName: "squre")
+//        view.image = UIImage(systemName: "checkmark.square")
+        view.image = UIImage(systemName: "square")
+        view.tintColor = .systemGray2
         return view
     }()
     private let todoLabel = {
         let view = UILabel()
-        view.font = Pretendard.size11.regular()
+        view.font = Pretendard.size15.semibold()
         return view
     }()
     
@@ -31,14 +31,14 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         contentView.addSubview(todoLabel)
         
         checkboxImageView.snp.makeConstraints { make in
-            make.width.equalTo(30)
+            make.width.equalTo(16)
             make.height.equalTo(checkboxImageView.snp.width)
             make.leading.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
         }
         todoLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(checkboxImageView.snp.trailing).offset(20)
+            make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
             make.trailing.equalToSuperview()
         }
     }
