@@ -41,13 +41,38 @@ class TodoViewController: BaseViewController{
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = CGFloat(16)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: view.frame.width-40, height: 28)
+        layout.itemSize = CGSize(width: view.frame.width, height: 20)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
         view.bounces = true
         view.backgroundColor = .none
         view.register(TodoCollectionViewCell.self, forCellWithReuseIdentifier: TodoCollectionViewCell.identifier)
         view.register(TodoHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TodoHeaderView.identifier)
+        return view
+    }()
+    private let textFieldBackgroundView = {
+        let view = UIView()
+        view.backgroundColor = QColor.backgroundColor
+        return view
+    }()
+    private let textFieldBorderview = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        view.layer.borderColor = QColor.accentColor.cgColor
+        view.layer.borderWidth = 1
+        return view
+    }()
+    private let registerButton = {
+        let view = UIButton()
+        view.setTitleColor(QColor.accentColor, for: .normal)
+        view.setTitle("추가", for: .normal)
+        view.titleLabel?.font = Pretendard.size18.bold()
+        return view
+    }()
+    private let textField = {
+        let view = UITextField()
+        view.isHidden = false
+        view.borderStyle = .none
         return view
     }()
 
@@ -71,7 +96,9 @@ class TodoViewController: BaseViewController{
    
     
     override func setConstraints() {
-        view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView])
+        view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
+        textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
+        textFieldBorderview.addSubview(textField)
 
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
@@ -90,8 +117,29 @@ class TodoViewController: BaseViewController{
         }
         todoCollectionView.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom).offset(10)
-            make.horizontalEdges.bottom.equalToSuperview().inset(20)
+            make.horizontalEdges.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-10)
         }
+        textFieldBackgroundView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+            make.height.equalTo(48)
+        }
+        textFieldBorderview.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview().inset(6)
+            make.leading.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+            make.trailing.equalTo(registerButton.snp.leading).offset(-10)
+        }
+        textField.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview()
+            make.horizontalEdges.equalToSuperview().inset(10)
+        }
+        registerButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalToSuperview()
+        }
+    
     }
     
     func setDelegate(){
@@ -156,9 +204,13 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TodoHeaderView.identifier, for: indexPath) as? TodoHeaderView else {return UICollectionReusableView()}
         switch indexPath.section {
         case 0:
-            header.setTitle(text: "곧 할일")
+            header.setTitle(text: "곧 할 일")
+            header.addButtonComletionHandler = {
+                print("addButtonTapped")
+               
+            }
         case 1:
-            header.setTitle(text: "오늘 할일")
+            header.setTitle(text: "오늘 할 일")
         default:
             break
         }
@@ -168,6 +220,6 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
 }
 extension TodoViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width-40, height: 20)
+        return CGSize(width: view.frame.width-40, height: 40)
     }
 }

@@ -15,6 +15,7 @@ class BaseView: UIView {
         super.init(frame: frame)
         configureView()
         setConstraints()
+        dismissKeyboardWhenTappedAround()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -26,6 +27,15 @@ class BaseView: UIView {
     
     func setConstraints() {
         
+    }
+    func dismissKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer =
+            UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.addGestureRecognizer(tap)
+    }
+    @objc func dismissKeyboard() {
+        self.endEditing(true)
     }
 }
 

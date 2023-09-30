@@ -8,6 +8,9 @@
 import UIKit
 
 class TodoHeaderView: BaseCollectionReusableView {
+    
+    var addButtonComletionHandler: (()->Void)?
+    
     private let titleLabel = {
         let view = UILabel()
         view.textAlignment = .center
@@ -16,7 +19,7 @@ class TodoHeaderView: BaseCollectionReusableView {
         return view
     }()
     
-    private let plusButton = {
+    private let addButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName:"plus.circle"), for: .normal)
         view.tintColor = QColor.accentColor
@@ -25,6 +28,7 @@ class TodoHeaderView: BaseCollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
 
     }
 
@@ -32,17 +36,20 @@ class TodoHeaderView: BaseCollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc func addButtonTapped() {
+        addButtonComletionHandler?()
+    }
     override func setConstraints() {
-        addSubviews([titleLabel,plusButton])
+        addSubviews([titleLabel,addButton])
         
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(20)
             
         }
-        plusButton.snp.makeConstraints { make in
+        addButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(titleLabel.snp.trailing).offset(15)
+            make.leading.equalTo(titleLabel.snp.trailing).offset(3)
             make.width.equalTo(20)
             make.height.equalTo(20)
         }

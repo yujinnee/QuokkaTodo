@@ -18,7 +18,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     }()
     private let todoLabel = {
         let view = UILabel()
-        view.font = Pretendard.size15.semibold()
+        view.font = Pretendard.size13.regular()
         view.numberOfLines = 1
         return view
     }()
@@ -34,7 +34,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         checkboxImageView.snp.makeConstraints { make in
             make.width.equalTo(16)
             make.height.equalTo(checkboxImageView.snp.width)
-            make.leading.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(20)
             make.centerY.equalToSuperview()
         }
         todoLabel.snp.makeConstraints { make in
