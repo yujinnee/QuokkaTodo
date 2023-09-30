@@ -8,11 +8,19 @@
 import UIKit
 import FSCalendar
 
+enum TodoType{
+    case soon
+    case today
+}
 class TodoViewController: BaseViewController{
+    var soonArray = [String]()
+    var todayArray = [String]()
+    var todoType: TodoType = .soon
+    
     private let headerLabel = {
         let view  = UILabel()
         view.textColor = QColor.accentColor
-        view.font = DINPro.size23.bold()
+        view.font = DINPro.size20.bold()
         let now = Date()
         view.text = DateFormatter.getYearMonth(date: now)
         return view
@@ -30,8 +38,8 @@ class TodoViewController: BaseViewController{
         label.textColor = QColor.accentColor
         label.font = Pretendard.size20.semibold()
         let now = Date()
-//        let currentMonth = Calendar.current.component(.month, from:now)
-//        let currentDay = Calendar.current.component(.day, from:now)
+        //        let currentMonth = Calendar.current.component(.month, from:now)
+        //        let currentDay = Calendar.current.component(.day, from:now)
         label.text = DateFormatter.getMonthDayWeekDay(date: now)
         return label
     }()
@@ -62,44 +70,83 @@ class TodoViewController: BaseViewController{
         view.layer.borderWidth = 1
         return view
     }()
-    private let registerButton = {
+    private lazy var registerButton = {
         let view = UIButton()
-        view.setTitleColor(QColor.accentColor, for: .normal)
+        view.setTitleColor(QColor.grayColor, for: .normal)
         view.setTitle("추가", for: .normal)
         view.titleLabel?.font = Pretendard.size18.bold()
+        view.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         return view
     }()
     private let textField = {
         let view = UITextField()
-        view.isHidden = false
         view.borderStyle = .none
+        view.returnKeyType = .done
         return view
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-       
+        
+        
         configureView()
         setCalendarView()
-      
+        
         setDelegate()
-       
+        setTextFieldIsHidden(isHidden: true)
+//        dismissKeyboardWhenTappedAround()
+        addTarget()
+        
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    func dismissKeyboardWhenTappedAround() {
+        
+        let tap: UITapGestureRecognizer =
+        UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    func addTarget() {
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    }
+    @objc func textFieldDidChange(){
+        print(textField.text)
+        print(textField.text!.count)
+        if(textField.text!.count == 0){
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
+            registerButton.isEnabled = false
+        }else {
+            print("D")
+            registerButton.setTitleColor(QColor.accentColor, for: .normal)
+            registerButton.isEnabled = true
+        }
+    }
+    
+    @objc func dismissKeyboard() {
+        print("DD")
+        view.endEditing(true)
+    }
+    @objc func registerButtonTapped(){
+        print("tapped")
+        addTodo()
+        todoCollectionView.reloadData()
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         view.backgroundColor = QColor.backgroundColor
-//        let month = 1
-//        let day = 16
-//        dateLabel.text = "date_text".localized(num1: month, num2: day)
+        //        let month = 1
+        //        let day = 16
+        //        dateLabel.text = "date_text".localized(num1: month, num2: day)
     }
-   
+    
     
     override func setConstraints() {
         view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         textFieldBorderview.addSubview(textField)
-
+        
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalToSuperview().inset(20)
@@ -108,7 +155,7 @@ class TodoViewController: BaseViewController{
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom)
             make.horizontalEdges.equalToSuperview().inset(12)
-            make.height.equalToSuperview().multipliedBy(0.4)
+            make.height.equalToSuperview().multipliedBy(0.35)
         }
         
         dateLabel.snp.makeConstraints { make in
@@ -139,15 +186,16 @@ class TodoViewController: BaseViewController{
             make.trailing.equalToSuperview().inset(16)
             make.centerY.equalToSuperview()
         }
-    
+        
     }
     
     func setDelegate(){
         todoCollectionView.delegate = self
         todoCollectionView.dataSource = self
+        textField.delegate = self
     }
-
-
+    
+    
 }
 
 extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
@@ -157,7 +205,7 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         
         calendarView.select(calendarView.today)
         calendarView.weekdayHeight = 48
-    
+        
         calendarView.locale = Locale(identifier: "ko_KR")
         calendarView.scope = .month
         calendarView.scrollEnabled = true
@@ -169,7 +217,7 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         calendarView.appearance.titleFont = DINPro.size11.regular()
         
         calendarView.headerHeight = 0
-//        calendarView.appearance.headerMinimumDissolvedAlpha = 0.0
+        //        calendarView.appearance.headerMinimumDissolvedAlpha = 0.0
         
         calendarView.appearance.selectionColor = QColor.accentColor
         calendarView.appearance.todayColor = .black
@@ -181,45 +229,101 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         let dateFormatter = DateFormatter()
         print(dateFormatter.string(from:date) + "날짜가 선택 되었습니다.")
     }
-
+    
+    func addTodo(){
+        switch todoType{
+        case .soon:
+            soonArray.append(textField.text ?? "")
+            print(soonArray)
+        case .today:
+            todayArray.append(textField.text ?? "")
+        }
+        textField.text = ""
+    }
+    
 }
 
 extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: TodoCollectionViewCell.identifier, for: indexPath) as? TodoCollectionViewCell else { return UICollectionViewCell()}
-        cell.setData(todo: "밥먹기")
+        switch indexPath.section{
+        case 0:
+            cell.setData(todo: soonArray[indexPath.row])
+        case 1:
+            cell.setData(todo: todayArray[indexPath.row])
+        default:
+            break
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        switch section{
+        case 0:
+            return soonArray.count
+        case 1:
+            return todayArray.count
+        default:
+            return 0
+        }
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TodoHeaderView.identifier, for: indexPath) as? TodoHeaderView else {return UICollectionReusableView()}
         switch indexPath.section {
         case 0:
             header.setTitle(text: "곧 할 일")
             header.addButtonComletionHandler = {
-                print("addButtonTapped")
-               
+                print("곧addButtonTapped")
+                self.setTextFieldIsHidden(isHidden: false)
+                self.textField.becomeFirstResponder()
+                self.todoType = .soon
+              
             }
         case 1:
             header.setTitle(text: "오늘 할 일")
+            header.addButtonComletionHandler = {
+                print("오늘addButtonTapped")
+                self.setTextFieldIsHidden(isHidden: false)
+                self.textField.becomeFirstResponder()
+                self.todoType = .today
+            }
         default:
             break
         }
+      
         return header
+    }
+    
+    func setTextFieldIsHidden(isHidden: Bool) {
+        textField.isHidden = isHidden
+        textFieldBorderview.isHidden = isHidden
+        textFieldBackgroundView.isHidden = isHidden
     }
     
 }
 extension TodoViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width-40, height: 40)
+    }
+}
+
+extension TodoViewController: UITextFieldDelegate {
+
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if(textField.text?.count ?? 0 > 0){
+            addTodo()
+            todoCollectionView.reloadData()
+            return true
+        } else {
+            return false
+        }
+        
     }
 }
