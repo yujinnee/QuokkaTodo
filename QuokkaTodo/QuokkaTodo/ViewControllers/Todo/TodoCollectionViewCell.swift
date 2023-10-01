@@ -13,7 +13,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         let view = UIImageView()
 //        view.image = UIImage(systemName: "checkmark.square")
         view.image = UIImage(systemName: "square")
-        view.tintColor = .systemGray2
+        view.tintColor = .systemGray3
         return view
     }()
     private let todoLabel = {
@@ -22,14 +22,20 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         view.numberOfLines = 1
         return view
     }()
+    private let menuButton = {
+        let view = UIButton()
+        view.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        view.tintColor = UIColor.systemGray2
+        return view
+        
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
     }
     override func setConstraints() {
-        contentView.addSubview(checkboxImageView)
-        contentView.addSubview(todoLabel)
+        contentView.addSubviews([checkboxImageView,todoLabel,menuButton])
         
         checkboxImageView.snp.makeConstraints { make in
             make.width.equalTo(16)
@@ -41,6 +47,11 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             make.centerY.equalToSuperview()
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
             make.trailing.equalToSuperview()
+        }
+        menuButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.width.equalTo(16)
+            make.height.equalTo(menuButton.snp.width)
         }
     }
     
