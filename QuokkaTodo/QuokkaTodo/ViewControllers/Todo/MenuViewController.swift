@@ -51,6 +51,8 @@ class MenuViewController: BaseViewController {
         super.viewDidLoad()
         if let sheetPresentationController = sheetPresentationController {
             sheetPresentationController.detents = [.medium()]
+            sheetPresentationController.prefersGrabberVisible = true
+            sheetPresentationController.preferredCornerRadius = 20
         }
         
     }
