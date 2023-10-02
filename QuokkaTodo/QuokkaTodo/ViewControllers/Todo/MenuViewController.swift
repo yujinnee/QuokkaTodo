@@ -62,7 +62,7 @@ class MenuViewController: BaseViewController {
         buttonStackView.addArrangedSubview(deleteButton)
         todoLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(30)
             make.horizontalEdges.equalToSuperview()
             make.height.equalTo(30)
         }

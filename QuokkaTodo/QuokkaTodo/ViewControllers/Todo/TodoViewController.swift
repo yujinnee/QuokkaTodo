@@ -7,6 +7,7 @@
 
 import UIKit
 import FSCalendar
+import RealmSwift
 
 enum TodoType{
     case soon
@@ -19,8 +20,11 @@ class TodoViewController: BaseViewController{
     var soonEditing = false
     var todayEditing = false
     
+    var realm = try! Realm()
+    
+    
 //    private let scrollView = {
-//        let view = UIScrollView()
+//        let view = UIcrollView()
 //        view.backgroundColor = .green
 //        return view
 //    }()
@@ -278,6 +282,11 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
 //            }
         case 1:
             cell.setData(todo: todayArray[indexPath.row])
+            cell.menuButtonTappedClosure = {
+                let menuViewController = MenuViewController()
+                menuViewController.modalPresentationStyle = .pageSheet
+                self.present(menuViewController, animated: true)
+            }
 //            cell.reviseButtonTappedClosure = {todoText in
 //                self.todayArray[indexPath.row] = todoText
 //                self.todoCollectionView.reloadData()
