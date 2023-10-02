@@ -8,17 +8,22 @@
 import Foundation
 
 extension DateFormatter {
-    static let format = {
+  
+    
+    static func todayString() -> String {
         let format = DateFormatter()
         format.dateFormat = "yy년 MM월 dd일"
-        return format
-    }()
-    
-    static func today() -> String {
         return format.string(from: Date())
     }
     
-    static func convertDate(date: Date) -> String {
+    static func convertToFullDateDBForm(date: Date) -> String {
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return format.string(from:date)
+    }
+    static func convertToOnlyDateDBForm(date: Date) -> String {
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd"
         return format.string(from:date)
     }
     
@@ -58,4 +63,5 @@ extension DateFormatter {
         }
     }
     
+
 }

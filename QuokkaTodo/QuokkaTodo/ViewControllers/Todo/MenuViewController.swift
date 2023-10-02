@@ -6,8 +6,16 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MenuViewController: BaseViewController {
+    let todoRepository = TodoRepository()
+    let spareTodoRepository = SpareTodoRepository()
+    var todoType: TodoType?
+    var deleteButtonTappedClosure: (()->Void)?
+    
+    var _id: ObjectId?
+    
     private let todoLabel = {
         let view = UILabel ()
         view.text = "투두제목"
@@ -55,6 +63,22 @@ class MenuViewController: BaseViewController {
             sheetPresentationController.preferredCornerRadius = 20
         }
         
+        addTargets()
+        
+    }
+    func addTargets(){
+        deleteButton.addTarget(self, action: #selector(deleteButtonDidTapped), for: .touchUpInside)
+    }
+    @objc func deleteButtonDidTapped() {
+        switch todoType{
+        case .soon:
+            spareTodoRepository.deleteTodo(_id: _id ?? ObjectId())
+        case .today:
+            todoRepository.deleteTodo(_id: _id ?? ObjectId())
+        default:
+            break
+        }
+        deleteButtonTappedClosure?()
     }
     override func setConstraints() {
         view.addSubviews([todoLabel,buttonStackView])
@@ -71,16 +95,16 @@ class MenuViewController: BaseViewController {
             make.horizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(100)
         }
-//        reviseButton.snp.makeConstraints { make in
-//            make.horizontalEdges.equalToSuperview()
-//            make.top.equalToSuperview().offset(50)
-//            make.height.equalTo(44)
-//        }
-//        deleteButton.snp.makeConstraints { make in
-//            make.horizontalEdges.equalToSuperview()
-//            make.top.equalTo(reviseButton.snp.bottom)
-//            make.height.equalTo(44)
-//        }
+        //        reviseButton.snp.makeConstraints { make in
+        //            make.horizontalEdges.equalToSuperview()
+        //            make.top.equalToSuperview().offset(50)
+        //            make.height.equalTo(44)
+        //        }
+        //        deleteButton.snp.makeConstraints { make in
+        //            make.horizontalEdges.equalToSuperview()
+        //            make.top.equalTo(reviseButton.snp.bottom)
+        //            make.height.equalTo(44)
+        //        }
     }
     
 }

@@ -10,14 +10,14 @@ import RealmSwift
 
 protocol todoRepositoryType: AnyObject {
     func findFileURL() -> URL?
-    func fetch() -> Results<Todo>
+    func fetchAll() -> Results<Todo>
     func fetchSelectedDateTodo(date: Date) -> Results<Todo>
     func createTodo(_ item: Todo)
     func updateContents(_id: ObjectId, contents: String)
     func updateDate(_id: ObjectId, date: String)
     func updateCompleted(_id: ObjectId, isCompleted: Bool)
     func updateLeafNum(_id: ObjectId, leafNum: Int)
-    func deleteTodo(_ item: Todo)
+    func deleteTodo(_id : ObjectId)
 }
 
 class TodoRepository: todoRepositoryType{
@@ -36,15 +36,16 @@ class TodoRepository: todoRepositoryType{
         return fileURL
     }
     
-    func fetch() -> RealmSwift.Results<Todo> {
+    func fetchAll() -> Results<Todo> {
         let data = realm.objects(Todo.self).sorted(byKeyPath: "createdDate",ascending: false)
         return data
     }
     func fetchSelectedDateTodo(date:Date) -> Results<Todo>{
-        let data = realm.objects(Todo.self).where {
-            $0.planDate == date
+        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
+        let result = realm.objects(Todo.self).where {
+            $0.planDate.contains(dateString)
         }
-        return data
+        return result
     }
 
     
@@ -99,10 +100,12 @@ class TodoRepository: todoRepositoryType{
         }
     }
     
-    func deleteTodo(_ item: Todo) {
+    func deleteTodo(_id: ObjectId) {
+        let item = realm.object(ofType: Todo.self, forPrimaryKey: _id)!
         do {
             try realm.write {
                 realm.delete(item)
+                print("Realm Remove Succeed")
             }
         } catch {
             print(error)

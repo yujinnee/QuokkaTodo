@@ -11,14 +11,14 @@ import RealmSwift
 
 protocol spareTodoRepositoryType: AnyObject {
     func findFileURL() -> URL?
-    func fetch() -> Results<SpareTodo>
+    func fetchAll() -> Results<SpareTodo>
     func fetchSelectedDateSpareTodo(date: Date) -> Results<SpareTodo>
     func createTodo(_ item: SpareTodo)
     func updateContents(_id: ObjectId, contents: String)
     func updateDate(_id: ObjectId, date: String)
     func updateCompleted(_id: ObjectId, isCompleted: Bool)
     func updateLeafNum(_id: ObjectId, leafNum: Int)
-    func deleteTodo(_ item: SpareTodo)
+    func deleteTodo(_id : ObjectId)
 }
 
 class SpareTodoRepository: spareTodoRepositoryType{
@@ -38,16 +38,19 @@ class SpareTodoRepository: spareTodoRepositoryType{
         return fileURL
     }
     
-    func fetch() -> RealmSwift.Results<SpareTodo> {
+    func fetchAll() -> Results<SpareTodo> {
         let data = realm.objects(SpareTodo.self).sorted(byKeyPath: "createdDate",ascending: false)
         return data
     }
     
     func fetchSelectedDateSpareTodo(date:Date) -> Results<SpareTodo>{
-        let data = realm.objects(SpareTodo.self).where {
-            $0.planDate == date
+  
+        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
+        
+        let result = realm.objects(SpareTodo.self).where {
+            $0.planDate.contains(dateString)
         }
-        return data
+        return result
     }
 
     
@@ -102,10 +105,12 @@ class SpareTodoRepository: spareTodoRepositoryType{
         }
     }
     
-    func deleteTodo(_ item: SpareTodo) {
+    func deleteTodo(_id: ObjectId) {
+        let item = realm.object(ofType: SpareTodo.self, forPrimaryKey: _id)!
         do {
             try realm.write {
                 realm.delete(item)
+                print("Realm Remove Succeed")
             }
         } catch {
             print(error)
