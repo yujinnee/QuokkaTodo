@@ -15,7 +15,7 @@ class TodoHeaderView: BaseCollectionReusableView {
         let view = UILabel()
         view.textAlignment = .center
         view.textColor = QColor.accentColor
-        view.font = Pretendard.size18.bold()
+        view.font = Pretendard.size18.light()
         return view
     }()
     
@@ -59,6 +59,19 @@ class TodoHeaderView: BaseCollectionReusableView {
         titleLabel.text = text
     }
 
+    func setFocused(isEditing: Bool){
+        switch isEditing{
+        case true:
+            titleLabel.font = Pretendard.size20.bold()
+            addButton.tintColor = QColor.accentColor
+            titleLabel.textColor = QColor.accentColor
+        case false:
+            titleLabel.font = Pretendard.size18.light()
+            addButton.tintColor =  QColor.accentColor
+            titleLabel.textColor =  QColor.accentColor
+        }
+       
+    }
     
     
 }

@@ -16,7 +16,14 @@ class TodoViewController: BaseViewController{
     var soonArray = [String]()
     var todayArray = [String]()
     var todoType: TodoType = .soon
+    var soonEditing = false
+    var todayEditing = false
     
+//    private let scrollView = {
+//        let view = UIScrollView()
+//        view.backgroundColor = .green
+//        return view
+//    }()
     private let headerLabel = {
         let view  = UILabel()
         view.textColor = QColor.accentColor
@@ -36,7 +43,7 @@ class TodoViewController: BaseViewController{
     private let dateLabel = {
         let label = UILabel()
         label.textColor = QColor.accentColor
-        label.font = Pretendard.size20.semibold()
+        label.font = Pretendard.size20.regular()
         let now = Date()
         //        let currentMonth = Calendar.current.component(.month, from:now)
         //        let currentDay = Calendar.current.component(.day, from:now)
@@ -112,24 +119,19 @@ class TodoViewController: BaseViewController{
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     @objc func textFieldDidChange(){
-        print(textField.text)
-        print(textField.text!.count)
         if(textField.text!.count == 0){
             registerButton.setTitleColor(QColor.grayColor, for: .normal)
             registerButton.isEnabled = false
         }else {
-            print("D")
             registerButton.setTitleColor(QColor.accentColor, for: .normal)
             registerButton.isEnabled = true
         }
     }
     
     @objc func dismissKeyboard() {
-        print("DD")
         view.endEditing(true)
     }
     @objc func registerButtonTapped(){
-        print("tapped")
         addTodo()
         todoCollectionView.reloadData()
     }
@@ -143,10 +145,15 @@ class TodoViewController: BaseViewController{
     
     
     override func setConstraints() {
+//        view.addSubview(scrollView)
+//        scrollView.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
+//        textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         textFieldBorderview.addSubview(textField)
-        
+//        scrollView.snp.makeConstraints { make in
+//            make.horizontalEdges.verticalEdges.equalToSuperview()
+//        }
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalToSuperview().inset(20)
@@ -154,8 +161,10 @@ class TodoViewController: BaseViewController{
         }
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom)
+            make.leading.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(0)
             make.horizontalEdges.equalToSuperview().inset(12)
-            make.height.equalToSuperview().multipliedBy(0.35)
+            make.height.equalTo(view).multipliedBy(0.2)
         }
         
         dateLabel.snp.makeConstraints { make in
@@ -234,7 +243,6 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         switch todoType{
         case .soon:
             soonArray.append(textField.text ?? "")
-            print(soonArray)
         case .today:
             todayArray.append(textField.text ?? "")
         }
@@ -250,8 +258,34 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         switch indexPath.section{
         case 0:
             cell.setData(todo: soonArray[indexPath.row])
+            cell.menuButtonTappedClosure = {
+                let menuViewController = MenuViewController()
+                menuViewController.modalPresentationStyle = .pageSheet
+                self.present(menuViewController, animated: true)
+            }
+//            cell.reviseButtonTappedClosure = {
+////                self.textField.becomeFirstResponder()
+//                print("reviseButtonTapped")
+//            }
+//            cell.reviseCompleteButtonTappedClosure = { todoText in
+//                self.soonArray[indexPath.row] = todoText
+//                self.todoCollectionView.reloadData()
+//            }
+//            cell.deleteButtonTappedClosure = {
+//                self.soonArray.remove(at: indexPath.row)
+//                print(self.soonArray)
+//                self.todoCollectionView.reloadData()
+//            }
         case 1:
             cell.setData(todo: todayArray[indexPath.row])
+//            cell.reviseButtonTappedClosure = {todoText in
+//                self.todayArray[indexPath.row] = todoText
+//                self.todoCollectionView.reloadData()
+//            }
+//            cell.deleteButtonTappedClosure = {
+//                self.todayArray.remove(at: indexPath.row)
+//                self.todoCollectionView.reloadData()
+//            }
         default:
             break
         }
@@ -279,23 +313,31 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         case 0:
             header.setTitle(text: "곧 할 일")
             header.addButtonComletionHandler = {
-                print("곧addButtonTapped")
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
                 self.todoType = .soon
+                self.soonEditing = true
+                self.todayEditing = false
+                self.todoCollectionView.reloadData()
               
             }
+            header.setFocused(isEditing: soonEditing)
         case 1:
             header.setTitle(text: "오늘 할 일")
             header.addButtonComletionHandler = {
-                print("오늘addButtonTapped")
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
                 self.todoType = .today
+                self.soonEditing = false
+                self.todayEditing = true
+                self.todoCollectionView.reloadData()
+              
             }
+            header.setFocused(isEditing: todayEditing)
         default:
             break
         }
+        
       
         return header
     }
@@ -314,9 +356,29 @@ extension TodoViewController: UICollectionViewDelegateFlowLayout{
 }
 
 extension TodoViewController: UITextFieldDelegate {
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        switch todoType {
+//        case .soon:
+//
+//        case .today:
+//            soonEditing = false
+//            todayEditing = true
+//            todoCollectionView.reloadData()
+//
+//        }
+//    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        setTextFieldIsHidden(isHidden: true)
+        soonEditing = false
+        todayEditing = false
+        todoCollectionView.reloadData()
+    }
 
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+//        setTextFieldIsHidden(isHidden: true)
+        
         if(textField.text?.count ?? 0 > 0){
             addTodo()
             todoCollectionView.reloadData()
@@ -327,3 +389,4 @@ extension TodoViewController: UITextFieldDelegate {
         
     }
 }
+

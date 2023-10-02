@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "floatingpanel",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scenee/FloatingPanel.git",
+      "state" : {
+        "revision" : "debeca1fb27fe2730f5c54bbb4eb22bc9b8f7a44",
+        "version" : "2.7.0"
+      }
+    },
+    {
       "identity" : "fscalendar",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WenchaoD/FSCalendar.git",
