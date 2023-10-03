@@ -20,7 +20,6 @@
 		6A0916522AC7201A0014FE2D /* SpareTodoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916512AC7201A0014FE2D /* SpareTodoRepository.swift */; };
 		6A0916562AC73C190014FE2D /* TodoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916552AC73C190014FE2D /* TodoHeaderView.swift */; };
 		6A0916582AC73D5E0014FE2D /* BaseCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916572AC73D5E0014FE2D /* BaseCollectionReusableView.swift */; };
-		6A6084392AC956D2005B85C7 /* FloatingPanel in Frameworks */ = {isa = PBXBuildFile; productRef = 6A6084382AC956D2005B85C7 /* FloatingPanel */; };
 		6A60843E2AC95887005B85C7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60843D2AC95887005B85C7 /* MenuViewController.swift */; };
 		6AB2B8722AC3355700830760 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8712AC3355700830760 /* AppDelegate.swift */; };
 		6AB2B8742AC3355700830760 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8732AC3355700830760 /* SceneDelegate.swift */; };
@@ -104,7 +103,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A09164B2AC6B9410014FE2D /* RealmSwift in Frameworks */,
-				6A6084392AC956D2005B85C7 /* FloatingPanel in Frameworks */,
 				6AB2B8AC2AC346A300830760 /* SnapKit in Frameworks */,
 				6ACADE062AC4958400382143 /* FSCalendar in Frameworks */,
 			);
@@ -285,7 +283,6 @@
 				6AB2B8AB2AC346A300830760 /* SnapKit */,
 				6ACADE052AC4958400382143 /* FSCalendar */,
 				6A09164A2AC6B9410014FE2D /* RealmSwift */,
-				6A6084382AC956D2005B85C7 /* FloatingPanel */,
 			);
 			productName = QoukkaTodo;
 			productReference = 6AB2B86E2AC3355700830760 /* QuokkaTodo.app */;
@@ -320,7 +317,6 @@
 				6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				6A0916492AC6B9410014FE2D /* XCRemoteSwiftPackageReference "realm-swift" */,
-				6A6084372AC956D2005B85C7 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
 			);
 			productRefGroup = 6AB2B86F2AC3355700830760 /* Products */;
 			projectDirPath = "";
@@ -622,14 +618,6 @@
 				kind = branch;
 			};
 		};
-		6A6084372AC956D2005B85C7 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/scenee/FloatingPanel.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -653,11 +641,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6A0916492AC6B9410014FE2D /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
-		};
-		6A6084382AC956D2005B85C7 /* FloatingPanel */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6A6084372AC956D2005B85C7 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
-			productName = FloatingPanel;
 		};
 		6AB2B8AB2AC346A300830760 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
