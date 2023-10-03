@@ -24,6 +24,13 @@ class MenuViewController: BaseViewController {
         view.font = Pretendard.size20.bold()
         return view
     }()
+    private let todoTypeLabel = {
+        let view = UILabel ()
+        view.textAlignment = .center
+        view.textColor = QColor.accentColor
+        view.font = Pretendard.size11.medium()
+        return view
+    }()
     let buttonStackView = {
         let view = UIStackView()
         view.axis = .horizontal
@@ -65,9 +72,35 @@ class MenuViewController: BaseViewController {
         }
         
         addTargets()
+        setTodoLabel()
+        setTodoTypeLabel()
         
     }
-    func addTargets(){
+    private func setTodoTypeLabel() {
+        guard let _id = _id else {return}
+        switch todoType {
+        case .soon:
+            todoTypeLabel.text = "곧 할 일"
+        case .today:
+            todoTypeLabel.text = "오늘 할 일"
+        default :
+            break
+        }
+        
+    }
+    private func setTodoLabel() {
+        guard let _id = _id else {return}
+        switch todoType {
+        case .soon:
+            todoLabel.text = spareTodoRepository.readTodo(_id: _id).contents
+        case .today:
+            todoLabel.text = todoRepository.readTodo(_id: _id).contents
+        default :
+            break
+        }
+        
+    }
+    private func addTargets(){
         deleteButton.addTarget(self, action: #selector(deleteButtonDidTapped), for: .touchUpInside)
         reviseButton.addTarget(self, action: #selector(reviseButtonDidTapped), for: .touchUpInside)
     }
@@ -89,17 +122,21 @@ class MenuViewController: BaseViewController {
         reviseButtonTappedClosure?()
     }
     override func setConstraints() {
-        view.addSubviews([todoLabel,buttonStackView])
+        view.addSubviews([todoLabel,todoTypeLabel,buttonStackView])
         buttonStackView.addArrangedSubview(reviseButton)
         buttonStackView.addArrangedSubview(deleteButton)
         todoLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(30)
             make.horizontalEdges.equalToSuperview()
-            make.height.equalTo(30)
+        }
+        todoTypeLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(todoLabel.snp.bottom).offset(5)
+            make.horizontalEdges.equalToSuperview()
         }
         buttonStackView.snp.makeConstraints { make in
-            make.top.equalTo(todoLabel.snp.bottom).offset(30)
+            make.top.equalTo(todoTypeLabel.snp.bottom).offset(30)
             make.horizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(100)
         }

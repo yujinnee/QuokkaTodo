@@ -47,7 +47,10 @@ class TodoRepository: todoRepositoryType{
         }
         return result
     }
-
+    func readTodo(_id: ObjectId) -> Todo {
+        let result = realm.object(ofType: Todo.self, forPrimaryKey: _id) ?? Todo()
+        return result
+    }
     
     func createTodo(_ item: Todo) {
         do {

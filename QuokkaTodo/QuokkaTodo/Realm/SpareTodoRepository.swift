@@ -52,8 +52,10 @@ class SpareTodoRepository: spareTodoRepositoryType{
         }
         return result
     }
-
-    
+    func readTodo(_id: ObjectId) -> SpareTodo {
+        let result = realm.object(ofType: SpareTodo.self, forPrimaryKey: _id) ?? SpareTodo()
+        return result
+    }
     func createTodo(_ item: SpareTodo) {
         do {
             try realm.write {
