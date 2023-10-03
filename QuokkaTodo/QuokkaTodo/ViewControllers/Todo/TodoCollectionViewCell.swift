@@ -6,14 +6,17 @@
 //
 
 import UIKit
+import RealmSwift
 
 class TodoCollectionViewCell: BaseCollectionViewCell {
+    var _id: ObjectId?
     var isRevising = false
     var todoText = ""
     var menuButtonTappedClosure: (()->Void)?
+    var reviseCompleteButtonTappedClosure: ((String)->Void)?
 //    var deleteButtonTappedClosure: (()->Void)?
 //    var reviseButtonTappedClosure: ((String)->Void)?
-//    var reviseCompleteButtonTappedClosure: ((String)->Void)?
+   
 //
     private let checkboxImageView = {
         let view = UIImageView()
@@ -25,13 +28,14 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     private let todoLabel = {
         let view = UILabel()
         view.font = Pretendard.size13.regular()
+        view.isHidden = false
         view.numberOfLines = 1
         return view
     }()
     private let todoTextField = {
         let view = UITextField()
+        view.isHidden = true
         view.font = Pretendard.size13.regular()
-    
         view.returnKeyType = .done
         return view
     }()
@@ -61,7 +65,6 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         super.init(frame: frame)
         addTargets()
         setDelegate()
-        setRevising(isRevising: false)
     }
     func setDelegate() {
         todoTextField.delegate = self
@@ -79,12 +82,15 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
 //
 //    }
     @objc func todoTextFieldTextChanged(){
-        print("reviseButtonTapped")
         todoText = todoTextField.text ?? ""
     }
     @objc func menuButtonDidTapped() {
             menuButtonTappedClosure?()
             print("menuButtonTappedcell")
+    }
+    func openKeyboard() {
+        print("keyboard!")
+        todoTextField.becomeFirstResponder()
     }
 //    @objc func reviseButtonDidTapped() {
 //        reviseButtonTappedClosure?()
@@ -141,10 +147,12 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         todoLabel.text = todo
     }
     func setRevising(isRevising: Bool) {
+        print(#function)
+       
+        self.isRevising = isRevising
         switch isRevising{
         case true:
             todoLabel.isHidden = true
-            print(todoText)
             todoTextField.text = todoText
             todoTextField.isHidden = false
         case false:
@@ -156,11 +164,14 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     
 }
 extension TodoCollectionViewCell: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        setRevising(isRevising: false)
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if todoTextField.text?.count != 0 {
             todoText = todoTextField.text ?? ""
-//            setRevising(isRevising: false)
-//            reviseCompleteButtonTappedClosure?(todoText)
+            setRevising(isRevising: false)
+            reviseCompleteButtonTappedClosure?(todoText)
             return true
         }
        return false

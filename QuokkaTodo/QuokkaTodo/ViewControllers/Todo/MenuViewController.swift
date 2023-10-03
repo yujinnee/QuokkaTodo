@@ -13,6 +13,7 @@ class MenuViewController: BaseViewController {
     let spareTodoRepository = SpareTodoRepository()
     var todoType: TodoType?
     var deleteButtonTappedClosure: (()->Void)?
+    var reviseButtonTappedClosure: (()->Void)?
     
     var _id: ObjectId?
     
@@ -68,6 +69,7 @@ class MenuViewController: BaseViewController {
     }
     func addTargets(){
         deleteButton.addTarget(self, action: #selector(deleteButtonDidTapped), for: .touchUpInside)
+        reviseButton.addTarget(self, action: #selector(reviseButtonDidTapped), for: .touchUpInside)
     }
     @objc func deleteButtonDidTapped() {
         switch todoType{
@@ -78,7 +80,13 @@ class MenuViewController: BaseViewController {
         default:
             break
         }
+        dismiss(animated: true)
         deleteButtonTappedClosure?()
+    }
+    
+    @objc func reviseButtonDidTapped() {
+        dismiss(animated: true)
+        reviseButtonTappedClosure?()
     }
     override func setConstraints() {
         view.addSubviews([todoLabel,buttonStackView])
