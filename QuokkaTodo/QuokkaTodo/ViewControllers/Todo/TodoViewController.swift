@@ -27,7 +27,7 @@ class TodoViewController: BaseViewController{
             headerLabel.text = DateFormatter.getYearMonth(date: selectedDate)
             dateLabel.text = DateFormatter.getMonthDayWeekDay(date: selectedDate)
             fetchTodoData()
-            todoCollectionView.reloadData()
+            todoCollectionView.reloadSections(IndexSet(1...1))
         }
     }
     
@@ -58,8 +58,6 @@ class TodoViewController: BaseViewController{
         label.textColor = QColor.accentColor
         label.font = Pretendard.size20.regular()
         let now = Date()
-        //        let currentMonth = Calendar.current.component(.month, from:now)
-        //        let currentDay = Calendar.current.component(.day, from:now)
         label.text = DateFormatter.getMonthDayWeekDay(date: now)
         return label
     }()
@@ -116,19 +114,18 @@ class TodoViewController: BaseViewController{
         //        dismissKeyboardWhenTappedAround()
         addTarget()
         fetchTodoData()
+        fetchSpareTodoData()
         print(todoRepository.findFileURL())
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         todoCollectionView.reloadData()
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
     func dismissKeyboardWhenTappedAround() {
-        
         let tap: UITapGestureRecognizer =
         UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -150,18 +147,12 @@ class TodoViewController: BaseViewController{
         view.endEditing(true)
     }
     @objc func registerButtonTapped(){
-        print("추가함!!")
         addTodo()
-        todoCollectionView.reloadData()
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         view.backgroundColor = QColor.backgroundColor
-        //        let month = 1
-        //        let day = 16
-        //        dateLabel.text = "date_text".localized(num1: month, num2: day)
     }
-    
     
     override func setConstraints() {
         //        view.addSubview(scrollView)
@@ -227,22 +218,21 @@ class TodoViewController: BaseViewController{
             let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
             switch todoType{
             case .soon:
-                //            soonArray.append(textField.text ?? "")
                 spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
             case .today:
                 todoRepository.createTodo(Todo(contents: text, planDate: date, createdDate: date, position: 0, leafNum: 0))
-                //            todayArray.append(textField.text ?? "")
+                calendarView.reloadData()//이벤트 점 표시용 reloadData()
             }
             textField.text = ""
             todoCollectionView.reloadData()
         }
-        
     }
     func fetchTodoData(){
         let date = selectedDate
         todayArray = todoRepository.fetchSelectedDateTodo(date: date)
-        soonArray = spareTodoRepository.fetchSelectedDateSpareTodo(date: date)
-        print(todayArray)
+    }
+    func fetchSpareTodoData() {
+        soonArray = spareTodoRepository.fetchAll()
     }
     
 }
@@ -262,43 +252,49 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         
         calendarView.appearance.weekdayFont = DINPro.size13.medium()
         calendarView.appearance.weekdayTextColor = QColor.accentColor
-        
         calendarView.appearance.titleFont = DINPro.size11.regular()
-        
-        calendarView.headerHeight = 0
-        //        calendarView.appearance.headerMinimumDissolvedAlpha = 0.0
         
         calendarView.appearance.selectionColor = QColor.accentColor
         calendarView.appearance.todayColor = .black
         
+        calendarView.appearance.eventDefaultColor = QColor.accentColor
+        calendarView.appearance.eventSelectionColor = QColor.accentColor
+        
+        calendarView.headerHeight = 0
+        
     }
-    
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        if todoRepository.fetchSelectedDateTodo(date: date).count>0{
+            return 1
+        }else {
+            return 0
+        }
+    }
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         selectedDate = date
     }
-
+    
     func calendar(_ calendar: FSCalendar, willDisplay cell: FSCalendarCell, for date: Date, at monthPosition: FSCalendarMonthPosition) {
-            let currentPage = calendar.currentPage
-            let currentYear = Calendar.current.component(.year, from: currentPage)
-            let currentMonth = Calendar.current.component(.month, from: currentPage)
-            
-            headerLabel.text = "\(currentYear)년 \(currentMonth)월"
-        }
+        let currentPage = calendar.currentPage
+        let currentYear = Calendar.current.component(.year, from: currentPage)
+        let currentMonth = Calendar.current.component(.month, from: currentPage)
+        
+        headerLabel.text = "\(currentYear)년 \(currentMonth)월"
+    }
     func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {
-            if monthPosition != .current {
-                calendar.setCurrentPage(date, animated: true)
-                return false
-            } else {
-                return true
-            }
+        if monthPosition != .current {
+            calendar.setCurrentPage(date, animated: true)
+            return false
+        } else {
+            return true
         }
-
+    }
+    
 }
 
 extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         guard let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: TodoCollectionViewCell.identifier, for: indexPath) as? TodoCollectionViewCell else {
             return UICollectionViewCell()}
         
@@ -317,7 +313,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 menuViewController.reviseButtonTappedClosure = {
                     cell.setRevising(isRevising: true)
                     cell.openKeyboard()
-
+                    
                 }
                 self.present(menuViewController, animated: true)
                 
@@ -326,22 +322,6 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.spareTodoRepository.updateContents(_id: item._id, contents: todoText)
                 self.todoCollectionView.reloadItems(at: [indexPath])
             }
-            //                self.soonArray[indexPath.row] = todoText
-            //                self.todoCollectionView.reloadData()
-            //            }
-            //            cell.reviseButtonTappedClosure = {
-            ////                self.textField.becomeFirstResponder()
-            //                print("reviseButtonTapped")
-            //            }
-            //            cell.reviseCompleteButtonTappedClosure = { todoText in
-            //                self.soonArray[indexPath.row] = todoText
-            //                self.todoCollectionView.reloadData()
-            //            }
-            //            cell.deleteButtonTappedClosure = {
-            //                self.soonArray.remove(at: indexPath.row)
-            //                print(self.soonArray)
-            //                self.todoCollectionView.reloadData()
-            //            }
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
             cell.setData(todo: item.contents)
@@ -352,6 +332,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 menuViewController._id = item._id
                 menuViewController.deleteButtonTappedClosure = {
                     self.todoCollectionView.reloadSections(IndexSet(1...1))
+                    self.calendarView.reloadData()
                 }
                 menuViewController.reviseButtonTappedClosure = {
                     cell.setRevising(isRevising: true)
@@ -363,14 +344,6 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todoRepository.updateContents(_id: item._id, contents: todoText)
                 self.todoCollectionView.reloadItems(at: [indexPath])
             }
-            //            cell.reviseButtonTappedClosure = {todoText in
-            //                self.todayArray[indexPath.row] = todoText
-            //                self.todoCollectionView.reloadData()
-            //            }
-            //            cell.deleteButtonTapㄱpedClosure = {
-            //                self.todayArray.remove(at: indexPath.row)
-            //                self.todoCollectionView.reloadData()
-            //            }
         default:
             break
         }
@@ -403,7 +376,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todoType = .soon
                 self.soonEditing = true
                 self.todayEditing = false
-                self.todoCollectionView.reloadData()
+                self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
                 
             }
             header.setFocused(isEditing: soonEditing)
@@ -415,7 +388,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todoType = .today
                 self.soonEditing = false
                 self.todayEditing = true
-                self.todoCollectionView.reloadData()
+                self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
                 
             }
             header.setFocused(isEditing: todayEditing)
@@ -442,18 +415,6 @@ extension TodoViewController: UICollectionViewDelegateFlowLayout{
 
 extension TodoViewController: UITextFieldDelegate {
     
-    //    func textFieldDidBeginEditing(_ textField: UITextField) {
-    //        switch todoType {
-    //        case .soon:
-    //
-    //        case .today:
-    //            soonEditing = false
-    //            todayEditing = true
-    //            todoCollectionView.reloadData()
-    //
-    //        }
-    //    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         setTextFieldIsHidden(isHidden: true)
         soonEditing = false
@@ -461,18 +422,15 @@ extension TodoViewController: UITextFieldDelegate {
         todoCollectionView.reloadData()
     }
     
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        //        setTextFieldIsHidden(isHidden: true)
-        
         if(textField.text?.count ?? 0 > 0){
             addTodo()
+            
             todoCollectionView.reloadData()
             return true
         } else {
             return false
         }
-        
     }
 }
 

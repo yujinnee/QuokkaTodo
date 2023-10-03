@@ -140,16 +140,6 @@ class MenuViewController: BaseViewController {
             make.horizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(100)
         }
-        //        reviseButton.snp.makeConstraints { make in
-        //            make.horizontalEdges.equalToSuperview()
-        //            make.top.equalToSuperview().offset(50)
-        //            make.height.equalTo(44)
-        //        }
-        //        deleteButton.snp.makeConstraints { make in
-        //            make.horizontalEdges.equalToSuperview()
-        //            make.top.equalTo(reviseButton.snp.bottom)
-        //            make.height.equalTo(44)
-        //        }
     }
     
 }
