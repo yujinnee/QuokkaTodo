@@ -172,7 +172,7 @@ class TodoViewController: BaseViewController{
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom)
             make.horizontalEdges.equalToSuperview().inset(20)
-            make.height.equalTo(view).multipliedBy(0.2)
+            make.height.equalTo(view).multipliedBy(0.35)
         }
         
         dateLabel.snp.makeConstraints { make in
@@ -322,6 +322,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.spareTodoRepository.updateContents(_id: item._id, contents: todoText)
                 self.todoCollectionView.reloadItems(at: [indexPath])
             }
+            cell.setCheckBox(isCompleted: item.isCompleted)
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
             cell.setData(todo: item.contents)
@@ -344,6 +345,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todoRepository.updateContents(_id: item._id, contents: todoText)
                 self.todoCollectionView.reloadItems(at: [indexPath])
             }
+            cell.setCheckBox(isCompleted: item.isCompleted)
         default:
             break
         }
@@ -359,6 +361,35 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         default:
             return 0
         }
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.section{
+        case 0:
+            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            
+            var isCompleted = false
+            if (item.isCompleted){
+                isCompleted = false
+            }else {
+                isCompleted = true
+            }
+            spareTodoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
+//            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
+        case 1:
+            let item = todayArray?[indexPath.row] ?? Todo()
+            var isCompleted = false
+            if (item.isCompleted){
+                isCompleted = false
+            }else {
+                isCompleted = true
+            }
+            todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
+//            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
+        default:
+            break
+        }
+//        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
+        todoCollectionView.reloadData()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

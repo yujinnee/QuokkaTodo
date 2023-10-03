@@ -11,9 +11,11 @@ import RealmSwift
 class TodoCollectionViewCell: BaseCollectionViewCell {
     var _id: ObjectId?
     var isRevising = false
+    var isCompleted = false
     var todoText = ""
     var menuButtonTappedClosure: (()->Void)?
     var reviseCompleteButtonTappedClosure: ((String)->Void)?
+    
     private let checkboxImageView = {
         let view = UIImageView()
 //        view.image = UIImage(systemName: "checkmark.square")
@@ -110,6 +112,15 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             todoLabel.isHidden = false
             todoLabel.text = todoText
             todoTextField.isHidden = true
+        }
+    }
+    func setCheckBox(isCompleted: Bool){
+        self.isCompleted = isCompleted
+        switch isCompleted{
+        case true:
+            checkboxImageView.image = UIImage(systemName: "checkmark.square")
+        case false:
+            checkboxImageView.image = UIImage(systemName: "square")
         }
     }
     
