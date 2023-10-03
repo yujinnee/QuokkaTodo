@@ -22,6 +22,15 @@ class TodoViewController: BaseViewController{
     var soonEditing = false
     var todayEditing = false
     
+    var selectedDate = Date() {
+        didSet {
+            headerLabel.text = DateFormatter.getYearMonth(date: selectedDate)
+            dateLabel.text = DateFormatter.getMonthDayWeekDay(date: selectedDate)
+            fetchTodoData()
+            todoCollectionView.reloadData()
+        }
+    }
+    
     
     //    private let scrollView = {
     //        let view = UIcrollView()
@@ -211,7 +220,30 @@ class TodoViewController: BaseViewController{
         todoCollectionView.dataSource = self
         textField.delegate = self
     }
-    
+    func addTodo(){
+        if let text = textField.text{
+            let text = textField.text ?? ""
+            
+            let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
+            switch todoType{
+            case .soon:
+                //            soonArray.append(textField.text ?? "")
+                spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
+            case .today:
+                todoRepository.createTodo(Todo(contents: text, planDate: date, createdDate: date, position: 0, leafNum: 0))
+                //            todayArray.append(textField.text ?? "")
+            }
+            textField.text = ""
+            todoCollectionView.reloadData()
+        }
+        
+    }
+    func fetchTodoData(){
+        let date = selectedDate
+        todayArray = todoRepository.fetchSelectedDateTodo(date: date)
+        soonArray = spareTodoRepository.fetchSelectedDateSpareTodo(date: date)
+        print(todayArray)
+    }
     
 }
 
@@ -239,39 +271,28 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         calendarView.appearance.selectionColor = QColor.accentColor
         calendarView.appearance.todayColor = .black
         
-        
     }
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        let dateFormatter = DateFormatter()
-        print(dateFormatter.string(from:date) + "날짜가 선택 되었습니다.")
+        selectedDate = date
     }
-    
-    func addTodo(){
-        if let text = textField.text{
-            print("ddddd")
-            let text = textField.text ?? ""
+
+    func calendar(_ calendar: FSCalendar, willDisplay cell: FSCalendarCell, for date: Date, at monthPosition: FSCalendarMonthPosition) {
+            let currentPage = calendar.currentPage
+            let currentYear = Calendar.current.component(.year, from: currentPage)
+            let currentMonth = Calendar.current.component(.month, from: currentPage)
             
-            let date = DateFormatter.convertToFullDateDBForm(date: Date())
-            switch todoType{
-            case .soon:
-                //            soonArray.append(textField.text ?? "")
-                spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
-            case .today:
-                todoRepository.createTodo(Todo(contents: text, planDate: date, createdDate: date, position: 0, leafNum: 0))
-                //            todayArray.append(textField.text ?? "")
-            }
-            textField.text = ""
-            todoCollectionView.reloadData()
+            headerLabel.text = "\(currentYear)년 \(currentMonth)월"
         }
-        
-    }
-    func fetchTodoData(){
-        let date = Date()
-        todayArray = todoRepository.fetchSelectedDateTodo(date: date)
-        soonArray = spareTodoRepository.fetchSelectedDateSpareTodo(date: date)
-        print(todayArray)
-    }
+    func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {
+            if monthPosition != .current {
+                calendar.setCurrentPage(date, animated: true)
+                return false
+            } else {
+                return true
+            }
+        }
+
 }
 
 extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSource {

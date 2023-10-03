@@ -30,18 +30,28 @@ extension DateFormatter {
     static func getYearMonth(date: Date) -> String{
         let format = DateFormatter()
         format.dateFormat = "yyyy년 M월"
+        format.locale = Locale(identifier: "ko_KR")
+        format.timeZone = TimeZone(abbreviation: "KST")
         return format.string(from: date)
     }
     
     static func getMonthDayWeekDay(date: Date) -> String{
         let format = DateFormatter()
+        format.locale = Locale(identifier: "ko_KR")
+        format.timeZone = TimeZone(abbreviation: "KST")
         let weekDay = getKoreanWeekDay(from: date)
         format.dateFormat = "M월 dd일 \(weekDay)요일"
         return format.string(from: date)
     }
     
     static func getKoreanWeekDay(from date: Date) -> String {
-        let currentDay = Calendar.current.component(.weekday, from: date)
+        let format = DateFormatter()
+        format.locale = Locale(identifier: "ko_KR")
+        format.timeZone = TimeZone(abbreviation: "KST")
+        let convertedKoreanDateString = format.string(from: date)
+        let convertedKoreanDate = format.date(from: convertedKoreanDateString) ?? Date()
+        
+        let currentDay = Calendar.current.component(.weekday, from: convertedKoreanDate)
         
         switch currentDay {
         case 1:
