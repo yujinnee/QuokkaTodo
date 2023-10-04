@@ -8,12 +8,6 @@
 import UIKit
 import SnapKit
 
-extension TimeInterval {
-    /// %02d: 빈자리를 0으로 채우고, 2자리 정수로 표현
-    var time: String {
-        return String(format:"%02d:%02d", Int(self/60), Int(ceil(truncatingRemainder(dividingBy: 60))) )
-    }
-}
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
@@ -69,7 +63,7 @@ class TimerViewController: BaseViewController {
     @objc private func resetButtonDidTap(){
         timer.invalidate()
         seconds = 1500
-        timeLabel.text = String(getTimeString(sec: seconds))
+        timeLabel.text = seconds.timeFormatString
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
@@ -103,9 +97,5 @@ class TimerViewController: BaseViewController {
             timer.invalidate()
         }
     }
-    
-    private func getTimeString(sec: Int) -> String{
-        return String(format:"%02d:%02d",sec/60, sec%60)
-    }
-    
+
 }
