@@ -12,6 +12,7 @@ import SnapKit
 class TimerViewController: BaseViewController {
     var timer = Timer()
     var seconds = 1500
+    var shouldKeepRunning = false
     
     private let timeLabel = {
         let view = UILabel()
@@ -53,37 +54,44 @@ class TimerViewController: BaseViewController {
         
     }
     @objc private func startButtonDidTap(){
-        timer.invalidate()// 확실하게 다른 타이머 돌아가는게 없도록 하기
-//        
-//        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-        
-        var shouldKeepRunning = true
-        DispatchQueue.global().async {
-            print(RunLoop.current == RunLoop.main)
+        if(shouldKeepRunning == false){
+            shouldKeepRunning = true
             
-            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                print(Date())
-                self.seconds -= 1
-                DispatchQueue.main.sync{
-                    self.timeLabel.text = self.seconds.timeFormatString
-                }
-               
+            timer.invalidate()// 확실하게 다른 타이머 돌아가는게 없도록 하기
+    //
+    //        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            
+            
+            DispatchQueue.global().async {
+                print(RunLoop.current == RunLoop.main)
                 
-                if(self.seconds == 0){
-                    timer.invalidate()
+                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                    print(Date())
+                    self.seconds -= 1
+                    DispatchQueue.main.sync{
+                        self.timeLabel.text = self.seconds.timeFormatString
+                    }
+                   
+                    
+                    if(self.seconds == 0){
+                        timer.invalidate()
+                    }
                 }
-            }
-            
-            while shouldKeepRunning {
-                RunLoop.current.run(until: .now + 0.1)
+                
+                while self.shouldKeepRunning {
+                    RunLoop.current.run(until: .now + 0.1)
+                }
             }
         }
+       
     }
     @objc private func pauseButtonDidTap(){
         timer.invalidate()
     }
     @objc private func resetButtonDidTap(){
         timer.invalidate()
+        shouldKeepRunning = false
+        
         seconds = 1500
         timeLabel.text = seconds.timeFormatString
     }
@@ -104,11 +112,11 @@ class TimerViewController: BaseViewController {
         }
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(startButton.snp.bottom).offset(10)
+            make.top.equalTo(startButton.snp.bottom).offset(50)
         }
         resetButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(pauseButton.snp.bottom).offset(10)
+            make.top.equalTo(pauseButton.snp.bottom).offset(50)
         }
     }
     @objc func timerTimeChanged() {
