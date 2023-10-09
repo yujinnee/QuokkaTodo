@@ -22,7 +22,14 @@ class TimerViewController: BaseViewController {
     let onePomoInterval:TimeInterval = 25*60
     let selectedTodo = "코딩하기"
    
-    
+    private let todoSelectionButton = {
+        let view = UIButton()
+        view.setTitle("투두 선택하기", for: .normal)
+        view.tintColor = QColor.accentColor
+        view.setTitleColor(QColor.accentColor, for: .normal)
+        view.titleLabel?.font = Pretendard.size20.bold()
+        return view
+    }()    
     private let timeLabel = {
         let view = UILabel()
         view.font = Pretendard.size35.bold()
@@ -84,12 +91,18 @@ class TimerViewController: BaseViewController {
     }
 
     private func addTargets(){
+        todoSelectionButton.addTarget(self, action: #selector(todoSelectionButtonDidTap), for: .touchUpInside)
         startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(pauseButtonDidTap), for: .touchUpInside)
         resetButton.addTarget(self, action: #selector(resetButtonDidTap), for: .touchUpInside)
 //        liveActivityButton.addTarget(self, action: #selector(liveActivityButtonDidTap), for: .touchUpInside)
 //        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
         
+    }
+    @objc private func todoSelectionButtonDidTap() {
+        let todoSelectionViewController = TodoSelectionViewController()
+        todoSelectionViewController.modalPresentationStyle = .pageSheet
+        self.present(todoSelectionViewController, animated: true)
     }
    
     @objc private func startButtonDidTap(){
@@ -230,7 +243,11 @@ class TimerViewController: BaseViewController {
     }
     
     override func setConstraints() {
-        view.addSubviews([timeLabel,startButton,pauseButton,resetButton])
+        view.addSubviews([todoSelectionButton,timeLabel,startButton,pauseButton,resetButton])
+        todoSelectionButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
+        }
         timeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-70)
