@@ -93,7 +93,7 @@ class TimerViewController: BaseViewController {
     }
    
     @objc private func startButtonDidTap(){
-        if !isTimerRunning && !isPaused{// 첫 시작
+        if !isPaused{// 첫 시작
             isTimerRunning = true
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
@@ -101,7 +101,7 @@ class TimerViewController: BaseViewController {
             
             startLiveActivity()
             
-        }else if !isTimerRunning && isPaused{//일시 정지 했다가 재시작
+        }else {//일시 정지 했다가 재시작
             isTimerRunning = true
             isPaused = false
             startTime = Date.now
@@ -145,13 +145,19 @@ class TimerViewController: BaseViewController {
        
     }
     @objc private func pauseButtonDidTap(){
-        timer.invalidate()
-        isTimerRunning = false
-        isPaused = true
-        leftTimeInterval = endTime.timeIntervalSince(Date.now) + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
-        Task{ await pauseLiveActivity()}
+        if(isTimerRunning){
+            timer.invalidate()
+            isTimerRunning = false
+            isPaused = true
+            leftTimeInterval = endTime.timeIntervalSince(Date.now) + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
+            Task{ await pauseLiveActivity()}
+        }
+       
     }
     @objc private func resetButtonDidTap() {
+        if isTimerRunning{
+            Task{ await endLiveActivity()}
+        }
         timer.invalidate()
         isTimerRunning = false
         isPaused = false
@@ -160,7 +166,7 @@ class TimerViewController: BaseViewController {
         leftTimeInterval = 1500
         timeLabel.text = seconds.timeFormatString
         
-        Task{ await endLiveActivity()}
+       
     }
     @objc private func liveActivityButtonDidTap(){
         startLiveActivity()
@@ -230,16 +236,16 @@ class TimerViewController: BaseViewController {
             make.centerY.equalToSuperview().offset(-70)
         }
         startButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(timeLabel.snp.bottom).offset(50)
+            make.centerY.equalTo(pauseButton)
+            make.trailing.equalTo(pauseButton.snp.leading).offset(-60)
         }
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(startButton.snp.bottom).offset(30)
+            make.top.equalTo(timeLabel.snp.bottom).offset(100)
         }
         resetButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(pauseButton.snp.bottom).offset(30)
+            make.centerY.equalTo(pauseButton)
+            make.leading.equalTo(pauseButton.snp.trailing).offset(60)
         }
 //        liveActivityButton.snp.makeConstraints { make in
 //            make.centerX.equalToSuperview()
