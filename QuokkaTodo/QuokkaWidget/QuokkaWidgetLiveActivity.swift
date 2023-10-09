@@ -12,46 +12,73 @@ import SwiftUI
 struct QuokkaWidgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic stateful properties about your activity go here!
-        var remainingTimeString: String
+        var todo: String
+//        var startTime: Date
+//        var endTime: Date
+        var seconds: TimeInterval
+        var isPaused: Bool
     }
     
     // Fixed non-changing properties about your activity go here!
-    var todo: String
+   
 }
 @available(iOS 16.2, *)
 struct QuokkaWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: QuokkaWidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
-            VStack {
-                Spacer()
-                Text("\(context.attributes.todo)")
-                    .foregroundColor(.black)
-                    .font(.system(size: 13, weight: .regular))
-                let future = Calendar.current.date(byAdding: .second, value: 1500, to: Date())!
-                let date = Date.now...future
-                Text(timerInterval:date ,countsDown: true)
-                    .multilineTextAlignment(.center)
-                    .monospacedDigit()
-                    .font(.system(size: 44, weight: .semibold))
-                    .foregroundColor(Color.white)
-                Spacer()
+            if(!context.state.isPaused){
+                VStack {
+                    Spacer()
+                    Text("\(context.state.todo)")
+                        .foregroundColor(.black)
+                        .font(.system(size: 13, weight: .regular))
+    //                let future = Calendar.current.date(byAdding: .second, value: 1500, to: Date())!
+    //                let future = Date(timeInterval: 25 * 60, since: .now)
+    //                let date = Date.now...future
+//                    let date = context.state.startTime...context.state.endTime
+                    let date = Date.now...Date(timeInterval: context.state.seconds,since: .now)
+                    Text(timerInterval:date ,countsDown: true)
+                        .multilineTextAlignment(.center)
+                        .monospacedDigit()
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundColor(Color.white)
+                    Spacer()
+                }
+                .activityBackgroundTint(Color.brown)
+            } 
+            else {
+                VStack {
+                    Spacer()
+                    Text("\(context.state.todo)")
+                        .foregroundColor(.black)
+                        .font(.system(size: 13, weight: .regular))
+                    let seconds = Int(context.state.seconds)
+                    let dateString = String(format:"%02d:%02d",seconds/60, seconds%60)
+                    Text(dateString)
+                        .multilineTextAlignment(.center)
+                        .monospacedDigit()
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundColor(Color.white)
+                    Spacer()
+                }
+                .activityBackgroundTint(Color.brown)
             }
-            .activityBackgroundTint(Color.brown)
+            
             
         } dynamicIsland: { context in
             DynamicIsland {
                 expandedContent(
-                    todo: context.attributes.todo,
+                    todo: context.state.todo,
                     contentState: context.state,
                     isStale: context.isStale
                 )
             } compactLeading: {
                 Text("L")
             } compactTrailing: {
-                Text("T \(context.state.remainingTimeString)")
+                Text("T")
             } minimal: {
-                Text(context.state.remainingTimeString)
+                Text("M")
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
