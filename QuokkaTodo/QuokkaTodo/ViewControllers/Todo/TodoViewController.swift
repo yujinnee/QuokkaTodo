@@ -302,6 +302,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         case 0:
             let item = soonArray?[indexPath.row] ?? SpareTodo()
             cell.setData(todo: item.contents)
+            cell.setLeaf(leafNum: item.leafNum)
             cell.menuButtonTappedClosure = {
                 let menuViewController = MenuViewController()
                 menuViewController.modalPresentationStyle = .pageSheet
@@ -326,6 +327,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
             cell.setData(todo: item.contents)
+            cell.setLeaf(leafNum: item.leafNum)
             cell.menuButtonTappedClosure = {
                 let menuViewController = MenuViewController()
                 menuViewController.modalPresentationStyle = .pageSheet

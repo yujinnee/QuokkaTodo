@@ -37,6 +37,43 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         view.returnKeyType = .done
         return view
     }()
+    private let leafStackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.distribution = .fillEqually
+        return view
+    }()
+    private let firstLeafImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "leaf")
+        view.tintColor = QColor.subDeepColor
+        return view
+    }()
+    private let secondLeafImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "leaf")
+        view.tintColor = QColor.subDeepColor
+        return view
+    }()
+    private let thirdLeafImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "leaf")
+        view.tintColor = QColor.subDeepColor
+        return view
+    }()
+    private let fourthLeafImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "leaf")
+        view.tintColor = QColor.subDeepColor
+        return view
+    }()
+    private let fifthLeafImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "leaf")
+        view.tintColor = QColor.subDeepColor
+        return view
+    }()
+    
     private let menuButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "ellipsis"), for: .normal)
@@ -67,7 +104,12 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         todoTextField.becomeFirstResponder()
     }
     override func setConstraints() {
-        contentView.addSubviews([checkboxImageView,todoLabel,todoTextField,menuButton])
+        contentView.addSubviews([checkboxImageView,todoLabel,todoTextField,leafStackView,menuButton])
+        leafStackView.addArrangedSubview(firstLeafImageView)
+        leafStackView.addArrangedSubview(secondLeafImageView)
+        leafStackView.addArrangedSubview(thirdLeafImageView)
+        leafStackView.addArrangedSubview(fourthLeafImageView)
+        leafStackView.addArrangedSubview(fifthLeafImageView)
         
         checkboxImageView.snp.makeConstraints { make in
             make.width.equalTo(16)
@@ -78,18 +120,26 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         todoLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
-            make.trailing.equalToSuperview()
+
         }
         todoTextField.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
             make.trailing.equalToSuperview()
         }
+        leafStackView.snp.makeConstraints { make in
+//            make.bottom.equalTo(todoLabel.snp.bottom)
+//            make.leading.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(todoLabel.snp.trailing).offset(10)
+//            make.width.equalTo(150)
+        }
         menuButton.snp.makeConstraints { make in
                    make.trailing.equalToSuperview().inset(20)
                    make.width.equalTo(16)
                    make.height.equalTo(menuButton.snp.width)
         }
+        
 
     }
     
@@ -108,10 +158,12 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             todoLabel.isHidden = true
             todoTextField.text = todoText
             todoTextField.isHidden = false
+            leafStackView.isHidden = true
         case false:
             todoLabel.isHidden = false
             todoLabel.text = todoText
             todoTextField.isHidden = true
+            leafStackView.isHidden = false
         }
     }
     func setCheckBox(isCompleted: Bool){
@@ -121,6 +173,55 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             checkboxImageView.image = UIImage(systemName: "checkmark.square")
         case false:
             checkboxImageView.image = UIImage(systemName: "square")
+        }
+    }
+    func setLeaf(leafNum: Int){
+        switch leafNum{
+        case 0:
+            leafStackView.isHidden = true
+        case 1:
+            leafStackView.isHidden = false
+            firstLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = true
+            thirdLeafImageView.isHidden = true
+            fourthLeafImageView.isHidden = true
+            fifthLeafImageView.isHidden = true
+        case 2:
+            leafStackView.isHidden = false
+            firstLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = false
+            thirdLeafImageView.isHidden = true
+            fourthLeafImageView.isHidden = true
+            fifthLeafImageView.isHidden = true
+        case 3:
+            leafStackView.isHidden = false
+            firstLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = false
+            thirdLeafImageView.isHidden = false
+            fourthLeafImageView.isHidden = true
+            fifthLeafImageView.isHidden = true
+        case 4:
+            leafStackView.isHidden = false
+            firstLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = false
+            thirdLeafImageView.isHidden = false
+            fourthLeafImageView.isHidden = false
+            fifthLeafImageView.isHidden = true
+        case 5:
+            leafStackView.isHidden = false
+            firstLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = false
+            thirdLeafImageView.isHidden = false
+            fourthLeafImageView.isHidden = false
+            fifthLeafImageView.isHidden = false
+        default:
+            leafStackView.isHidden = false
+            firstLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = false
+            thirdLeafImageView.isHidden = false
+            fourthLeafImageView.isHidden = false
+            fifthLeafImageView.isHidden = false
+            
         }
     }
     

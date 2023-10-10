@@ -22,12 +22,12 @@ class TimerViewController: BaseViewController {
     var leftTimeInterval = TimeInterval()
     let onePomoInterval:TimeInterval = 10
     var todoType: TodoType = .today
-    var selectedTodoId: ObjectId? {
+    var selectedTodoId: ObjectId?
+    var selectedTodoContents = "" {
         didSet{
-            selectedTodo = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).contents
+            todoSelectionButton.setTitle(selectedTodoContents, for: .normal)
         }
     }
-    var selectedTodo = ""
     
     let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
@@ -127,10 +127,12 @@ class TimerViewController: BaseViewController {
             switch todoType{
             case .soon:
                 let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+//                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+                self.selectedTodoContents = item.contents
             case .today:
                 let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+//                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+                self.selectedTodoContents = item.contents
             }
             print(_id)
             
@@ -232,7 +234,7 @@ class TimerViewController: BaseViewController {
     private func startLiveActivity() {
         if #available(iOS 16.2, *) {
             if ActivityAuthorizationInfo().areActivitiesEnabled {
-                let initialContentState = QuokkaWidgetAttributes.ContentState(todo: selectedTodo, seconds: leftTimeInterval, isPaused: false)
+                let initialContentState = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents, seconds: leftTimeInterval, isPaused: false)
                 let activityAttributes = QuokkaWidgetAttributes()
                 let activityContent = ActivityContent(state: initialContentState, staleDate: nil)
                 do {
@@ -246,7 +248,7 @@ class TimerViewController: BaseViewController {
     }
     private func pauseLiveActivity() async {
         if #available(iOS 16.2, *) {
-            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodo,seconds: leftTimeInterval, isPaused: true)
+            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: leftTimeInterval, isPaused: true)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
             
             for activity in Activity<QuokkaWidgetAttributes>.activities {
@@ -257,7 +259,7 @@ class TimerViewController: BaseViewController {
     }
     private func restartTimerIntLiveActivity() async {
         if #available(iOS 16.2, *) {
-            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodo,seconds: leftTimeInterval, isPaused: false)
+            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: leftTimeInterval, isPaused: false)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
             
             for activity in Activity<QuokkaWidgetAttributes>.activities {
@@ -268,7 +270,7 @@ class TimerViewController: BaseViewController {
     }
     private func endLiveActivity() async {
         if #available(iOS 16.2, *) {
-            let finalStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodo, seconds: TimeInterval(), isPaused: true)
+            let finalStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents, seconds: TimeInterval(), isPaused: true)
             let finalContent = ActivityContent(state: finalStatus, staleDate: nil)
             
             for activity in Activity<QuokkaWidgetAttributes>.activities {
@@ -318,6 +320,15 @@ class TimerViewController: BaseViewController {
         if(seconds <= 0){
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
+            guard let id = selectedTodoId else {return}
+            switch todoType {
+            case .soon:
+                var currentLeafNum = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
+                spareTodoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+            case .today:
+                var currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
+                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+            }
         }else{
             seconds -= 1
             timeLabel.text = seconds.timeFormatString
