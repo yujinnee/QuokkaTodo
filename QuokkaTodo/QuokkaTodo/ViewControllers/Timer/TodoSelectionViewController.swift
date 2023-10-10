@@ -15,6 +15,8 @@ class TodoSelectionViewController: BaseViewController {
     var soonArray: Results<SpareTodo>?
     var selectedDate = Date()
     
+    var todoCellTappedClosure: ((ObjectId,TodoType)->Void)?
+ 
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -99,16 +101,20 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        switch indexPath.section{
-//        case 0:
-//            let item = soonArray?[indexPath.row] ?? SpareTodo()
-//            
-//        case 1:
-//            let item = todayArray?[indexPath.row] ?? Todo()
-//        default:
-//            break
-//        }
-//        todoCollectionView.reloadData()
+        switch indexPath.section{
+        case 0:
+            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            todoCellTappedClosure?(item._id,.soon)
+            dismiss(animated: true)
+            
+        case 1:
+            let item = todayArray?[indexPath.row] ?? Todo()
+            todoCellTappedClosure?(item._id,.today)
+            dismiss(animated: true)
+        default:
+            break
+        }
+        todoCollectionView.reloadData()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

@@ -10,6 +10,7 @@ import SwiftUI
 
 import ActivityKit
 import SnapKit
+import RealmSwift
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
@@ -20,7 +21,16 @@ class TimerViewController: BaseViewController {
     var endTime =  Date()
     var leftTimeInterval: TimeInterval = 1500
     let onePomoInterval:TimeInterval = 25*60
-    let selectedTodo = "코딩하기"
+    var todoType: TodoType = .today
+    var selectedTodoId: ObjectId? {
+        didSet{
+            selectedTodo = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).contents
+        }
+    }
+    var selectedTodo = "주스 먹기"
+    
+    let spareTodoRepository = SpareTodoRepository()
+    let todoRepository = TodoRepository()
    
     private let todoSelectionButton = {
         let view = UIButton()
@@ -102,30 +112,48 @@ class TimerViewController: BaseViewController {
     @objc private func todoSelectionButtonDidTap() {
         let todoSelectionViewController = TodoSelectionViewController()
         todoSelectionViewController.modalPresentationStyle = .pageSheet
+        todoSelectionViewController.todoCellTappedClosure = { _id ,todoType in
+            self.selectedTodoId = _id
+            self.todoType = todoType
+            switch todoType{
+            case .soon:
+                let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+            case .today:
+                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+            }
+            print(_id)
+            
+            
+
+            
+        }
         self.present(todoSelectionViewController, animated: true)
     }
    
     @objc private func startButtonDidTap(){
-        if !isPaused{// 첫 시작
+        if !isTimerRunning {
             isTimerRunning = true
-            startTime = Date.now
-            endTime = Date(timeInterval: onePomoInterval, since: startTime)
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-            
-            startLiveActivity()
-            
-        }else {//일시 정지 했다가 재시작
-            isTimerRunning = true
-            isPaused = false
-            startTime = Date.now
-            endTime = Date.now.addingTimeInterval(leftTimeInterval)
-            seconds = leftTimeInterval
-            
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-            Task{
-                await restartTimerIntLiveActivity()
+            if !isPaused {// 첫 시작
+                startTime = Date.now
+                endTime = Date(timeInterval: onePomoInterval, since: startTime)
+                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+                
+                startLiveActivity()
+                
+            }else {//일시 정지 했다가 재시작
+                isPaused = false
+                startTime = Date.now
+                endTime = Date.now.addingTimeInterval(leftTimeInterval)
+                seconds = leftTimeInterval
+                
+                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+                Task{
+                    await restartTimerIntLiveActivity()
+                }
+                
             }
-            
         }
         
 //        if(isTimerRunning == false){
@@ -160,7 +188,7 @@ class TimerViewController: BaseViewController {
     @objc private func pauseButtonDidTap(){
         if(isTimerRunning){
             timer.invalidate()
-            isTimerRunning = false
+//            isTimerRunning = false
             isPaused = true
             leftTimeInterval = endTime.timeIntervalSince(Date.now) + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
             Task{ await pauseLiveActivity()}
