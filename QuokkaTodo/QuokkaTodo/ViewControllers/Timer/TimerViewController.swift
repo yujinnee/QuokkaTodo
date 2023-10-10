@@ -31,7 +31,7 @@ class TimerViewController: BaseViewController {
     
     let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
-   
+    
     private let todoSelectionButton = {
         let view = UIButton()
         view.setTitle("투두 선택하기", for: .normal)
@@ -39,7 +39,7 @@ class TimerViewController: BaseViewController {
         view.setTitleColor(QColor.accentColor, for: .normal)
         view.titleLabel?.font = Pretendard.size20.bold()
         return view
-    }()    
+    }()
     private let timeLabel = {
         let view = UILabel()
         view.font = Pretendard.size35.bold()
@@ -67,20 +67,20 @@ class TimerViewController: BaseViewController {
         view.setTitleColor(QColor.accentColor, for: .normal)
         return view
     }()
-//    private let liveActivityButton = {
-//        let view = UIButton()
-//        view.setTitle("liveActivity", for: .normal)
-//        view.tintColor = QColor.accentColor
-//        view.setTitleColor(QColor.accentColor, for: .normal)
-//        return view
-//    }()
-//    private let endLiveActivityButton = {
-//        let view = UIButton()
-//        view.setTitle("EndLiveActivity", for: .normal)
-//        view.tintColor = QColor.accentColor
-//        view.setTitleColor(QColor.accentColor, for: .normal)
-//        return view
-//    }()
+    //    private let liveActivityButton = {
+    //        let view = UIButton()
+    //        view.setTitle("liveActivity", for: .normal)
+    //        view.tintColor = QColor.accentColor
+    //        view.setTitleColor(QColor.accentColor, for: .normal)
+    //        return view
+    //    }()
+    //    private let endLiveActivityButton = {
+    //        let view = UIButton()
+    //        view.setTitle("EndLiveActivity", for: .normal)
+    //        view.tintColor = QColor.accentColor
+    //        view.setTitleColor(QColor.accentColor, for: .normal)
+    //        return view
+    //    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,14 +99,14 @@ class TimerViewController: BaseViewController {
         }
         
     }
-
+    
     private func addTargets(){
         todoSelectionButton.addTarget(self, action: #selector(todoSelectionButtonDidTap), for: .touchUpInside)
         startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(pauseButtonDidTap), for: .touchUpInside)
         resetButton.addTarget(self, action: #selector(resetButtonDidTap), for: .touchUpInside)
-//        liveActivityButton.addTarget(self, action: #selector(liveActivityButtonDidTap), for: .touchUpInside)
-//        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
+        //        liveActivityButton.addTarget(self, action: #selector(liveActivityButtonDidTap), for: .touchUpInside)
+        //        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
         
     }
     @objc private func todoSelectionButtonDidTap() {
@@ -126,88 +126,92 @@ class TimerViewController: BaseViewController {
             print(_id)
             
             
-
+            
             
         }
         self.present(todoSelectionViewController, animated: true)
     }
-   
+    
     @objc private func startButtonDidTap(){
-        if !isTimerRunning {
+        
+        
+        if !isTimerRunning && !isPaused {// 첫 시작
             isTimerRunning = true
-            if !isPaused {// 첫 시작
-                startTime = Date.now
-                endTime = Date(timeInterval: onePomoInterval, since: startTime)
-                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-                
-                startLiveActivity()
-                
-            }else {//일시 정지 했다가 재시작
-                isPaused = false
-                startTime = Date.now
-                endTime = Date.now.addingTimeInterval(leftTimeInterval)
-                seconds = leftTimeInterval
-                
-                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-                Task{
-                    await restartTimerIntLiveActivity()
-                }
-                
-            }
+            isPaused = false
+            startTime = Date.now
+            endTime = Date(timeInterval: onePomoInterval, since: startTime)
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            
+            startLiveActivity()
         }
         
-//        if(isTimerRunning == false){
-//            isTimerRunning = true
-//
-//            timer.invalidate()// 확실하게 다른 타이머 돌아가는게 없도록 하기
-    //
-//            
-//            DispatchQueue.global().async {
-//                print(RunLoop.current == RunLoop.main)
-//                
-//                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-//                    print(Date())
-//                    self.seconds -= 1
-//                    DispatchQueue.main.sync{
-//                        self.timeLabel.text = self.seconds.timeFormatString
-//                    }
-//                   
-//                    
-//                    if(self.seconds == 0){
-//                        timer.invalidate()
-//                    }
-//                }
-//                
-//                while self.shouldKeepRunning {
-//                    RunLoop.current.run(until: .now + 0.1)
-//                }
-//            }
-//        }
-       
+        if isTimerRunning && isPaused{//일시 정지 했다가 재시작
+            isPaused = false
+            startTime = Date.now
+            endTime = Date.now.addingTimeInterval(leftTimeInterval)
+            seconds = leftTimeInterval
+            
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            Task{
+                await restartTimerIntLiveActivity()
+            }
+            
+        }
+        
+        
+        //        if(isTimerRunning == false){
+        //            isTimerRunning = true
+        //
+        //            timer.invalidate()// 확실하게 다른 타이머 돌아가는게 없도록 하기
+        //
+        //
+        //            DispatchQueue.global().async {
+        //                print(RunLoop.current == RunLoop.main)
+        //
+        //                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        //                    print(Date())
+        //                    self.seconds -= 1
+        //                    DispatchQueue.main.sync{
+        //                        self.timeLabel.text = self.seconds.timeFormatString
+        //                    }
+        //
+        //
+        //                    if(self.seconds == 0){
+        //                        timer.invalidate()
+        //                    }
+        //                }
+        //
+        //                while self.shouldKeepRunning {
+        //                    RunLoop.current.run(until: .now + 0.1)
+        //                }
+        //            }
+        //        }
+        
     }
     @objc private func pauseButtonDidTap(){
         if(isTimerRunning){
             timer.invalidate()
-//            isTimerRunning = false
+            //            isTimerRunning = false
             isPaused = true
             leftTimeInterval = endTime.timeIntervalSince(Date.now) + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
             Task{ await pauseLiveActivity()}
         }
-       
+        
     }
     @objc private func resetButtonDidTap() {
         if isTimerRunning{
             Task{ await endLiveActivity()}
+            timer.invalidate()
+            isTimerRunning = false
+            isPaused = false
+            
+            seconds = 1500
+            leftTimeInterval = 1500
+            timeLabel.text = seconds.timeFormatString
+            
         }
-        timer.invalidate()
-        isTimerRunning = false
-        isPaused = false
         
-        seconds = 1500
-        leftTimeInterval = 1500
-        timeLabel.text = seconds.timeFormatString
         
-       
     }
     @objc private func liveActivityButtonDidTap(){
         startLiveActivity()
@@ -235,7 +239,7 @@ class TimerViewController: BaseViewController {
         if #available(iOS 16.2, *) {
             let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodo,seconds: leftTimeInterval, isPaused: true)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
-
+            
             for activity in Activity<QuokkaWidgetAttributes>.activities {
                 await activity.update(updateContent)
                 print("Updating the Live Activity(forPause): \(activity.id)")
@@ -246,7 +250,7 @@ class TimerViewController: BaseViewController {
         if #available(iOS 16.2, *) {
             let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodo,seconds: leftTimeInterval, isPaused: false)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
-
+            
             for activity in Activity<QuokkaWidgetAttributes>.activities {
                 await activity.update(updateContent)
                 print("Updating the Live Activity(Timer): \(activity.id)")
@@ -257,7 +261,7 @@ class TimerViewController: BaseViewController {
         if #available(iOS 16.2, *) {
             let finalStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodo, seconds: TimeInterval(), isPaused: true)
             let finalContent = ActivityContent(state: finalStatus, staleDate: nil)
-
+            
             for activity in Activity<QuokkaWidgetAttributes>.activities {
                 await activity.end(finalContent, dismissalPolicy: .immediate)
                 print("Ending the Live Activity(Timer): \(activity.id)")
@@ -292,14 +296,14 @@ class TimerViewController: BaseViewController {
             make.centerY.equalTo(pauseButton)
             make.leading.equalTo(pauseButton.snp.trailing).offset(60)
         }
-//        liveActivityButton.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.top.equalTo(resetButton.snp.bottom).offset(10)
-//        }
-//        endLiveActivityButton.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.top.equalTo(liveActivityButton.snp.bottom).offset(10)
-//        }
+        //        liveActivityButton.snp.makeConstraints { make in
+        //            make.centerX.equalToSuperview()
+        //            make.top.equalTo(resetButton.snp.bottom).offset(10)
+        //        }
+        //        endLiveActivityButton.snp.makeConstraints { make in
+        //            make.centerX.equalToSuperview()
+        //            make.top.equalTo(liveActivityButton.snp.bottom).offset(10)
+        //        }
     }
     @objc func timerTimeChanged() {
         seconds -= 1
@@ -309,5 +313,5 @@ class TimerViewController: BaseViewController {
             timer.invalidate()
         }
     }
-
+    
 }
