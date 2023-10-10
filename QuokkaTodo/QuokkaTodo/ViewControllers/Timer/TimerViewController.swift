@@ -14,20 +14,20 @@ import RealmSwift
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
-    var seconds:Double = 1500
+    var seconds = Double()
     var isTimerRunning = false
     var isPaused = false
     var startTime = Date()
     var endTime =  Date()
-    var leftTimeInterval: TimeInterval = 1500
-    let onePomoInterval:TimeInterval = 25*60
+    var leftTimeInterval = TimeInterval()
+    let onePomoInterval:TimeInterval = 10
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId? {
         didSet{
             selectedTodo = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).contents
         }
     }
-    var selectedTodo = "주스 먹기"
+    var selectedTodo = ""
     
     let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
@@ -86,16 +86,25 @@ class TimerViewController: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
         addTargets()
+        setTimeInterval(num: onePomoInterval)
+    }
+    func setTimeInterval(num: Double){
+        seconds = num
+        leftTimeInterval = num
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidLoad()
-        if(endTime.compare(.now) == .orderedAscending) {// 시간 지났을 때
-            seconds = 1500
+        if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 시간 지났을 때
+            seconds = onePomoInterval
+            print(seconds)
+            print(seconds.timeFormatString)
             timeLabel.text = seconds.timeFormatString
+            print("지남?")
         }else{
             leftTimeInterval = endTime.timeIntervalSince(.now)
             seconds = leftTimeInterval
             timeLabel.text = seconds.timeFormatString
+            print("안지남?")
         }
         
     }
@@ -205,8 +214,8 @@ class TimerViewController: BaseViewController {
             isTimerRunning = false
             isPaused = false
             
-            seconds = 1500
-            leftTimeInterval = 1500
+            seconds = onePomoInterval
+            leftTimeInterval = onePomoInterval
             timeLabel.text = seconds.timeFormatString
             
         }
@@ -306,11 +315,12 @@ class TimerViewController: BaseViewController {
         //        }
     }
     @objc func timerTimeChanged() {
-        seconds -= 1
-        timeLabel.text = seconds.timeFormatString
-        
-        if(seconds == 0){
+        if(seconds <= 0){
             timer.invalidate()
+            timeLabel.text = 0.timeFormatString
+        }else{
+            seconds -= 1
+            timeLabel.text = seconds.timeFormatString
         }
     }
     
