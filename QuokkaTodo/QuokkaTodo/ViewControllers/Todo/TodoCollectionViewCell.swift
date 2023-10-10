@@ -45,32 +45,32 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     }()
     private let firstLeafImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "leaf")
-        view.tintColor = QColor.subDeepColor
+        view.image = UIImage(systemName: "leaf.fill")
+        view.tintColor = QColor.subLightColor
         return view
     }()
     private let secondLeafImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "leaf")
-        view.tintColor = QColor.subDeepColor
+        view.image = UIImage(systemName: "leaf.fill")
+        view.tintColor = QColor.subLightColor
         return view
     }()
     private let thirdLeafImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "leaf")
-        view.tintColor = QColor.subDeepColor
+        view.image = UIImage(systemName: "leaf.fill")
+        view.tintColor = QColor.subLightColor
         return view
     }()
     private let fourthLeafImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "leaf")
-        view.tintColor = QColor.subDeepColor
+        view.image = UIImage(systemName: "leaf.fill")
+        view.tintColor = QColor.subLightColor
         return view
     }()
     private let fifthLeafImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "leaf")
-        view.tintColor = QColor.subDeepColor
+        view.image = UIImage(systemName: "leaf.fill")
+        view.tintColor = QColor.subLightColor
         return view
     }()
     
@@ -130,14 +130,30 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         leafStackView.snp.makeConstraints { make in
 //            make.bottom.equalTo(todoLabel.snp.bottom)
 //            make.leading.equalToSuperview()
-            make.centerY.equalToSuperview()
+//            make.centerY.equalToSuperview()
             make.leading.equalTo(todoLabel.snp.trailing).offset(10)
+            make.top.bottom.equalToSuperview().inset(3)
 //            make.width.equalTo(150)
         }
         menuButton.snp.makeConstraints { make in
                    make.trailing.equalToSuperview().inset(20)
                    make.width.equalTo(16)
                    make.height.equalTo(menuButton.snp.width)
+        }
+        firstLeafImageView.snp.makeConstraints { make in
+            make.width.equalTo(firstLeafImageView.snp.height)
+        }
+        secondLeafImageView.snp.makeConstraints { make in
+            make.width.equalTo(secondLeafImageView.snp.height)
+        }
+        thirdLeafImageView.snp.makeConstraints { make in
+            make.width.equalTo(thirdLeafImageView.snp.height)
+        }
+        fourthLeafImageView.snp.makeConstraints { make in
+            make.width.equalTo(fourthLeafImageView.snp.height)
+        }
+        fifthLeafImageView.snp.makeConstraints { make in
+            make.width.equalTo(fifthLeafImageView.snp.height)
         }
         
 
