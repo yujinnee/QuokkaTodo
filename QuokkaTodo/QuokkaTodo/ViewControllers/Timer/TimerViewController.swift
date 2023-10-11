@@ -99,12 +99,10 @@ class TimerViewController: BaseViewController {
             print(seconds)
             print(seconds.timeFormatString)
             timeLabel.text = seconds.timeFormatString
-            print("지남?")
         }else{
             leftTimeInterval = endTime.timeIntervalSince(.now)
             seconds = leftTimeInterval
             timeLabel.text = seconds.timeFormatString
-            print("안지남?")
         }
         
     }
@@ -129,10 +127,13 @@ class TimerViewController: BaseViewController {
                 let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
 //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
+                Task{await self.updateTodoLiveActivity()}
+                
             case .today:
                 let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
 //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
+                Task{await self.updateTodoLiveActivity()}
             }
             print(_id)
             
@@ -164,7 +165,7 @@ class TimerViewController: BaseViewController {
             
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             Task{
-                await restartTimerIntLiveActivity()
+                await restartTimerInLiveActivity()
             }
             
         }
@@ -222,7 +223,25 @@ class TimerViewController: BaseViewController {
             
         }
         
-        
+    }
+
+    @objc func timerTimeChanged() {
+        if(seconds <= 0){
+            timer.invalidate()
+            timeLabel.text = 0.timeFormatString
+            guard let id = selectedTodoId else {return}
+            switch todoType {
+            case .soon:
+                var currentLeafNum = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
+                spareTodoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+            case .today:
+                var currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
+                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+            }
+        }else{
+            seconds -= 1
+            timeLabel.text = seconds.timeFormatString
+        }
     }
     @objc private func liveActivityButtonDidTap(){
         startLiveActivity()
@@ -257,7 +276,18 @@ class TimerViewController: BaseViewController {
             }
         }
     }
-    private func restartTimerIntLiveActivity() async {
+    private func restartTimerInLiveActivity() async {
+        if #available(iOS 16.2, *) {
+            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: leftTimeInterval, isPaused: false)
+            let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
+            
+            for activity in Activity<QuokkaWidgetAttributes>.activities {
+                await activity.update(updateContent)
+                print("Updating the Live Activity(Timer): \(activity.id)")
+            }
+        }
+    }
+    private func updateTodoLiveActivity() async {
         if #available(iOS 16.2, *) {
             let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: leftTimeInterval, isPaused: false)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
@@ -315,24 +345,6 @@ class TimerViewController: BaseViewController {
         //            make.centerX.equalToSuperview()
         //            make.top.equalTo(liveActivityButton.snp.bottom).offset(10)
         //        }
-    }
-    @objc func timerTimeChanged() {
-        if(seconds <= 0){
-            timer.invalidate()
-            timeLabel.text = 0.timeFormatString
-            guard let id = selectedTodoId else {return}
-            switch todoType {
-            case .soon:
-                var currentLeafNum = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
-                spareTodoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-            case .today:
-                var currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
-                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-            }
-        }else{
-            seconds -= 1
-            timeLabel.text = seconds.timeFormatString
-        }
     }
     
 }
