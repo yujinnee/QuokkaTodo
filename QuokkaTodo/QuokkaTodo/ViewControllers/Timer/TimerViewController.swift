@@ -12,6 +12,12 @@ import ActivityKit
 import SnapKit
 import RealmSwift
 
+extension Int {
+    var degreesToRadians: CGFloat {
+        return CGFloat(self) * .pi / 180
+    }
+}
+
 class TimerViewController: BaseViewController {
     var timer = Timer()
     var seconds = Double()
@@ -20,7 +26,7 @@ class TimerViewController: BaseViewController {
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 10
+    let onePomoInterval:TimeInterval = 60*25
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -46,6 +52,31 @@ class TimerViewController: BaseViewController {
         view.tintColor = QColor.accentColor
         return view
     }()
+    private lazy var circularPath: UIBezierPath = {
+        return UIBezierPath(arcCenter: CGPoint(x: view.bounds.midX, y: view.bounds.midY-70),
+                               radius: 140, // 반지름
+                               startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
+                               endAngle: 270.degreesToRadians, // 2시 방향
+                               clockwise: true)
+       }()
+       
+       private lazy var trackLayer: CAShapeLayer = {
+           let layer = CAShapeLayer()
+           layer.path = circularPath.cgPath
+           layer.fillColor = UIColor.clear.cgColor
+           layer.strokeColor = QColor.subLightColor.cgColor
+           layer.lineWidth = 15
+           return layer
+       }()
+
+       private lazy var barLayer: CAShapeLayer = {
+           let layer = CAShapeLayer()
+           layer.path = circularPath.cgPath
+           layer.fillColor = UIColor.clear.cgColor
+           layer.strokeColor = QColor.accentColor.cgColor
+           layer.lineWidth = 15
+           return layer
+       }()
     private let startButton = {
         let view = UIButton()
         view.setTitle("start", for: .normal)
@@ -88,6 +119,12 @@ class TimerViewController: BaseViewController {
         addTargets()
         setTimeInterval(num: onePomoInterval)
     }
+    override func configureView() {
+        navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
+        timeLabel.text = seconds.timeFormatString
+        
+       
+    }
     func setTimeInterval(num: Double){
         seconds = num
         leftTimeInterval = num
@@ -116,6 +153,14 @@ class TimerViewController: BaseViewController {
         //        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
         
     }
+    private func animateToBarLayer() {
+           let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
+           strokeAnimation.fromValue = 0
+           strokeAnimation.toValue = 1
+           strokeAnimation.duration = seconds
+           
+           barLayer.add(strokeAnimation, forKey: nil)
+       }
     @objc private func todoSelectionButtonDidTap() {
         let todoSelectionViewController = TodoSelectionViewController()
         todoSelectionViewController.modalPresentationStyle = .pageSheet
@@ -153,7 +198,7 @@ class TimerViewController: BaseViewController {
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-            
+            animateToBarLayer()
             startLiveActivity()
         }
         
@@ -250,6 +295,7 @@ class TimerViewController: BaseViewController {
         Task{ await endLiveActivity() }
     }
     
+    
     private func startLiveActivity() {
         if #available(iOS 16.2, *) {
             if ActivityAuthorizationInfo().areActivitiesEnabled {
@@ -289,7 +335,7 @@ class TimerViewController: BaseViewController {
     }
     private func updateTodoLiveActivity() async {
         if #available(iOS 16.2, *) {
-            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: leftTimeInterval, isPaused: false)
+            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: seconds, isPaused: false)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
             
             for activity in Activity<QuokkaWidgetAttributes>.activities {
@@ -310,13 +356,14 @@ class TimerViewController: BaseViewController {
         }
     }
     
-    override func configureView() {
-        navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
-        timeLabel.text = seconds.timeFormatString
-    }
+   
     
     override func setConstraints() {
         view.addSubviews([todoSelectionButton,timeLabel,startButton,pauseButton,resetButton])
+        
+        view.layer.addSublayer(trackLayer)
+        view.layer.addSublayer(barLayer)
+        
         todoSelectionButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
@@ -331,7 +378,7 @@ class TimerViewController: BaseViewController {
         }
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timeLabel.snp.bottom).offset(100)
+            make.top.equalTo(timeLabel.snp.bottom).offset(200)
         }
         resetButton.snp.makeConstraints { make in
             make.centerY.equalTo(pauseButton)
