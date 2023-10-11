@@ -13,8 +13,6 @@ class TodoSelectionViewController: BaseViewController {
     let spareTodoRepository = SpareTodoRepository()
     var todayArray: Results<Todo>?
     var soonArray: Results<SpareTodo>?
-    var selectedDate = Date()
-    
     var todoCellTappedClosure: ((ObjectId,TodoType)->Void)?
  
     private lazy var todoCollectionView = {
@@ -40,8 +38,8 @@ class TodoSelectionViewController: BaseViewController {
             sheetPresentationController.preferredCornerRadius = 20
         }
         setDelegate()
-        fetchTodoData()
-        fetchSpareTodoData()
+        fetchTodayUncompletedTodoData()
+        fetchSpareUncompletedTodoData()
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -60,12 +58,13 @@ class TodoSelectionViewController: BaseViewController {
         todoCollectionView.delegate = self
         todoCollectionView.dataSource = self
     }
-    func fetchTodoData(){
-        let date = selectedDate
-        todayArray = todoRepository.fetchSelectedDateTodo(date: date)
+    func fetchTodayUncompletedTodoData(){
+        let today = Date()
+        todayArray = todoRepository.fetchSelectedDateUnCompletedTodo(date: today)
     }
-    func fetchSpareTodoData() {
-        soonArray = spareTodoRepository.fetchAll()
+    func fetchSpareUncompletedTodoData() {
+        let today = Date()
+        soonArray = spareTodoRepository.fetchUnCompletedTodo()
     }
 
 }

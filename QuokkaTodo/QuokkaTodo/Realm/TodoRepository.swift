@@ -47,6 +47,13 @@ class TodoRepository: todoRepositoryType{
         }
         return result
     }
+    func fetchSelectedDateUnCompletedTodo(date:Date) -> Results<Todo>{
+        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
+        let result = realm.objects(Todo.self).where {
+            $0.planDate.contains(dateString) && $0.isCompleted == false
+        }
+        return result
+    }
     func readTodo(_id: ObjectId) -> Todo {
         let result = realm.object(ofType: Todo.self, forPrimaryKey: _id) ?? Todo()
         return result

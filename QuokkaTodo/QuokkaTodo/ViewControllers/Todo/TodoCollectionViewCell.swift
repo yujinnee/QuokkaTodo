@@ -18,7 +18,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     
     private let checkboxImageView = {
         let view = UIImageView()
-//        view.image = UIImage(systemName: "checkmark.square")
+        //        view.image = UIImage(systemName: "checkmark.square")
         view.image = UIImage(systemName: "square")
         view.tintColor = .systemGray3
         return view
@@ -73,7 +73,12 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         view.tintColor = QColor.subLightColor
         return view
     }()
-    
+    private let leafNumLabel = {
+        let view = UILabel()
+        view.font = Pretendard.size10.bold()
+        view.textColor = QColor.subDeepColor
+        return view
+    }()
     private let menuButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "ellipsis"), for: .normal)
@@ -110,6 +115,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         leafStackView.addArrangedSubview(thirdLeafImageView)
         leafStackView.addArrangedSubview(fourthLeafImageView)
         leafStackView.addArrangedSubview(fifthLeafImageView)
+        firstLeafImageView.addSubview(leafNumLabel)
         
         checkboxImageView.snp.makeConstraints { make in
             make.width.equalTo(16)
@@ -155,6 +161,9 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         fifthLeafImageView.snp.makeConstraints { make in
             make.width.equalTo(fifthLeafImageView.snp.height)
         }
+        leafNumLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
         
 
     }
@@ -194,8 +203,10 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     func setLeaf(leafNum: Int){
         switch leafNum{
         case 0:
+            leafNumLabel.isHidden = true
             leafStackView.isHidden = true
         case 1:
+            leafNumLabel.isHidden = true
             leafStackView.isHidden = false
             firstLeafImageView.isHidden = false
             secondLeafImageView.isHidden = true
@@ -203,6 +214,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             fourthLeafImageView.isHidden = true
             fifthLeafImageView.isHidden = true
         case 2:
+            leafNumLabel.isHidden = true
             leafStackView.isHidden = false
             firstLeafImageView.isHidden = false
             secondLeafImageView.isHidden = false
@@ -210,6 +222,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             fourthLeafImageView.isHidden = true
             fifthLeafImageView.isHidden = true
         case 3:
+            leafNumLabel.isHidden = true
             leafStackView.isHidden = false
             firstLeafImageView.isHidden = false
             secondLeafImageView.isHidden = false
@@ -217,6 +230,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             fourthLeafImageView.isHidden = true
             fifthLeafImageView.isHidden = true
         case 4:
+            leafNumLabel.isHidden = true
             leafStackView.isHidden = false
             firstLeafImageView.isHidden = false
             secondLeafImageView.isHidden = false
@@ -224,6 +238,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             fourthLeafImageView.isHidden = false
             fifthLeafImageView.isHidden = true
         case 5:
+            leafNumLabel.isHidden = true
             leafStackView.isHidden = false
             firstLeafImageView.isHidden = false
             secondLeafImageView.isHidden = false
@@ -231,12 +246,14 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             fourthLeafImageView.isHidden = false
             fifthLeafImageView.isHidden = false
         default:
+            leafNumLabel.isHidden = false
+            leafNumLabel.text = "\(leafNum)"
             leafStackView.isHidden = false
             firstLeafImageView.isHidden = false
-            secondLeafImageView.isHidden = false
-            thirdLeafImageView.isHidden = false
-            fourthLeafImageView.isHidden = false
-            fifthLeafImageView.isHidden = false
+            secondLeafImageView.isHidden = true
+            thirdLeafImageView.isHidden = true
+            fourthLeafImageView.isHidden = true
+            fifthLeafImageView.isHidden = true
             
         }
     }
