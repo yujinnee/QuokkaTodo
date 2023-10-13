@@ -55,7 +55,6 @@ class TimerViewController: BaseViewController {
     private let timeLabel = {
         let view = UILabel()
         view.font = Pretendard.size35.bold()
-        view.tintColor = QColor.accentColor
         return view
     }()
     private lazy var circularProgressView = {
@@ -389,7 +388,7 @@ class TimerViewController: BaseViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
             make.horizontalEdges.equalToSuperview().inset(50)
-            make.height.equalTo(30)
+            make.height.equalTo(35)
         }
         circularProgressView.snp.makeConstraints { make in
             make.top.equalTo(todoSelectionButton.snp.bottom).offset(30)

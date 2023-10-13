@@ -15,12 +15,19 @@ class TodoSelectionViewController: BaseViewController {
     var soonArray: Results<SpareTodo>?
     var todoCellTappedClosure: ((ObjectId,TodoType)->Void)?
  
+    private let titleLabel = {
+        let view = UILabel()
+        view.font = Pretendard.size21.bold()
+        view.textColor = QColor.accentColor
+        view.text = "진행 할 투두 선택하기"
+        return view
+    }()
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = CGFloat(16)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: view.frame.width-40, height: 30)
+        layout.itemSize = CGSize(width: view.frame.width-40, height: 40)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
         view.bounces = true
@@ -47,9 +54,13 @@ class TodoSelectionViewController: BaseViewController {
         todoCollectionView.reloadData()
     }
     override func setConstraints() {
-        view.addSubview(todoCollectionView)
+        view.addSubviews([titleLabel,todoCollectionView])
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(30)
+            make.horizontalEdges.equalToSuperview().inset(30)
+        }
         todoCollectionView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(50)
+            make.top.equalTo(titleLabel).offset(40)
             make.horizontalEdges.bottom.equalToSuperview().inset(20)
         }
     }
@@ -86,6 +97,7 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         default:
             break
         }
+        cell.setLayout()
         return cell
     }
     
@@ -139,6 +151,7 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         
         return header
     }
+    
     
     
 }

@@ -24,6 +24,12 @@ class TodoPlayCollectionViewCell: BaseCollectionViewCell {
     }()
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setLayout()
+        
+//        backgroundView?.layer.cornerRadius = 10
+//        backgroundView?.layer.borderWidth = 2
+//        backgroundView?.layer.borderColor = QColor.backgroundColor.cgColor
+        print("안함?")
         
     }
     
@@ -40,13 +46,18 @@ class TodoPlayCollectionViewCell: BaseCollectionViewCell {
         }
         playButton.snp.makeConstraints { make in
                    make.trailing.equalToSuperview().inset(20)
-                   make.width.equalTo(20)
+            make.verticalEdges.equalToSuperview().inset(3)
                    make.height.equalTo(playButton.snp.width)
         }
     }
     
     func setData(todo: String) {
         todoLabel.text = todo
+    }
+    func setLayout(){
+        layer.cornerRadius = 10
+        layer.borderWidth = 2
+        layer.borderColor = QColor.grayColor.cgColor
     }
 }
 
