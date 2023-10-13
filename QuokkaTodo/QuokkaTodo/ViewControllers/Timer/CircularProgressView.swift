@@ -11,7 +11,6 @@ class CircularProgressView: BaseView {
     var startAngle =  -90.degreesToRadians
     var progress: CGFloat = 0 {
         didSet {
-            print(progress)
             animateToBarLayer()
         }
     }
@@ -68,7 +67,7 @@ class CircularProgressView: BaseView {
     }
     override func draw(_ rect: CGRect) {
         // 원의 경로 생성
-        print(#function)
+//        print(#function)
         //        let circlePath = UIBezierPath(ovalIn: rect)
         // 원 내부 채우기 색상
         //        UIColor.lightGray.setFill()
@@ -91,7 +90,7 @@ class CircularProgressView: BaseView {
     }
     private func animateToBarLayer() {
         let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        print(progress)
+//        print(progress)
         strokeAnimation.fromValue = progress
         strokeAnimation.toValue = progress-1/10
         strokeAnimation.duration = 1.0
