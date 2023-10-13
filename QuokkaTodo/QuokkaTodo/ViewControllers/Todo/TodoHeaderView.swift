@@ -54,6 +54,9 @@ class TodoHeaderView: BaseCollectionReusableView {
             make.height.equalTo(20)
         }
     }
+    func hideAddButton(){
+        addButton.isHidden = true
+    }
     
     func setTitle(text: String) {
         titleLabel.text = text

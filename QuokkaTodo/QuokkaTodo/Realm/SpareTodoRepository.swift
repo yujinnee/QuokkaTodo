@@ -52,6 +52,12 @@ class SpareTodoRepository: spareTodoRepositoryType{
         }
         return result
     }
+    func fetchUnCompletedTodo() -> Results<SpareTodo>{
+        let result = realm.objects(SpareTodo.self).where {
+            $0.isCompleted == false
+        }
+        return result
+    }
     func readTodo(_id: ObjectId) -> SpareTodo {
         let result = realm.object(ofType: SpareTodo.self, forPrimaryKey: _id) ?? SpareTodo()
         return result

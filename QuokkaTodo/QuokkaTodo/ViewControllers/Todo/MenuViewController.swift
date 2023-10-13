@@ -70,7 +70,6 @@ class MenuViewController: BaseViewController {
             sheetPresentationController.prefersGrabberVisible = true
             sheetPresentationController.preferredCornerRadius = 20
         }
-        
         addTargets()
         setTodoLabel()
         setTodoTypeLabel()
