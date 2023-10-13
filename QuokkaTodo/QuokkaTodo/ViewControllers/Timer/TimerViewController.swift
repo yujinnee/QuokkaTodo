@@ -20,13 +20,17 @@ extension Int {
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
-    var seconds = Double()
+    var seconds = Double(){
+        didSet{
+            circularProgressView.progress = seconds/10
+        }
+    }
     var isTimerRunning = false
     var isPaused = false
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 60*25
+    let onePomoInterval:TimeInterval = 10
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -41,9 +45,11 @@ class TimerViewController: BaseViewController {
     private let todoSelectionButton = {
         let view = UIButton()
         view.setTitle("투두 선택하기", for: .normal)
-        view.tintColor = QColor.accentColor
-        view.setTitleColor(QColor.accentColor, for: .normal)
-        view.titleLabel?.font = Pretendard.size20.bold()
+        view.layer.borderColor = QColor.grayColor.cgColor
+        view.layer.borderWidth = 2
+        view.layer.cornerRadius = 8
+        view.setTitleColor(QColor.fontColor, for: .normal)
+        view.titleLabel?.font = Pretendard.size15.bold()
         return view
     }()
     private let timeLabel = {
@@ -52,50 +58,66 @@ class TimerViewController: BaseViewController {
         view.tintColor = QColor.accentColor
         return view
     }()
-    private lazy var circularPath: UIBezierPath = {
-        return UIBezierPath(arcCenter: CGPoint(x: view.bounds.midX, y: view.bounds.midY-70),
-                               radius: 140, // 반지름
-                               startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
-                               endAngle: 270.degreesToRadians, // 2시 방향
-                               clockwise: true)
-       }()
-       
-       private lazy var trackLayer: CAShapeLayer = {
-           let layer = CAShapeLayer()
-           layer.path = circularPath.cgPath
-           layer.fillColor = UIColor.clear.cgColor
-           layer.strokeColor = QColor.subLightColor.cgColor
-           layer.lineWidth = 15
-           return layer
-       }()
-
-       private lazy var barLayer: CAShapeLayer = {
-           let layer = CAShapeLayer()
-           layer.path = circularPath.cgPath
-           layer.fillColor = UIColor.clear.cgColor
-           layer.strokeColor = QColor.accentColor.cgColor
-           layer.lineWidth = 15
-           return layer
-       }()
+    private lazy var circularProgressView = {
+        let view = CircularProgressView(seconds:seconds)
+        return view
+    }()
+//    private lazy var circularPath: UIBezierPath = {
+//        return UIBezierPath(arcCenter: CGPoint(x: view.bounds.midX, y: view.bounds.midY-70),
+//                            radius: 140, // 반지름
+//                            startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
+//                            endAngle: 270.degreesToRadians, // 2시 방향
+//                            clockwise: true)
+//    }()
+//    
+//    private lazy var trackLayer: CAShapeLayer = {
+//        let layer = CAShapeLayer()
+//        layer.path = circularPath.cgPath
+//        layer.fillColor = UIColor.clear.cgColor
+//        layer.strokeColor = QColor.subLightColor.cgColor
+//        layer.lineWidth = 15
+//        return layer
+//    }()
+//    
+//    private lazy var barLayer: CAShapeLayer = {
+//        let layer = CAShapeLayer()
+//        layer.path = circularPath.cgPath
+//        layer.fillColor = UIColor.clear.cgColor
+//        layer.strokeColor = QColor.accentColor.cgColor
+//        layer.lineWidth = 15
+//        return layer
+//    }()
     private let startButton = {
         let view = UIButton()
-        view.setTitle("start", for: .normal)
+//        view.setTitle("start", for: .normal)
+        view.setImage(UIImage(systemName: "play.fill"), for: .normal)
         view.tintColor = QColor.accentColor
-        view.setTitleColor(QColor.accentColor, for: .normal)
+        view.layer.cornerRadius = 8
+        view.layer.borderWidth = 1
+        view.layer.borderColor = QColor.accentColor.cgColor
         return view
     }()
     private let pauseButton = {
         let view = UIButton()
-        view.setTitle("pause", for: .normal)
+//        view.setTitle("pause", for: .normal)
+        view.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         view.tintColor = QColor.accentColor
-        view.setTitleColor(QColor.accentColor, for: .normal)
+        view.layer.cornerRadius = 8
+
+        view.layer.borderWidth = 1
+        view.layer.borderColor = QColor.accentColor.cgColor
+
         return view
     }()
     private let resetButton = {
         let view = UIButton()
-        view.setTitle("reset", for: .normal)
+        view.setImage(UIImage(systemName: "arrow.circlepath"), for: .normal)
         view.tintColor = QColor.accentColor
-        view.setTitleColor(QColor.accentColor, for: .normal)
+        view.layer.cornerRadius = 8
+
+        view.layer.borderWidth = 1
+        view.layer.borderColor = QColor.accentColor.cgColor
+
         return view
     }()
     //    private let liveActivityButton = {
@@ -123,7 +145,7 @@ class TimerViewController: BaseViewController {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         timeLabel.text = seconds.timeFormatString
         
-       
+        
     }
     func setTimeInterval(num: Double){
         seconds = num
@@ -153,14 +175,14 @@ class TimerViewController: BaseViewController {
         //        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
         
     }
-    private func animateToBarLayer() {
-           let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
-           strokeAnimation.fromValue = 0
-           strokeAnimation.toValue = 1
-           strokeAnimation.duration = seconds
-           
-           barLayer.add(strokeAnimation, forKey: nil)
-       }
+//    private func animateToBarLayer() {
+//        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
+//        strokeAnimation.fromValue = 0
+//        strokeAnimation.toValue = 1
+//        strokeAnimation.duration = seconds
+//        
+//        barLayer.add(strokeAnimation, forKey: nil)
+//    }
     @objc private func todoSelectionButtonDidTap() {
         let todoSelectionViewController = TodoSelectionViewController()
         todoSelectionViewController.modalPresentationStyle = .pageSheet
@@ -170,13 +192,13 @@ class TimerViewController: BaseViewController {
             switch todoType{
             case .soon:
                 let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-//                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+                //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
                 
             case .today:
                 let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-//                self.todoSelectionButton.setTitle(item.contents, for: .normal)
+                //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
             }
@@ -191,14 +213,13 @@ class TimerViewController: BaseViewController {
     
     @objc private func startButtonDidTap(){
         
-        
         if !isTimerRunning && !isPaused {// 첫 시작
             isTimerRunning = true
             isPaused = false
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-            animateToBarLayer()
+//            animateToBarLayer()
             startLiveActivity()
         }
         
@@ -269,7 +290,7 @@ class TimerViewController: BaseViewController {
         }
         
     }
-
+    
     @objc func timerTimeChanged() {
         if(seconds <= 0){
             timer.invalidate()
@@ -356,33 +377,46 @@ class TimerViewController: BaseViewController {
         }
     }
     
-   
+    
     
     override func setConstraints() {
-        view.addSubviews([todoSelectionButton,timeLabel,startButton,pauseButton,resetButton])
-        
-        view.layer.addSublayer(trackLayer)
-        view.layer.addSublayer(barLayer)
+        view.addSubviews([todoSelectionButton,circularProgressView,startButton,pauseButton,resetButton])
+        circularProgressView.addSubview(timeLabel)
+//        view.layer.addSublayer(trackLayer)
+//        view.layer.addSublayer(barLayer)
         
         todoSelectionButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.horizontalEdges.equalToSuperview().inset(50)
+            make.height.equalTo(30)
+        }
+        circularProgressView.snp.makeConstraints { make in
+            make.top.equalTo(todoSelectionButton.snp.bottom).offset(30)
+            make.centerX.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(30)
+            make.height.equalTo(circularProgressView.snp.width)
         }
         timeLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-70)
+            make.center.equalToSuperview()
         }
         startButton.snp.makeConstraints { make in
             make.centerY.equalTo(pauseButton)
-            make.trailing.equalTo(pauseButton.snp.leading).offset(-60)
+            make.width.equalTo(80)
+            make.height.equalTo(40)
+            make.trailing.equalTo(pauseButton.snp.leading).offset(-30)
         }
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timeLabel.snp.bottom).offset(200)
+            make.width.equalTo(80)
+            make.height.equalTo(40)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(50)
         }
         resetButton.snp.makeConstraints { make in
             make.centerY.equalTo(pauseButton)
-            make.leading.equalTo(pauseButton.snp.trailing).offset(60)
+            make.width.equalTo(80)
+            make.height.equalTo(40)
+            make.leading.equalTo(pauseButton.snp.trailing).offset(30)
         }
         //        liveActivityButton.snp.makeConstraints { make in
         //            make.centerX.equalToSuperview()

@@ -33,6 +33,7 @@
 		6A1A88CD2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1A88CC2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift */; };
 		6A60843E2AC95887005B85C7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60843D2AC95887005B85C7 /* MenuViewController.swift */; };
 		6A6ED6642ACDD39B00CD902B /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6ED6632ACDD39B00CD902B /* Int+Extension.swift */; };
+		6A7A91D42AD7E44A00633C06 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7A91D32AD7E44A00633C06 /* CircularProgressView.swift */; };
 		6AB2B8722AC3355700830760 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8712AC3355700830760 /* AppDelegate.swift */; };
 		6AB2B8742AC3355700830760 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8732AC3355700830760 /* SceneDelegate.swift */; };
 		6AB2B87B2AC3355B00830760 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AB2B87A2AC3355B00830760 /* Assets.xcassets */; };
@@ -113,6 +114,7 @@
 		6A1A88CC2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoPlayCollectionViewCell.swift; sourceTree = "<group>"; };
 		6A60843D2AC95887005B85C7 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		6A6ED6632ACDD39B00CD902B /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
+		6A7A91D32AD7E44A00633C06 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		6AB2B86E2AC3355700830760 /* QuokkaTodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuokkaTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AB2B8712AC3355700830760 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6AB2B8732AC3355700830760 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				6AB2B8B02AC349CE00830760 /* TimerViewController.swift */,
 				6A1A88CA2AD47FD700A51E10 /* TodoSelectionViewController.swift */,
 				6A1A88CC2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift */,
+				6A7A91D32AD7E44A00633C06 /* CircularProgressView.swift */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -487,6 +490,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AB2B8AF2AC349B900830760 /* TodoViewController.swift in Sources */,
+				6A7A91D42AD7E44A00633C06 /* CircularProgressView.swift in Sources */,
 				6A0916562AC73C190014FE2D /* TodoHeaderView.swift in Sources */,
 				6A0916582AC73D5E0014FE2D /* BaseCollectionReusableView.swift in Sources */,
 				6AB2B8722AC3355700830760 /* AppDelegate.swift in Sources */,

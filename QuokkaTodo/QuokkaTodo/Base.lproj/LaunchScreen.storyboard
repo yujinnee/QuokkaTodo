@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="leaf.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="bHa-V8-kjz">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrow.circlepath" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="bHa-V8-kjz">
                                 <rect key="frame" x="57" y="106" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" systemColor="systemBrownColor"/>
@@ -33,7 +33,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="leaf.fill" catalog="system" width="128" height="109"/>
+        <image name="arrow.circlepath" catalog="system" width="128" height="112"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
