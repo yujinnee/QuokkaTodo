@@ -74,7 +74,6 @@ class TodoSelectionViewController: BaseViewController {
         todayArray = todoRepository.fetchSelectedDateUnCompletedTodo(date: today)
     }
     func fetchSpareUncompletedTodoData() {
-        let today = Date()
         soonArray = spareTodoRepository.fetchUnCompletedTodo()
     }
 
