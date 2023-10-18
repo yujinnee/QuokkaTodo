@@ -8,6 +8,17 @@
 import UIKit
 
 class QuokkaViewController: BaseViewController {
+    let levelRepository = LevelRepository()
+    let bagRepository = BagRepository()
+    let feedLeafRepository = FeedLeafRepository()
+    
+//    var leafNum = 0
+//    var feedLeafNum = 0
+//    var feedNutritionNum = 0
+//    var level = 0
+//    var exp = 0
+//    
+   
     
     private let brownButtonConfiguration = {
         var config = UIButton.Configuration.filled()
@@ -71,10 +82,14 @@ class QuokkaViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        addTargets()
         view.backgroundColor = QColor.backgroundColor
-
-
-        // Do any additional setup after loading the view.
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchLeafNum()
+        fetchNutritionNum()
+        fetchLevelAndExp()
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
@@ -83,11 +98,43 @@ class QuokkaViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "btn_settinggear") , style: .plain, target: self, action: #selector(settingButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = QColor.accentColor
         
-       
-    
         navigationController?.navigationBar.tintColor = QColor.accentColor
 
     }
+    private func addTargets(){
+        feedLeafButton.addTarget(self, action: #selector(feedLeafButtonTapped), for: .touchUpInside)
+
+    }
+    func fetchLevelAndExp(){
+        let feedLeafNum = levelRepository.readLeafNum()
+        let feedNutritionNum = levelRepository.readNutritionNum()
+        let sum = feedLeafNum*5 + feedNutritionNum*10
+        print("feedLeafNum\(feedLeafNum)")
+        print("feedNutritionNum\(feedNutritionNum)")
+        let level = sum/10
+        let exp = Double(sum).truncatingRemainder(dividingBy: 10)
+        print("levle\(level)")
+        print("exp\(exp)")
+        levelLabel.text = "Lv\(level)"
+        expLabel.text = "\(exp)%"
+    }
+    @objc private func feedLeafButtonTapped(){
+        let bagLeafNum = bagRepository.readLeafNum() - 1
+        if(bagLeafNum<0) {return}
+        bagRepository.updateLeafNum(num: bagLeafNum)
+        
+        var feedLeafNum = levelRepository.readLeafNum() + 1
+        feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: DateFormatter.convertToFullDateDBForm(date: Date())))
+        
+        levelRepository.updateLeafNum(num: feedLeafNum)
+       
+        
+        fetchLeafNum()
+        fetchLevelAndExp()
+        leafLabel.text = "나뭇잎 \(bagLeafNum)개"
+       
+    }
+
     @objc private func chartButtonTapped(){
         let vc = ChartViewController()
         navigationController?.pushViewController(vc, animated: true)
@@ -97,9 +144,12 @@ class QuokkaViewController: BaseViewController {
         navigationController?.pushViewController(vc, animated: true)
         
     }
-                                                           
+    func fetchLeafNum(){
+        leafLabel.text = "나뭇잎 \(bagRepository.readLeafNum()) 개"
+    }
+                                    
     override func setConstraints() {
-        view.addSubviews([costumeButton,quokkaImageView,levelLabel,expLabel,leafLabel,feedLeafButton,feedNutritionButton])
+        view.addSubviews([costumeButton,quokkaImageView,levelLabel,expLabel,leafLabel,nutritionLabel,feedLeafButton,feedNutritionButton])
         costumeButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.trailing.equalToSuperview().inset(30)
@@ -123,6 +173,7 @@ class QuokkaViewController: BaseViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(expLabel.snp.bottom).offset(20)
         }
+
         feedLeafButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(leafLabel.snp.bottom).offset(10)

@@ -41,6 +41,8 @@ class TimerViewController: BaseViewController {
     
     let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
+    let feedLeafRepository = FeedLeafRepository()
+    let bagRepository = BagRepository()
     
     private let todoSelectionButton = {
         let view = UIButton()
@@ -302,6 +304,10 @@ class TimerViewController: BaseViewController {
                 let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
                 todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
             }
+            let dateString = DateFormatter.convertToFullDateDBForm(date: Date())
+            let leafNum = bagRepository.readLeafNum()
+            feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
+            bagRepository.updateLeafNum(num: leafNum+1)
         }else{
             seconds -= 1
             timeLabel.text = seconds.timeFormatString

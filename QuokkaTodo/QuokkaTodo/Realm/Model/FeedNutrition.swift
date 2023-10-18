@@ -12,10 +12,9 @@ class FeedNutrition: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var feedNutritionTime: String
 
-    convenience init(_id: ObjectId, feedNutritionTime: String) {
+    convenience init(feedNutritionTime: String) {
         self.init()
         
-        self._id = _id
         self.feedNutritionTime = feedNutritionTime
     }
 }
