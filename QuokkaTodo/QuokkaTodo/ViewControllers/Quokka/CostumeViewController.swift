@@ -8,10 +8,9 @@
 import UIKit
 
 class CostumeViewController: BaseViewController {
-    let costumeArray = [CostumeModel(isSelected: true, imageTitle: "icon_empty"),
-                        CostumeModel(isSelected: false, imageTitle: "icon_birthday_hat"),
-                        CostumeModel(isSelected: false, imageTitle: "icon_glasses"),
-                        CostumeModel(isSelected: false, imageTitle: "icon_sunglasses")]
+    let levelRepository = LevelRepository()
+    
+    var costumeArray = Array<CostumeModel>()
 
 //    static let badgeElementKind = "badge-element-kind"
     enum Section {
@@ -27,6 +26,7 @@ class CostumeViewController: BaseViewController {
         navigationItem.title = "쿼카 꾸미기"
         configureHierarchy()
         configureDataSource()
+//        collectionView.delegate = self
     }
 }
 
@@ -55,12 +55,13 @@ extension CostumeViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
+        collectionView.clipsToBounds = true
         view.addSubview(collectionView)
     }
     func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<CostumeCollectionViewCell, CostumeModel> { (cell, indexPath, model) in
             // Populate the cell with our item description.
-            cell.costumeImageView.image = UIImage(named: model.imageTitle)
+            
 //            cell.contentView.backgroundColor = QColor.backgroundColor
             cell.contentView.layer.borderColor = UIColor.black.cgColor
             cell.contentView.layer.borderWidth = 1
@@ -70,11 +71,18 @@ extension CostumeViewController {
                 cell.contentView.layer.borderColor = QColor.accentColor.cgColor
                 cell.contentView.layer.borderWidth = 2
             case false:
-                cell.contentView.layer.borderColor = UIColor.black.cgColor
+                cell.contentView.layer.borderColor = QColor.grayColor.cgColor
                 cell.contentView.layer.borderWidth = 1
-                
-                
             }
+            switch model.isLocked{
+            case true: 
+                cell.contentView.backgroundColor = QColor.grayColor
+            
+                cell.costumeImageView.image = UIImage(named:"icon_lock")
+            case false:
+                cell.costumeImageView.image = UIImage(named: model.imageTitle)
+            }
+            
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, CostumeModel>(collectionView: collectionView) {
@@ -86,8 +94,37 @@ extension CostumeViewController {
         // initial data
         var snapshot = NSDiffableDataSourceSnapshot<Section, CostumeModel>()
         snapshot.appendSections([.main])
-//        let models = (0..<100).map { Model(title: "\($0)", badgeCount: Int.random(in: 0..<3)) }
+        
+        for i in 0..<Costume.allCases.count{
+            let selectedItemImage = UserDefaultsHelper.standard.selectedCostume
+            print(selectedItemImage)
+            let costumeImageName = Costume.allCases[i].imageName
+            let isSelected = costumeImageName == selectedItemImage ? true : false
+            var isLocked = true
+            if(i<=calculateLevel()+1){
+                isLocked = false
+            }
+            
+            costumeArray.append(CostumeModel(isSelected: isSelected, isLocked: isLocked, imageTitle: costumeImageName))
+        }
         snapshot.appendItems(costumeArray)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
+    
+    private func calculateLevel()->Int{
+        let feedLeafNum = levelRepository.readLeafNum()
+        let feedNutritionNum = levelRepository.readNutritionNum()
+        let sum = Double(feedLeafNum)*3.323 + Double(feedNutritionNum)*6.216
+        let level = Int(sum/100)
+        return level
+    }
 }
+
+//extension CostumeViewController: UICollectionViewDelegate{
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        costumeArray[indexPath.row].isSelected.toggle()
+//        collectionView.reloadData()
+//        print("dd")
+//        
+//    }
+//}

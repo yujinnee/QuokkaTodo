@@ -34,6 +34,8 @@
 		6A2C23132AE0FF3B007807EF /* CostumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C23122AE0FF3B007807EF /* CostumeViewController.swift */; };
 		6A2C23152AE10247007807EF /* CostumeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C23142AE10247007807EF /* CostumeCollectionViewCell.swift */; };
 		6A2C23182AE106CC007807EF /* CostumeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C23172AE106CC007807EF /* CostumeModel.swift */; };
+		6A2C231C2AE176B7007807EF /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C231B2AE176B7007807EF /* UserDefaultsHelper.swift */; };
+		6A2C23202AE177C0007807EF /* Costume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C231F2AE177C0007807EF /* Costume.swift */; };
 		6A60843E2AC95887005B85C7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60843D2AC95887005B85C7 /* MenuViewController.swift */; };
 		6A67B1092ADA6ADD00FC8D9D /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A67B1082ADA6ADD00FC8D9D /* ChartViewController.swift */; };
 		6A67B10B2ADA6AF500FC8D9D /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A67B10A2ADA6AF500FC8D9D /* SettingViewController.swift */; };
@@ -135,6 +137,8 @@
 		6A2C23122AE0FF3B007807EF /* CostumeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostumeViewController.swift; sourceTree = "<group>"; };
 		6A2C23142AE10247007807EF /* CostumeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostumeCollectionViewCell.swift; sourceTree = "<group>"; };
 		6A2C23172AE106CC007807EF /* CostumeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostumeModel.swift; sourceTree = "<group>"; };
+		6A2C231B2AE176B7007807EF /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
+		6A2C231F2AE177C0007807EF /* Costume.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Costume.swift; sourceTree = "<group>"; };
 		6A60843D2AC95887005B85C7 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		6A67B1082ADA6ADD00FC8D9D /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		6A67B10A2ADA6AF500FC8D9D /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -288,6 +292,22 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		6A2C23192AE1769B007807EF /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				6A2C231B2AE176B7007807EF /* UserDefaultsHelper.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
+		6A2C231E2AE177AF007807EF /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				6A2C231F2AE177C0007807EF /* Costume.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
 		6A67B1062ADA6A9900FC8D9D /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -326,6 +346,8 @@
 		6AB2B8702AC3355700830760 /* QoukkaTodo */ = {
 			isa = PBXGroup;
 			children = (
+				6A2C231E2AE177AF007807EF /* Enum */,
+				6A2C23192AE1769B007807EF /* UserDefaults */,
 				6A0916462AC6B80F0014FE2D /* Realm */,
 				6ACADE032AC479B300382143 /* Localization */,
 				6AB2B8AD2AC349A300830760 /* ViewControllers */,
@@ -620,6 +642,7 @@
 				6AB2B8A52AC3463B00830760 /* BaseViewController.swift in Sources */,
 				6AB2B8B32AC349F000830760 /* QuokkaViewController.swift in Sources */,
 				6A0CA0BD2AD3E7B500C5C1FD /* QuokkaWidgetLiveActivity.swift in Sources */,
+				6A2C23202AE177C0007807EF /* Costume.swift in Sources */,
 				6A2C23152AE10247007807EF /* CostumeCollectionViewCell.swift in Sources */,
 				6A1A88CB2AD47FD700A51E10 /* TodoSelectionViewController.swift in Sources */,
 				6A1A88CD2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift in Sources */,
@@ -631,6 +654,7 @@
 				6AB2B8A22AC3461A00830760 /* ReusableViewProtocol.swift in Sources */,
 				6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */,
 				6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */,
+				6A2C231C2AE176B7007807EF /* UserDefaultsHelper.swift in Sources */,
 				6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */,
 				6ABF94F42ADFC14A0038F075 /* FeedNutiritionRepository.swift in Sources */,
 				6ABF94EB2ADE10D70038F075 /* FeedLeaf.swift in Sources */,

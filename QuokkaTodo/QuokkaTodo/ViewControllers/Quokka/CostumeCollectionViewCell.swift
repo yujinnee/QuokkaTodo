@@ -20,9 +20,8 @@ class CostumeCollectionViewCell: BaseCollectionViewCell {
     }
     
     override func configureView() {
-        addSubview(costumeImageView)
+        contentView.addSubview(costumeImageView)
         costumeImageView.snp.makeConstraints { make in
-//            make.edges.equalToSuperview()
             make.center.equalToSuperview()
         }
     }

@@ -7,9 +7,16 @@
 
 import Foundation
 
+enum ItemStatus {
+    case locked
+    case unselected
+    case selected
+}
+
 struct CostumeModel: Hashable {
-    let isSelected: Bool
-    let imageTitle: String
+    var isSelected: Bool
+    var isLocked: Bool
+    var imageTitle: String
 
     let identifier = UUID()
     func hash(into hasher: inout Hasher) {

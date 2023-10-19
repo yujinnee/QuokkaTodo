@@ -36,8 +36,9 @@ class QuokkaViewController: BaseViewController {
     
     private lazy var costumeButton = {
         let view = UIButton()
+        view.setImage(UIImage(systemName: "tshirt"), for: .normal)
         view.configuration = brownButtonConfiguration
-        view.configuration?.attributedTitle = AttributedString("꾸미기", attributes: titleContainer)
+//        view.configuration?.attributedTitle = AttributedString("꾸미기", attributes: titleContainer)
         return view
     }()
     private let quokkaImageView = {
@@ -47,7 +48,7 @@ class QuokkaViewController: BaseViewController {
     }()
     private let levelLabel = {
         let view = UILabel()
-        view.text = "LV.12"
+        view.text = "Lv.12"
         view.font = Pretendard.size13.bold()
         view.textColor = QColor.subDeepColor
         return view
@@ -95,7 +96,7 @@ class QuokkaViewController: BaseViewController {
     
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "btn_barchart") , style: .plain, target: self, action: #selector(chartButtonTapped))
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "btn_barchart") , style: .plain, target: self, action: #selector(chartButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = QColor.accentColor
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "btn_settinggear") , style: .plain, target: self, action: #selector(settingButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = QColor.accentColor
@@ -112,11 +113,11 @@ class QuokkaViewController: BaseViewController {
     func fetchLevelAndExp(){
         let feedLeafNum = levelRepository.readLeafNum()
         let feedNutritionNum = levelRepository.readNutritionNum()
-        let sum = feedLeafNum*3 + feedNutritionNum*15
-        let level = sum/100
+        let sum = Double(feedLeafNum)*3.323 + Double(feedNutritionNum)*6.216
+        let level = Int(sum/100)
         let exp = Double(sum).truncatingRemainder(dividingBy: 100)
-        levelLabel.text = "Lv\(level)"
-        expLabel.text = "\(exp)%"
+        levelLabel.text = "Lv.\(level)"
+        expLabel.text = "\(String(format: "%.2f",exp))%"
     }
     @objc private func feedLeafButtonTapped(){
         let bagLeafNum = bagRepository.readLeafNum() - 1
@@ -131,7 +132,7 @@ class QuokkaViewController: BaseViewController {
         
         fetchLeafNum()
         fetchLevelAndExp()
-        leafLabel.text = "나뭇잎 \(bagLeafNum)개"
+        leafLabel.text = "먹일 수 있는 나뭇잎 \(bagLeafNum)개"
        
     }
     @objc private func feedNutritionButtonTapped(){
@@ -160,7 +161,7 @@ class QuokkaViewController: BaseViewController {
         
     }
     func fetchLeafNum(){
-        leafLabel.text = "나뭇잎 \(bagRepository.readLeafNum()) 개"
+        leafLabel.text = "먹일 수 있는 나뭇잎 \(bagRepository.readLeafNum()) 개"
     }
                                     
     override func setConstraints() {
