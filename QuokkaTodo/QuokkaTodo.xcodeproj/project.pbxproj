@@ -72,6 +72,8 @@
 		6ABF95042ADFCF260038F075 /* BagRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95032ADFCF260038F075 /* BagRepository.swift */; };
 		6ABF95062ADFCF330038F075 /* LevelRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95052ADFCF330038F075 /* LevelRepository.swift */; };
 		6ABF95082AE0098C0038F075 /* DiaryWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95072AE0098C0038F075 /* DiaryWritingViewController.swift */; };
+		6ABF950A2AE03F130038F075 /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95092AE03F130038F075 /* Diary.swift */; };
+		6ABF950C2AE0406F0038F075 /* DiaryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */; };
 		6ACADDFD2AC4728E00382143 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6ACADDFF2AC4728E00382143 /* Localizable.strings */; };
 		6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACADE012AC479AD00382143 /* String+Extension.swift */; };
 		6ACADE062AC4958400382143 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 6ACADE052AC4958400382143 /* FSCalendar */; };
@@ -169,6 +171,8 @@
 		6ABF95032ADFCF260038F075 /* BagRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BagRepository.swift; sourceTree = "<group>"; };
 		6ABF95052ADFCF330038F075 /* LevelRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelRepository.swift; sourceTree = "<group>"; };
 		6ABF95072AE0098C0038F075 /* DiaryWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingViewController.swift; sourceTree = "<group>"; };
+		6ABF95092AE03F130038F075 /* Diary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
+		6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepository.swift; sourceTree = "<group>"; };
 		6ACADDFA2AC471CD00382143 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		6ACADDFE2AC4728E00382143 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE002AC4729200382143 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 				6ABF94F72ADFC9510038F075 /* GainNutrition.swift */,
 				6ABF94FF2ADFCE680038F075 /* Bag.swift */,
 				6ABF95012ADFCF050038F075 /* Level.swift */,
+				6ABF95092AE03F130038F075 /* Diary.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -404,6 +409,7 @@
 				6ABF94FD2ADFCD640038F075 /* GainNutiritionRepository.swift */,
 				6ABF95032ADFCF260038F075 /* BagRepository.swift */,
 				6ABF95052ADFCF330038F075 /* LevelRepository.swift */,
+				6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -566,6 +572,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6ABF950A2AE03F130038F075 /* Diary.swift in Sources */,
 				6ABF95022ADFCF050038F075 /* Level.swift in Sources */,
 				6ABF95002ADFCE680038F075 /* Bag.swift in Sources */,
 				6A67B10B2ADA6AF500FC8D9D /* SettingViewController.swift in Sources */,
@@ -586,6 +593,7 @@
 				6A09164D2AC71FD30014FE2D /* SpareTodo.swift in Sources */,
 				6ABF95062ADFCF330038F075 /* LevelRepository.swift in Sources */,
 				6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */,
+				6ABF950C2AE0406F0038F075 /* DiaryRepository.swift in Sources */,
 				6AB2B89C2AC3418D00830760 /* UIFont+Extension.swift in Sources */,
 				6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */,
 				6ABF94ED2ADE10E40038F075 /* FeedNutrition.swift in Sources */,

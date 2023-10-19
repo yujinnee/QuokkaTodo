@@ -29,7 +29,6 @@ class TodoPlayCollectionViewCell: BaseCollectionViewCell {
 //        backgroundView?.layer.cornerRadius = 10
 //        backgroundView?.layer.borderWidth = 2
 //        backgroundView?.layer.borderColor = QColor.backgroundColor.cgColor
-        print("안함?")
         
     }
     

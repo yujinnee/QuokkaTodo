@@ -11,6 +11,7 @@ class QuokkaViewController: BaseViewController {
     let levelRepository = LevelRepository()
     let bagRepository = BagRepository()
     let feedLeafRepository = FeedLeafRepository()
+    let feedNutritionRepository = FeedNutritionRepository()
     
 //    var leafNum = 0
 //    var feedLeafNum = 0
@@ -88,9 +89,10 @@ class QuokkaViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchLeafNum()
-        fetchNutritionNum()
         fetchLevelAndExp()
+        print(#function)
     }
+    
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "btn_barchart") , style: .plain, target: self, action: #selector(chartButtonTapped))
@@ -103,18 +105,15 @@ class QuokkaViewController: BaseViewController {
     }
     private func addTargets(){
         feedLeafButton.addTarget(self, action: #selector(feedLeafButtonTapped), for: .touchUpInside)
+        feedNutritionButton.addTarget(self, action: #selector(feedNutritionButtonTapped), for: .touchUpInside)
 
     }
     func fetchLevelAndExp(){
         let feedLeafNum = levelRepository.readLeafNum()
         let feedNutritionNum = levelRepository.readNutritionNum()
-        let sum = feedLeafNum*5 + feedNutritionNum*10
-        print("feedLeafNum\(feedLeafNum)")
-        print("feedNutritionNum\(feedNutritionNum)")
-        let level = sum/10
-        let exp = Double(sum).truncatingRemainder(dividingBy: 10)
-        print("levle\(level)")
-        print("exp\(exp)")
+        let sum = feedLeafNum*3 + feedNutritionNum*15
+        let level = sum/100
+        let exp = Double(sum).truncatingRemainder(dividingBy: 100)
         levelLabel.text = "Lv\(level)"
         expLabel.text = "\(exp)%"
     }
@@ -134,6 +133,17 @@ class QuokkaViewController: BaseViewController {
         leafLabel.text = "나뭇잎 \(bagLeafNum)개"
        
     }
+    @objc private func feedNutritionButtonTapped(){
+        let vc = DiaryWritingViewController()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .coverVertical
+        vc.diaryWritingCompletedCompletion = {
+            self.fetchLevelAndExp()
+            print("DDD")
+        }
+
+        present(vc, animated: true)
+    }
 
     @objc private func chartButtonTapped(){
         let vc = ChartViewController()
@@ -149,7 +159,7 @@ class QuokkaViewController: BaseViewController {
     }
                                     
     override func setConstraints() {
-        view.addSubviews([costumeButton,quokkaImageView,levelLabel,expLabel,leafLabel,nutritionLabel,feedLeafButton,feedNutritionButton])
+        view.addSubviews([costumeButton,quokkaImageView,levelLabel,expLabel,leafLabel,feedLeafButton,feedNutritionButton])
         costumeButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.trailing.equalToSuperview().inset(30)
