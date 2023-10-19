@@ -53,6 +53,19 @@ class QuokkaViewController: BaseViewController {
         view.textColor = QColor.subDeepColor
         return view
     }()
+    private let progressBarView = {
+        let view = UIProgressView()
+        view.progressViewStyle = .default
+        view.progressTintColor = QColor.accentColor
+        view.trackTintColor = QColor.grayColor
+        view.progress = 0.2
+//        view.transform = view.transform.scaledBy(x: 1, y: 8)
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 8
+        view.layer.sublayers![1].cornerRadius = 5
+        view.subviews[1].clipsToBounds = true
+        return view
+    }()
     private let expLabel = {
         let view = UILabel()
         view.text = "77.7%"
@@ -110,12 +123,16 @@ class QuokkaViewController: BaseViewController {
         costumeButton.addTarget(self, action: #selector(costumeButtonTapped), for: .touchUpInside)
 
     }
-    func fetchLevelAndExp(){
+    private func getLevelAndExp() -> (level:Int,exp:Double){
         let feedLeafNum = levelRepository.readLeafNum()
         let feedNutritionNum = levelRepository.readNutritionNum()
         let sum = Double(feedLeafNum)*3.323 + Double(feedNutritionNum)*6.216
         let level = Int(sum/100)
         let exp = Double(sum).truncatingRemainder(dividingBy: 100)
+        return(level,exp)
+    }
+    func fetchLevelAndExp(){
+        let (level,exp) = getLevelAndExp()
         levelLabel.text = "Lv.\(level)"
         expLabel.text = "\(String(format: "%.2f",exp))%"
     }
@@ -129,11 +146,18 @@ class QuokkaViewController: BaseViewController {
         
         levelRepository.updateLeafNum(num: feedLeafNum)
        
-        
+        let (_,exp) = getLevelAndExp()
+        animateProgressBar(progress: Float(exp/100))
         fetchLeafNum()
         fetchLevelAndExp()
+        
         leafLabel.text = "먹일 수 있는 나뭇잎 \(bagLeafNum)개"
        
+    }
+    private func animateProgressBar(progress:Float){
+        UIView.animate(withDuration: 1) {
+            self.progressBarView.setProgress(progress, animated: true)
+        }
     }
     @objc private func feedNutritionButtonTapped(){
         let vc = DiaryWritingViewController()
@@ -142,6 +166,8 @@ class QuokkaViewController: BaseViewController {
         vc.diaryWritingCompletedCompletion = {
             self.fetchLevelAndExp()
             print("DDD")
+            let (_,exp) = self.getLevelAndExp()
+            self.animateProgressBar(progress: Float(exp/100))
         }
 
         present(vc, animated: true)
@@ -165,7 +191,7 @@ class QuokkaViewController: BaseViewController {
     }
                                     
     override func setConstraints() {
-        view.addSubviews([costumeButton,quokkaImageView,levelLabel,expLabel,leafLabel,feedLeafButton,feedNutritionButton])
+        view.addSubviews([costumeButton,quokkaImageView,levelLabel,progressBarView,expLabel,leafLabel,feedLeafButton,feedNutritionButton])
         costumeButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.trailing.equalToSuperview().inset(30)
@@ -181,9 +207,14 @@ class QuokkaViewController: BaseViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(quokkaImageView.snp.bottom).offset(10)
         }
+        progressBarView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview().inset(30)
+            make.height.equalTo(16)
+            make.top.equalTo(levelLabel.snp.bottom).offset(10)
+        }
         expLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(levelLabel.snp.bottom).offset(10)
+            make.top.equalTo(progressBarView.snp.bottom).offset(10)
         }
         leafLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
