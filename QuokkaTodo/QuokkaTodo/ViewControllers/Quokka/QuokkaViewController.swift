@@ -106,6 +106,7 @@ class QuokkaViewController: BaseViewController {
     private func addTargets(){
         feedLeafButton.addTarget(self, action: #selector(feedLeafButtonTapped), for: .touchUpInside)
         feedNutritionButton.addTarget(self, action: #selector(feedNutritionButtonTapped), for: .touchUpInside)
+        costumeButton.addTarget(self, action: #selector(costumeButtonTapped), for: .touchUpInside)
 
     }
     func fetchLevelAndExp(){
@@ -143,6 +144,10 @@ class QuokkaViewController: BaseViewController {
         }
 
         present(vc, animated: true)
+    }
+    @objc private func costumeButtonTapped() {
+        let vc = CostumeViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     @objc private func chartButtonTapped(){
