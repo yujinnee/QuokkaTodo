@@ -41,15 +41,21 @@ class QuokkaViewController: BaseViewController {
 //        view.configuration?.attributedTitle = AttributedString("꾸미기", attributes: titleContainer)
         return view
     }()
+    private lazy var diaryButton = {
+        let view = UIButton()
+        view.configuration = brownButtonConfiguration
+        view.configuration?.attributedTitle = AttributedString("행복일기", attributes: titleContainer)
+        return view
+    }()
     private let quokkaImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "img_quokka")
+        view.image = UIImage(named: Costume.none.quokkaImage)
         return view
     }()
     private let levelLabel = {
         let view = UILabel()
         view.text = "Lv.12"
-        view.font = Pretendard.size13.bold()
+        view.font = Pretendard.size23.black()
         view.textColor = QColor.subDeepColor
         return view
     }()
@@ -75,7 +81,6 @@ class QuokkaViewController: BaseViewController {
     }()
     private let leafLabel = {
         let view = UILabel()
-        view.text = "나뭇잎 23개"
         view.font = Pretendard.size13.bold()
         view.textColor = QColor.subDeepColor
         return view
@@ -105,6 +110,13 @@ class QuokkaViewController: BaseViewController {
         fetchLeafNum()
         fetchLevelAndExp()
         print(#function)
+        setQuokkaImage()
+    }
+    func setQuokkaImage() {
+        var idx = UserDefaultsHelper.standard.selectedCostume
+        let imageName = Costume(rawValue: idx)?.quokkaImage ?? ""
+        
+        quokkaImageView.image = UIImage(named: imageName) ?? UIImage()
     }
     
     override func configureView() {
@@ -121,7 +133,7 @@ class QuokkaViewController: BaseViewController {
         feedLeafButton.addTarget(self, action: #selector(feedLeafButtonTapped), for: .touchUpInside)
         feedNutritionButton.addTarget(self, action: #selector(feedNutritionButtonTapped), for: .touchUpInside)
         costumeButton.addTarget(self, action: #selector(costumeButtonTapped), for: .touchUpInside)
-
+        diaryButton.addTarget(self, action: #selector(diaryButtonTapped), for: .touchUpInside)
     }
     private func getLevelAndExp() -> (level:Int,exp:Double){
         let feedLeafNum = levelRepository.readLeafNum()
@@ -151,7 +163,7 @@ class QuokkaViewController: BaseViewController {
         fetchLeafNum()
         fetchLevelAndExp()
         
-        leafLabel.text = "먹일 수 있는 나뭇잎 \(bagLeafNum)개"
+        leafLabel.text = "쿼카에게 줄 수 있는 나뭇잎 \(bagLeafNum)개"
        
     }
     private func animateProgressBar(progress:Float){
@@ -176,6 +188,10 @@ class QuokkaViewController: BaseViewController {
         let vc = CostumeViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    @objc private func diaryButtonTapped() {
+        let vc = DiaryViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
     @objc private func chartButtonTapped(){
         let vc = ChartViewController()
@@ -187,11 +203,15 @@ class QuokkaViewController: BaseViewController {
         
     }
     func fetchLeafNum(){
-        leafLabel.text = "먹일 수 있는 나뭇잎 \(bagRepository.readLeafNum()) 개"
+        leafLabel.text = "쿼카에게 줄 수 있는 나뭇잎 \(bagRepository.readLeafNum()) 개"
     }
                                     
     override func setConstraints() {
-        view.addSubviews([costumeButton,quokkaImageView,levelLabel,progressBarView,expLabel,leafLabel,feedLeafButton,feedNutritionButton])
+        view.addSubviews([diaryButton,costumeButton,quokkaImageView,levelLabel,progressBarView,expLabel,leafLabel,feedLeafButton,feedNutritionButton])
+        diaryButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            make.leading.equalToSuperview().inset(30)
+        }
         costumeButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.trailing.equalToSuperview().inset(30)

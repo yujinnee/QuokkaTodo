@@ -18,9 +18,9 @@ class UserDefaultsHelper {
         case selectedCostume = "selectedCostume"
     }
     
-    var selectedCostume: String {
+    var selectedCostume: Int {
         get {
-            return userDefaults.string(forKey: Key.selectedCostume.rawValue) ?? "icon_empty"
+            return userDefaults.integer(forKey: Key.selectedCostume.rawValue) ?? 0
         }
         set {
             userDefaults.set(newValue,forKey: Key.selectedCostume.rawValue)

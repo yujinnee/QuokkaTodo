@@ -11,6 +11,7 @@ class CostumeViewController: BaseViewController {
     let levelRepository = LevelRepository()
     
     var costumeArray = Array<CostumeModel>()
+    var selectedIndex = 0
 
 //    static let badgeElementKind = "badge-element-kind"
     enum Section {
@@ -26,7 +27,7 @@ class CostumeViewController: BaseViewController {
         navigationItem.title = "쿼카 꾸미기"
         configureHierarchy()
         configureDataSource()
-//        collectionView.delegate = self
+        collectionView.delegate = self
     }
 }
 
@@ -66,8 +67,9 @@ extension CostumeViewController {
             cell.contentView.layer.borderColor = UIColor.black.cgColor
             cell.contentView.layer.borderWidth = 1
             cell.contentView.layer.cornerRadius = 10
-            switch model.isSelected{
-            case true: 
+
+            switch indexPath.row == UserDefaultsHelper.standard.selectedCostume{
+            case true:
                 cell.contentView.layer.borderColor = QColor.accentColor.cgColor
                 cell.contentView.layer.borderWidth = 2
             case false:
@@ -77,9 +79,9 @@ extension CostumeViewController {
             switch model.isLocked{
             case true: 
                 cell.contentView.backgroundColor = QColor.grayColor
-            
                 cell.costumeImageView.image = UIImage(named:"icon_lock")
             case false:
+                cell.contentView.backgroundColor = QColor.backgroundColor
                 cell.costumeImageView.image = UIImage(named: model.imageTitle)
             }
             
@@ -96,16 +98,14 @@ extension CostumeViewController {
         snapshot.appendSections([.main])
         
         for i in 0..<Costume.allCases.count{
-            let selectedItemImage = UserDefaultsHelper.standard.selectedCostume
-            print(selectedItemImage)
+           
             let costumeImageName = Costume.allCases[i].imageName
-            let isSelected = costumeImageName == selectedItemImage ? true : false
             var isLocked = true
             if(i<=calculateLevel()+1){
                 isLocked = false
             }
             
-            costumeArray.append(CostumeModel(isSelected: isSelected, isLocked: isLocked, imageTitle: costumeImageName))
+            costumeArray.append(CostumeModel(isLocked: isLocked, imageTitle: costumeImageName))
         }
         snapshot.appendItems(costumeArray)
         dataSource.apply(snapshot, animatingDifferences: false)
@@ -120,11 +120,23 @@ extension CostumeViewController {
     }
 }
 
-//extension CostumeViewController: UICollectionViewDelegate{
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        costumeArray[indexPath.row].isSelected.toggle()
-//        collectionView.reloadData()
-//        print("dd")
-//        
-//    }
-//}
+extension CostumeViewController: UICollectionViewDelegate{
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        var item = costumeArray[indexPath.row]
+
+     
+        
+        switch item.isLocked {
+        case true:
+            print("잠겨있는 아이템 입니다.")
+        case false:
+            print("잠겨 있지 않은 아이템입니다.")
+            selectedIndex = indexPath.row
+            UserDefaultsHelper.standard.selectedCostume = indexPath.row
+            collectionView.reloadData()
+        }
+        
+        print("dd")
+        
+    }
+}

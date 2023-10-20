@@ -7,14 +7,8 @@
 
 import Foundation
 
-enum ItemStatus {
-    case locked
-    case unselected
-    case selected
-}
 
 struct CostumeModel: Hashable {
-    var isSelected: Bool
     var isLocked: Bool
     var imageTitle: String
 

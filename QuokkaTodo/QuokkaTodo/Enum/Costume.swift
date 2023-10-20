@@ -25,4 +25,17 @@ enum Costume: Int,CaseIterable {
             return "icon_birthday_hat"
         }
     }
+    
+    var quokkaImage: String {
+        switch self{
+        case .none:
+            return "img_quokka_plain"
+        case .glasses:
+            return "img_quokka_glasses"
+        case .sunglasses:
+            return "img_quokka_sunglasses"
+        case .birthDayHat:
+            return "img_quokka_birthday_hat"
+        }
+    }
 }
