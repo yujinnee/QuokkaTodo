@@ -76,7 +76,6 @@ class MenuViewController: BaseViewController {
         
     }
     private func setTodoTypeLabel() {
-        guard let _id = _id else {return}
         switch todoType {
         case .soon:
             todoTypeLabel.text = "곧 할 일"

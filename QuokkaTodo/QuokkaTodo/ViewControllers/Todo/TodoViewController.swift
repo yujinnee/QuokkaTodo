@@ -116,6 +116,7 @@ class TodoViewController: BaseViewController{
         fetchTodoData()
         fetchSpareTodoData()
         print(todoRepository.findFileURL())
+
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -212,7 +213,7 @@ class TodoViewController: BaseViewController{
         textField.delegate = self
     }
     func addTodo(){
-        if let text = textField.text{
+        if textField.text != nil{
             let text = textField.text ?? ""
             
             let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
