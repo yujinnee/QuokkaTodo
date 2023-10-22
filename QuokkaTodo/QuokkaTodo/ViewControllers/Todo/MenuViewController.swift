@@ -44,25 +44,29 @@ class MenuViewController: BaseViewController {
     private let reviseButton = {
         let view = UIButton()
         view.setTitle("수정", for: .normal)
-        view.setImage(UIImage(systemName: "pencil"), for: .normal)
+//        view.setImage(UIImage(systemName: "pencil"), for: .normal)
+        view.backgroundColor = QColor.subLightColor
+        view.setTitleColor(QColor.backgroundColor, for: .normal)
         view.titleLabel?.font = Pretendard.size18.bold()
-        view.setTitleColor(QColor.accentColor, for: .normal)
-        view.tintColor = QColor.accentColor
+//        view.setTitleColor(QColor.accentColor, for: .normal)
+//        view.tintColor = QColor.accentColor
         view.layer.cornerRadius = 10
-        view.layer.borderColor = QColor.accentColor.cgColor
-        view.layer.borderWidth = 1
+//        view.layer.borderColor = QColor.accentColor.cgColor
+//        view.layer.borderWidth = 1
         return view
     }()
     private let deleteButton = {
         let view = UIButton()
         view.setTitle("삭제", for: .normal)
-        view.setImage(UIImage(systemName: "trash"), for: .normal)
+//        view.setImage(UIImage(systemName: "trash"), for: .normal)
+        view.backgroundColor = UIColor(red: 255/255, green: 155/255, blue: 158/255, alpha: 1.0)
         view.titleLabel?.font = Pretendard.size18.bold()
-        view.setTitleColor(QColor.accentColor, for: .normal)
-        view.tintColor = QColor.accentColor
+        view.setTitleColor(QColor.backgroundColor, for: .normal)
+//        view.setTitleColor(QColor.accentColor, for: .normal)
+//        view.tintColor = QColor.accentColor
         view.layer.cornerRadius = 10
-        view.layer.borderColor = QColor.accentColor.cgColor
-        view.layer.borderWidth = 1
+//        view.layer.borderColor = QColor.accentColor.cgColor
+//        view.layer.borderWidth = 1
         return view
     }()
     

@@ -69,7 +69,7 @@ class TodoViewController: BaseViewController{
         //        layout.minimumInteritemSpacing = CGFloat(1.0)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         //        layout.itemSize = CGSize(width: view.frame.width, height: 20)
-        layout.minimumLineSpacing = 0
+        layout.minimumLineSpacing = 3
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
         view.bounces = true

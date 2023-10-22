@@ -151,10 +151,9 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
 
         }
         menuButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
-            make.width.equalTo(16)
-            make.height.equalTo(menuButton.snp.width)
-            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-10)
+            make.verticalEdges.equalToSuperview()
+            make.width.equalTo(menuButton.snp.height)
         }
         firstLeafImageView.snp.makeConstraints { make in
             make.width.equalTo(firstLeafImageView.snp.height)
