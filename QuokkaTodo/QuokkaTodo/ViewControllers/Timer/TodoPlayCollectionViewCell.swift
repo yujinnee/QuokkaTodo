@@ -19,6 +19,7 @@ class TodoPlayCollectionViewCell: BaseCollectionViewCell {
         let view = UIButton()
         view.setImage(UIImage(systemName: "play.circle"), for: .normal)
         view.tintColor = QColor.accentColor
+        view.isUserInteractionEnabled = false
         return view
 
     }()
