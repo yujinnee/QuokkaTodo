@@ -210,19 +210,21 @@ class TimerViewController: BaseViewController {
         
     }
     @objc private func resetButtonDidTap() {
-            Task{ await endLiveActivity()}
-            timer.invalidate()
-        timerStatus = .reset
-            seconds = onePomoInterval
-            leftTimeInterval = onePomoInterval
-            timeLabel.text = seconds.timeFormatString
-            circularProgressView.resetStatus()
-        
+        setReset()
+    }
+    private func setReset() {
+        Task{ await endLiveActivity()}
+        timer.invalidate()
+    timerStatus = .reset
+        seconds = onePomoInterval
+        leftTimeInterval = onePomoInterval
+        timeLabel.text = seconds.timeFormatString
+        circularProgressView.resetStatus()
     }
     
     @objc func timerTimeChanged() {
       
-        if(seconds <= 0){
+        if(seconds == 0){
             circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
@@ -238,7 +240,11 @@ class TimerViewController: BaseViewController {
             let leafNum = bagRepository.readLeafNum()
             feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
             bagRepository.updateLeafNum(num: leafNum+1)
-        }else{
+    
+        }else if(seconds < -1){
+            setReset()
+        }
+            else{
             seconds -= timeUnit
             timeLabel.text = seconds.timeFormatString
             circularProgressView.progress = seconds/onePomoInterval
