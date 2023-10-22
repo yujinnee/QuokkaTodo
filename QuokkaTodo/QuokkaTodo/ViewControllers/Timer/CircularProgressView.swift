@@ -12,14 +12,20 @@ class CircularProgressView: BaseView {
     var progress: CGFloat = 0 {
         didSet {
             animateToBarLayer()
+            if(oldValue == 0){
+                setEndStatus()
+            }
         }
     }
+    var onePomoInterval:TimeInterval = 0
+    var pauseStrokeEnd = 0.0
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    init(seconds:TimeInterval) {
+    init(seconds:TimeInterval,onePomo: TimeInterval) {
         super.init(frame: .zero)
         progress = seconds
+        onePomoInterval = onePomo
         configureView()
         setConstraints()
     }
@@ -88,16 +94,23 @@ class CircularProgressView: BaseView {
         //        progressPath.stroke()
         
     }
-    private func animateToBarLayer() {
-        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
-//        print(progress)
-        strokeAnimation.fromValue = progress
-        strokeAnimation.toValue = progress-1/10
-        strokeAnimation.duration = 1.0
+    func animateToBarLayer() {
         
+        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        strokeAnimation.fromValue = progress
+        strokeAnimation.toValue = progress-0.1/onePomoInterval
+        strokeAnimation.duration = 0.1
+    
         barLayer.add(strokeAnimation, forKey: nil)
+        pauseStrokeEnd = progress-0.1/onePomoInterval
     }
-    //    func setProgress(seconds: TimeInterval){
-    //        progress = seconds
-    //    }
+    func setPauseStatus() {
+        barLayer.strokeEnd = pauseStrokeEnd
+    }
+    func setEndStatus() {
+        barLayer.strokeEnd = 0
+    }
+    func resetStatus() {
+        barLayer.strokeEnd = 1
+    }
 }

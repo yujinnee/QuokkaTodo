@@ -20,17 +20,13 @@ extension Int {
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
-    var seconds = Double(){
-        didSet{
-            circularProgressView.progress = seconds/10
-        }
-    }
+    var seconds = Double()
     var isTimerRunning = false
     var isPaused = false
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 10
+    let onePomoInterval:TimeInterval = 60*25
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -38,6 +34,7 @@ class TimerViewController: BaseViewController {
             todoSelectionButton.setTitle(selectedTodoContents, for: .normal)
         }
     }
+    let timeUnit = 0.01
     
     let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
@@ -60,34 +57,9 @@ class TimerViewController: BaseViewController {
         return view
     }()
     private lazy var circularProgressView = {
-        let view = CircularProgressView(seconds:seconds)
+        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval)
         return view
     }()
-//    private lazy var circularPath: UIBezierPath = {
-//        return UIBezierPath(arcCenter: CGPoint(x: view.bounds.midX, y: view.bounds.midY-70),
-//                            radius: 140, // 반지름
-//                            startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
-//                            endAngle: 270.degreesToRadians, // 2시 방향
-//                            clockwise: true)
-//    }()
-//    
-//    private lazy var trackLayer: CAShapeLayer = {
-//        let layer = CAShapeLayer()
-//        layer.path = circularPath.cgPath
-//        layer.fillColor = UIColor.clear.cgColor
-//        layer.strokeColor = QColor.subLightColor.cgColor
-//        layer.lineWidth = 15
-//        return layer
-//    }()
-//    
-//    private lazy var barLayer: CAShapeLayer = {
-//        let layer = CAShapeLayer()
-//        layer.path = circularPath.cgPath
-//        layer.fillColor = UIColor.clear.cgColor
-//        layer.strokeColor = QColor.accentColor.cgColor
-//        layer.lineWidth = 15
-//        return layer
-//    }()
     private let startButton = {
         let view = UIButton()
 //        view.setTitle("start", for: .normal)
@@ -121,21 +93,7 @@ class TimerViewController: BaseViewController {
 
         return view
     }()
-    //    private let liveActivityButton = {
-    //        let view = UIButton()
-    //        view.setTitle("liveActivity", for: .normal)
-    //        view.tintColor = QColor.accentColor
-    //        view.setTitleColor(QColor.accentColor, for: .normal)
-    //        return view
-    //    }()
-    //    private let endLiveActivityButton = {
-    //        let view = UIButton()
-    //        view.setTitle("EndLiveActivity", for: .normal)
-    //        view.tintColor = QColor.accentColor
-    //        view.setTitleColor(QColor.accentColor, for: .normal)
-    //        return view
-    //    }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
@@ -172,19 +130,8 @@ class TimerViewController: BaseViewController {
         startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(pauseButtonDidTap), for: .touchUpInside)
         resetButton.addTarget(self, action: #selector(resetButtonDidTap), for: .touchUpInside)
-        //        liveActivityButton.addTarget(self, action: #selector(liveActivityButtonDidTap), for: .touchUpInside)
-        //        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
-        
     }
-//    private func animateToBarLayer() {
-//        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
-//        strokeAnimation.fromValue = 0
-//        strokeAnimation.toValue = 1
-//        strokeAnimation.duration = seconds
-//        
-//        barLayer.add(strokeAnimation, forKey: nil)
-//    }
-    @objc private func todoSelectionButtonDidTap() {
+    @objc func todoSelectionButtonDidTap() {
         let todoSelectionViewController = TodoSelectionViewController()
         todoSelectionViewController.modalPresentationStyle = .pageSheet
         todoSelectionViewController.todoCellTappedClosure = { _id ,todoType in
@@ -219,7 +166,7 @@ class TimerViewController: BaseViewController {
             isPaused = false
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
 //            animateToBarLayer()
             startLiveActivity()
         }
@@ -230,49 +177,21 @@ class TimerViewController: BaseViewController {
             endTime = Date.now.addingTimeInterval(leftTimeInterval)
             seconds = leftTimeInterval
             
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             Task{
                 await restartTimerInLiveActivity()
             }
             
         }
-        
-        
-        //        if(isTimerRunning == false){
-        //            isTimerRunning = true
-        //
-        //            timer.invalidate()// 확실하게 다른 타이머 돌아가는게 없도록 하기
-        //
-        //
-        //            DispatchQueue.global().async {
-        //                print(RunLoop.current == RunLoop.main)
-        //
-        //                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-        //                    print(Date())
-        //                    self.seconds -= 1
-        //                    DispatchQueue.main.sync{
-        //                        self.timeLabel.text = self.seconds.timeFormatString
-        //                    }
-        //
-        //
-        //                    if(self.seconds == 0){
-        //                        timer.invalidate()
-        //                    }
-        //                }
-        //
-        //                while self.shouldKeepRunning {
-        //                    RunLoop.current.run(until: .now + 0.1)
-        //                }
-        //            }
-        //        }
+        circularProgressView.progress = seconds/onePomoInterval
         
     }
     @objc private func pauseButtonDidTap(){
         if(isTimerRunning){
+            circularProgressView.setPauseStatus()
             timer.invalidate()
-            //            isTimerRunning = false
             isPaused = true
-            leftTimeInterval = endTime.timeIntervalSince(Date.now) + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
+            leftTimeInterval = endTime.timeIntervalSince(Date.now)// + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
             Task{ await pauseLiveActivity()}
         }
         
@@ -287,13 +206,15 @@ class TimerViewController: BaseViewController {
             seconds = onePomoInterval
             leftTimeInterval = onePomoInterval
             timeLabel.text = seconds.timeFormatString
-            
+            circularProgressView.resetStatus()
         }
         
     }
     
     @objc func timerTimeChanged() {
+      
         if(seconds <= 0){
+            circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
             switch todoType {
@@ -309,9 +230,11 @@ class TimerViewController: BaseViewController {
             feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
             bagRepository.updateLeafNum(num: leafNum+1)
         }else{
-            seconds -= 1
+            seconds -= timeUnit
             timeLabel.text = seconds.timeFormatString
+            circularProgressView.progress = seconds/onePomoInterval
         }
+       
     }
     @objc private func liveActivityButtonDidTap(){
         startLiveActivity()
@@ -386,8 +309,6 @@ class TimerViewController: BaseViewController {
     override func setConstraints() {
         view.addSubviews([todoSelectionButton,circularProgressView,startButton,pauseButton,resetButton])
         circularProgressView.addSubview(timeLabel)
-//        view.layer.addSublayer(trackLayer)
-//        view.layer.addSublayer(barLayer)
         
         todoSelectionButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -422,14 +343,6 @@ class TimerViewController: BaseViewController {
             make.height.equalTo(40)
             make.leading.equalTo(pauseButton.snp.trailing).offset(30)
         }
-        //        liveActivityButton.snp.makeConstraints { make in
-        //            make.centerX.equalToSuperview()
-        //            make.top.equalTo(resetButton.snp.bottom).offset(10)
-        //        }
-        //        endLiveActivityButton.snp.makeConstraints { make in
-        //            make.centerX.equalToSuperview()
-        //            make.top.equalTo(liveActivityButton.snp.bottom).offset(10)
-        //        }
     }
     
 }
