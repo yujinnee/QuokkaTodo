@@ -46,6 +46,12 @@ class TodoViewController: BaseViewController{
         view.text = DateFormatter.getYearMonth(date: now)
         return view
     }()
+    private let todayButton = {
+        let view = UIButton()
+        view.setImage(UIImage(systemName: "clock.arrow.circlepath"), for: .normal)
+        view.tintColor = QColor.accentColor
+        return view
+    }()
     
     private let calendarView = {
         let view = FSCalendar()
@@ -63,6 +69,7 @@ class TodoViewController: BaseViewController{
         label.text = DateFormatter.getMonthDayWeekDay(date: now)
         return label
     }()
+   
     
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -140,6 +147,11 @@ class TodoViewController: BaseViewController{
     }
     func addTarget() {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        todayButton.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
+//        headerLabel.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
+    }
+    @objc func todayButtonTapped() {
+        calendarView.setCurrentPage(Date(), animated: true)
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -161,7 +173,7 @@ class TodoViewController: BaseViewController{
         //        view.addSubview(scrollView)
         //        scrollView.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         //        textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
-        view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
+        view.addSubviews([headerLabel,todayButton,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         textFieldBorderview.addSubview(textField)
         //        scrollView.snp.makeConstraints { make in
@@ -169,7 +181,14 @@ class TodoViewController: BaseViewController{
         //        }
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.horizontalEdges.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().inset(20)
+            make.width.equalTo(150)
+            make.height.equalTo(32)
+        }
+        todayButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.trailing.equalToSuperview().inset(20)
+            make.width.equalTo(50)
             make.height.equalTo(32)
         }
         calendarView.snp.makeConstraints { make in
