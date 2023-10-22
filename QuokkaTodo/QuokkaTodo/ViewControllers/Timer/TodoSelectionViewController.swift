@@ -164,12 +164,12 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         case 0:
             header.setTitle(text: "곧 할 일")
             header.setFocused(isEditing: true)
-            header.hideAddButton()
+//            header.hideAddButton()
     
         case 1:
             header.setTitle(text: "오늘 할 일")
             header.setFocused(isEditing: true)
-            header.hideAddButton()
+//            header.hideAddButton()
         
         default:
             break

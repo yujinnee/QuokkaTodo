@@ -15,14 +15,20 @@ class TodoHeaderView: BaseCollectionReusableView {
         let view = UILabel()
         view.textAlignment = .center
         view.textColor = QColor.accentColor
-        view.font = Pretendard.size18.light()
+        view.font = Pretendard.size16.light()
         return view
     }()
-    
+    private let plusImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName:"plus.circle.fill")
+        view.tintColor = QColor.accentColor
+        return view
+    }()
     private let addButton = {
         let view = UIButton()
-        view.setImage(UIImage(systemName:"plus.circle"), for: .normal)
-        view.tintColor = QColor.accentColor
+        view.layer.borderColor = QColor.grayColor.cgColor
+        view.layer.borderWidth = 1
+        view.layer.cornerRadius = 15
         return view
     }()
     
@@ -40,23 +46,29 @@ class TodoHeaderView: BaseCollectionReusableView {
         addButtonComletionHandler?()
     }
     override func setConstraints() {
-        addSubviews([titleLabel,addButton])
+        addSubviews([titleLabel,plusImageView,addButton])
         
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
             
         }
-        addButton.snp.makeConstraints { make in
+        plusImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(titleLabel.snp.trailing).offset(3)
-            make.width.equalTo(20)
-            make.height.equalTo(20)
+            make.verticalEdges.equalToSuperview().inset(10)
+            make.width.equalTo(plusImageView.snp.height)
+        }
+        addButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(titleLabel.snp.leading).offset(-7)
+            make.trailing.equalTo(plusImageView.snp.trailing).offset(7)
+            make.verticalEdges.equalToSuperview().inset(5)
         }
     }
-    func hideAddButton(){
-        addButton.isHidden = true
-    }
+//    func hideAddButton(){
+//        addButton.isHidden = true
+//    }
     
     func setTitle(text: String) {
         titleLabel.text = text
@@ -65,11 +77,11 @@ class TodoHeaderView: BaseCollectionReusableView {
     func setFocused(isEditing: Bool){
         switch isEditing{
         case true:
-            titleLabel.font = Pretendard.size20.bold()
+            titleLabel.font = Pretendard.size18.semibold()
             addButton.tintColor = QColor.accentColor
             titleLabel.textColor = QColor.accentColor
         case false:
-            titleLabel.font = Pretendard.size18.light()
+            titleLabel.font = Pretendard.size16.light()
             addButton.tintColor =  QColor.accentColor
             titleLabel.textColor =  QColor.accentColor
         }
