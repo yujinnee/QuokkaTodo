@@ -21,6 +21,7 @@ class TodoViewController: BaseViewController{
     var todoType: TodoType = .soon
     var soonEditing = false
     var todayEditing = false
+    let maxLength = 10
     
     var selectedDate = Date() {
         didSet {
@@ -65,7 +66,7 @@ class TodoViewController: BaseViewController{
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-//        layout.minimumInteritemSpacing = CGFloat(1.0)
+        //        layout.minimumInteritemSpacing = CGFloat(1.0)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         //        layout.itemSize = CGSize(width: view.frame.width, height: 20)
         layout.minimumLineSpacing = 0
@@ -136,15 +137,6 @@ class TodoViewController: BaseViewController{
     func addTarget() {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
-    @objc func textFieldDidChange(){
-        if(textField.text!.count == 0){
-            registerButton.setTitleColor(QColor.grayColor, for: .normal)
-            registerButton.isEnabled = false
-        }else {
-            registerButton.setTitleColor(QColor.accentColor, for: .normal)
-            registerButton.isEnabled = true
-        }
-    }
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -203,6 +195,7 @@ class TodoViewController: BaseViewController{
         }
         registerButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(16)
+            make.width.equalTo(50)
             make.centerY.equalToSuperview()
         }
         
@@ -478,6 +471,36 @@ extension TodoViewController: UICollectionViewDelegateFlowLayout{
 }
 
 extension TodoViewController: UITextFieldDelegate {
+    @objc func textFieldDidChange(){
+        if(textField.text!.count == 0){
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
+            registerButton.isEnabled = false
+        }else {
+            registerButton.setTitleColor(QColor.accentColor, for: .normal)
+            registerButton.isEnabled = true
+        }
+        let textString = textField.text!
+        if textString.count >= maxLength {
+            let index = textString.index(textString.startIndex, offsetBy: maxLength)
+            let fixedText = textString[textString.startIndex..<index]
+            textField.text = fixedText + " "
+            
+            let when = DispatchTime.now() + 0.01
+            DispatchQueue.main.asyncAfter(deadline: when) {
+                self.textField.text = String(fixedText)
+            }
+        }
+        
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if(textField.text!.count == 0){
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
+            registerButton.isEnabled = false
+        }else {
+            registerButton.setTitleColor(QColor.accentColor, for: .normal)
+            registerButton.isEnabled = true
+        }
+    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         setTextFieldIsHidden(isHidden: true)

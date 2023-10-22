@@ -146,7 +146,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         }
         leafStackView.snp.makeConstraints { make in
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
-            make.height.equalTo(13)
+            make.height.equalTo(11)
             make.bottom.equalToSuperview()
 
         }
