@@ -66,9 +66,10 @@ class TodoHeaderView: BaseCollectionReusableView {
             make.verticalEdges.equalToSuperview().inset(5)
         }
     }
-//    func hideAddButton(){
-//        addButton.isHidden = true
-//    }
+    func hideAddButton(){
+        addButton.isHidden = true
+        plusImageView.isHidden = true
+    }
     
     func setTitle(text: String) {
         titleLabel.text = text

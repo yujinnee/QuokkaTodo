@@ -50,6 +50,7 @@ class TodoViewController: BaseViewController{
     private let calendarView = {
         let view = FSCalendar()
         view.tintColor = QColor.accentColor
+        view.backgroundColor = QColor.backgroundColor
         view.allowsSelection = true
         return view
     }()
@@ -97,6 +98,9 @@ class TodoViewController: BaseViewController{
         view.titleLabel?.font = Pretendard.size18.bold()
         view.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         view.isEnabled = false
+//        view.layer.borderColor = QColor.accentColor.cgColor
+//        view.layer.borderWidth = 1
+//        view.layer.cornerRadius = 10
         return view
     }()
     private let textField = {
@@ -118,7 +122,7 @@ class TodoViewController: BaseViewController{
         fetchTodoData()
         fetchSpareTodoData()
         print(todoRepository.findFileURL())
-        
+        setKeyboardObserver()
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -145,8 +149,13 @@ class TodoViewController: BaseViewController{
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
+        navigationController?.navigationBar.backgroundColor = QColor.backgroundColor
         view.backgroundColor = QColor.backgroundColor
+//        preferredStatusBarStyle = .darkContent
     }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+            return .darkContent
+        }
     
     override func setConstraints() {
         //        view.addSubview(scrollView)
@@ -166,7 +175,7 @@ class TodoViewController: BaseViewController{
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom)
             make.horizontalEdges.equalToSuperview().inset(20)
-            make.height.equalTo(view).multipliedBy(0.35)
+            make.height.equalTo(view).multipliedBy(0.3)
         }
         
         dateLabel.snp.makeConstraints { make in
@@ -187,15 +196,16 @@ class TodoViewController: BaseViewController{
             make.verticalEdges.equalToSuperview().inset(6)
             make.leading.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
-            make.trailing.equalTo(registerButton.snp.leading).offset(-10)
+            make.trailing.equalTo(registerButton.snp.leading).offset(-2)
         }
         textField.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(10)
         }
         registerButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(16)
-            make.width.equalTo(50)
+            
+            make.trailing.equalToSuperview().inset(2)
+            make.width.equalTo(60)
             make.centerY.equalToSuperview()
         }
         
@@ -207,7 +217,7 @@ class TodoViewController: BaseViewController{
         textField.delegate = self
     }
     func addTodo(){
-        if textField.text != nil{
+        if textField.text!.count != 0{
             let text = textField.text ?? ""
             
             let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
@@ -219,6 +229,7 @@ class TodoViewController: BaseViewController{
                 calendarView.reloadData()//이벤트 점 표시용 reloadData()
             }
             textField.text = ""
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
             todoCollectionView.reloadData()
         }
     }
@@ -510,9 +521,8 @@ extension TodoViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if(textField.text?.count ?? 0 > 0){
+        if(textField.text!.count > 0){
             addTodo()
-            
             todoCollectionView.reloadData()
             return true
         } else {
@@ -521,3 +531,47 @@ extension TodoViewController: UITextFieldDelegate {
     }
 }
 
+extension TodoViewController {
+    
+    func setKeyboardObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(TodoViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(TodoViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object:nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+          if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                  let keyboardRectangle = keyboardFrame.cgRectValue
+                  let keyboardHeight = keyboardRectangle.height
+              let tabbarHeight = 45.0
+              UIView.animate(withDuration: 1) {
+
+                  self.headerLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  self.dateLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  self.calendarView.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  print(self.textFieldBackgroundView.frame.origin.y)
+//                  self.textFieldBackgroundView.frame.origin.y -= keyboardHeight
+                  
+              }
+          }
+      }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.window?.frame.origin.y != 0 {
+            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                    let keyboardRectangle = keyboardFrame.cgRectValue
+                    let keyboardHeight = keyboardRectangle.height
+                let tabbarHeight = 45.0
+                UIView.animate(withDuration: 1) {
+
+                    self.headerLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
+                    self.dateLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
+                    self.calendarView.frame.origin.y += (keyboardHeight - tabbarHeight)
+//                    self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
+//                    self.view.window?.frame.origin.y += (keyboardHeight - tabbarHeight)
+                }
+            }
+        }
+    }
+}
