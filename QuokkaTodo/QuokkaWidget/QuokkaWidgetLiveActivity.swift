@@ -37,7 +37,7 @@ struct QuokkaWidgetLiveActivity: Widget {
     //                let future = Date(timeInterval: 25 * 60, since: .now)
     //                let date = Date.now...future
 //                    let date = context.state.startTime...context.state.endTime
-                    let date = Date.now...Date(timeInterval: context.state.seconds,since: .now)
+                    let date = Date.now...Date(timeInterval: context.state.seconds-1,since: .now)
                     Text(timerInterval:date ,countsDown: true)
                         .multilineTextAlignment(.center)
                         .monospacedDigit()

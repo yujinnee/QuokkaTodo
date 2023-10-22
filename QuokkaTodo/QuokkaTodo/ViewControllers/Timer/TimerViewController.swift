@@ -17,12 +17,17 @@ extension Int {
         return CGFloat(self) * .pi / 180
     }
 }
+enum TimerStatus {
+    case running
+    case pause
+    case reset
+}
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
     var seconds = Double()
-    var isTimerRunning = false
-    var isPaused = false
+//    var isTimerRunning = false
+//    var isPaused = false
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
@@ -35,6 +40,11 @@ class TimerViewController: BaseViewController {
         }
     }
     let timeUnit = 0.01
+    var timerStatus:TimerStatus = .reset {
+        didSet{
+            setButton(status: timerStatus)
+        }
+    }
     
     let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
@@ -63,34 +73,32 @@ class TimerViewController: BaseViewController {
     private let startButton = {
         let view = UIButton()
 //        view.setTitle("start", for: .normal)
-        view.setImage(UIImage(systemName: "play.fill"), for: .normal)
-        view.tintColor = QColor.accentColor
+        view.setTitle("뽀모도로 시작하기", for: .normal)
+        view.setTitleColor(QColor.backgroundColor, for: .normal)
+        view.titleLabel?.font = Pretendard.size18.semibold()
+        view.backgroundColor = QColor.accentColor
         view.layer.cornerRadius = 8
-        view.layer.borderWidth = 1
-        view.layer.borderColor = QColor.accentColor.cgColor
+//        view.layer.borderWidth = 1
+//        view.layer.borderColor = QColor.subDeepColor.cgColor
         return view
     }()
     private let pauseButton = {
         let view = UIButton()
 //        view.setTitle("pause", for: .normal)
-        view.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-        view.tintColor = QColor.accentColor
+//        view.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        view.setTitle("일시정지", for: .normal)
+        view.titleLabel?.textColor = .white
+        view.titleLabel?.font = Pretendard.size18.semibold()
+        view.backgroundColor = QColor.subLightColor
         view.layer.cornerRadius = 8
-
-        view.layer.borderWidth = 1
-        view.layer.borderColor = QColor.accentColor.cgColor
 
         return view
     }()
     private let resetButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "arrow.circlepath"), for: .normal)
+//        view.setImage(UIImage(systemName: "xmark"), for: .normal)
         view.tintColor = QColor.accentColor
-        view.layer.cornerRadius = 8
-
-        view.layer.borderWidth = 1
-        view.layer.borderColor = QColor.accentColor.cgColor
-
         return view
     }()
 
@@ -99,6 +107,9 @@ class TimerViewController: BaseViewController {
         view.backgroundColor = QColor.backgroundColor
         addTargets()
         setTimeInterval(num: onePomoInterval)
+        setButton(status: timerStatus)
+
+        
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
@@ -106,9 +117,27 @@ class TimerViewController: BaseViewController {
         
         
     }
-    func setTimeInterval(num: Double){
+    private func setTimeInterval(num: Double){
         seconds = num
         leftTimeInterval = num
+    }
+    private func setButton(status: TimerStatus){
+        switch status{
+        case .running:
+            startButton.isHidden = true
+            pauseButton.isHidden = false
+            resetButton.isHidden = false
+        case .pause:
+            startButton.setTitle("다시 시작하기", for: .normal)
+            startButton.isHidden = false
+            pauseButton.isHidden = true
+            resetButton.isHidden = false
+        case .reset:
+            startButton.setTitle("뽀모도로 시작하기", for: .normal)
+            startButton.isHidden = false
+            pauseButton.isHidden = true
+            resetButton.isHidden = true
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidLoad()
@@ -161,18 +190,18 @@ class TimerViewController: BaseViewController {
     
     @objc private func startButtonDidTap(){
         
-        if !isTimerRunning && !isPaused {// 첫 시작
-            isTimerRunning = true
-            isPaused = false
+        if timerStatus == .reset {// 첫 시작
+            timerStatus = .running
+//            isTimerRunning = true
+//            isPaused = false
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
 //            animateToBarLayer()
             startLiveActivity()
-        }
-        
-        if isTimerRunning && isPaused{//일시 정지 했다가 재시작
-            isPaused = false
+        }else if timerStatus == .pause{//일시 정지 했다가 재시작
+            timerStatus = .running
+//            isPaused = false
             startTime = Date.now
             endTime = Date.now.addingTimeInterval(leftTimeInterval)
             seconds = leftTimeInterval
@@ -187,27 +216,25 @@ class TimerViewController: BaseViewController {
         
     }
     @objc private func pauseButtonDidTap(){
-        if(isTimerRunning){
             circularProgressView.setPauseStatus()
             timer.invalidate()
-            isPaused = true
+            timerStatus = .pause
+//            isPaused = true
             leftTimeInterval = endTime.timeIntervalSince(Date.now)// + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
             Task{ await pauseLiveActivity()}
-        }
         
     }
     @objc private func resetButtonDidTap() {
-        if isTimerRunning{
             Task{ await endLiveActivity()}
             timer.invalidate()
-            isTimerRunning = false
-            isPaused = false
+        timerStatus = .reset
+//            isTimerRunning = false
+//            isPaused = false
             
             seconds = onePomoInterval
             leftTimeInterval = onePomoInterval
             timeLabel.text = seconds.timeFormatString
             circularProgressView.resetStatus()
-        }
         
     }
     
@@ -242,6 +269,7 @@ class TimerViewController: BaseViewController {
     @objc private func endLiveActivityButtonDidTap()  {
         Task{ await endLiveActivity() }
     }
+    
     
     
     private func startLiveActivity() {
@@ -317,7 +345,7 @@ class TimerViewController: BaseViewController {
             make.height.equalTo(35)
         }
         circularProgressView.snp.makeConstraints { make in
-            make.top.equalTo(todoSelectionButton.snp.bottom).offset(30)
+            make.centerY.equalToSuperview().offset(-50)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(30)
             make.height.equalTo(circularProgressView.snp.width)
@@ -326,22 +354,21 @@ class TimerViewController: BaseViewController {
             make.center.equalToSuperview()
         }
         startButton.snp.makeConstraints { make in
-            make.centerY.equalTo(pauseButton)
-            make.width.equalTo(80)
-            make.height.equalTo(40)
-            make.trailing.equalTo(pauseButton.snp.leading).offset(-30)
+            make.horizontalEdges.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(30)
         }
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(80)
-            make.height.equalTo(40)
-            make.top.equalTo(circularProgressView.snp.bottom).offset(50)
+            make.horizontalEdges.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(30)
         }
         resetButton.snp.makeConstraints { make in
-            make.centerY.equalTo(pauseButton)
-            make.width.equalTo(80)
-            make.height.equalTo(40)
-            make.leading.equalTo(pauseButton.snp.trailing).offset(30)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(100)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(50)
+            make.height.equalTo(50)
         }
     }
     

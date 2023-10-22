@@ -53,6 +53,7 @@ enum Pretendard {
     case size25
     case size26
     case size35
+    case size45
     
     var size: CGFloat {
         switch self {
@@ -75,6 +76,7 @@ enum Pretendard {
         case .size25: return 25
         case .size26: return 26
         case .size35: return 35
+        case .size45: return 45
         }
     }
     
