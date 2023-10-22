@@ -21,15 +21,15 @@ class TodoPlayCollectionViewCell: BaseCollectionViewCell {
         view.tintColor = QColor.accentColor
         view.isUserInteractionEnabled = false
         return view
-
+        
     }()
     override init(frame: CGRect) {
         super.init(frame: frame)
         setLayout()
         
-//        backgroundView?.layer.cornerRadius = 10
-//        backgroundView?.layer.borderWidth = 2
-//        backgroundView?.layer.borderColor = QColor.backgroundColor.cgColor
+        //        backgroundView?.layer.cornerRadius = 10
+        //        backgroundView?.layer.borderWidth = 2
+        //        backgroundView?.layer.borderColor = QColor.backgroundColor.cgColor
         
     }
     
@@ -43,11 +43,12 @@ class TodoPlayCollectionViewCell: BaseCollectionViewCell {
         todoLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
+            make.trailing.equalTo(playButton.snp.leading).offset(-20)
         }
         playButton.snp.makeConstraints { make in
-                   make.trailing.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(10)
             make.verticalEdges.equalToSuperview().inset(3)
-                   make.height.equalTo(playButton.snp.width)
+            make.height.equalTo(playButton.snp.width)
         }
     }
     

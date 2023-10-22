@@ -65,9 +65,10 @@ class TodoViewController: BaseViewController{
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = CGFloat(16)
+//        layout.minimumInteritemSpacing = CGFloat(1.0)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: view.frame.width, height: 20)
+        //        layout.itemSize = CGSize(width: view.frame.width, height: 20)
+        layout.minimumLineSpacing = 0
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
         view.bounces = true
@@ -116,7 +117,7 @@ class TodoViewController: BaseViewController{
         fetchTodoData()
         fetchSpareTodoData()
         print(todoRepository.findFileURL())
-
+        
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -377,7 +378,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 isCompleted = true
             }
             spareTodoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-//            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
+            //            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
             var isCompleted = false
@@ -387,11 +388,11 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 isCompleted = true
             }
             todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-//            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
+            //            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         default:
             break
         }
-//        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
+        //        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
         todoCollectionView.reloadData()
     }
     
@@ -443,7 +444,36 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
 }
 extension TodoViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
         return CGSize(width: view.frame.width-40, height: 40)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let width = view.frame.width
+        let estimatedHeight: CGFloat = 300.0
+        let dummyCell = TodoCollectionViewCell(frame: CGRect(x: 0, y: 0, width: width, height: estimatedHeight))
+        
+        switch indexPath.section{
+        case 0:
+            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            dummyCell.todoLabel.text = item.contents
+        case 1:
+            let item = todayArray?[indexPath.row] ?? Todo()
+            dummyCell.todoLabel.text = item.contents
+        default:
+            break
+        }
+        dummyCell.contentView.setNeedsLayout()
+        dummyCell.contentView.layoutIfNeeded()
+        var height = dummyCell.contentView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)).height
+        dummyCell.prepareForReuse()
+        print(indexPath.row)
+        print(height)
+        return CGSize(width: width, height: height)
+        
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1.0
     }
 }
 

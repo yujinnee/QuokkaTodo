@@ -29,7 +29,7 @@ class TimerViewController: BaseViewController {
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 60*25
+    let onePomoInterval:TimeInterval = 10// 60*25
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -57,6 +57,7 @@ class TimerViewController: BaseViewController {
         view.layer.cornerRadius = 8
         view.setTitleColor(QColor.fontColor, for: .normal)
         view.titleLabel?.font = Pretendard.size15.bold()
+        view.titleLabel?.lineBreakMode = .byTruncatingTail
         return view
     }()
     private let timeLabel = {

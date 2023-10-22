@@ -22,6 +22,9 @@ class MenuViewController: BaseViewController {
         view.text = "투두제목"
         view.textAlignment = .center
         view.font = Pretendard.size20.bold()
+        view.numberOfLines = 3
+        view.adjustsFontSizeToFitWidth = true
+        view.minimumScaleFactor = 0.7 
         return view
     }()
     private let todoTypeLabel = {
@@ -126,7 +129,7 @@ class MenuViewController: BaseViewController {
         todoLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(30)
-            make.horizontalEdges.equalToSuperview()
+            make.horizontalEdges.equalToSuperview().inset(20)
         }
         todoTypeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
