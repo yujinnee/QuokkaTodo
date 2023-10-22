@@ -26,8 +26,6 @@ enum TimerStatus {
 class TimerViewController: BaseViewController {
     var timer = Timer()
     var seconds = Double()
-//    var isTimerRunning = false
-//    var isPaused = false
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
@@ -72,23 +70,18 @@ class TimerViewController: BaseViewController {
     }()
     private let startButton = {
         let view = UIButton()
-//        view.setTitle("start", for: .normal)
         view.setTitle("뽀모도로 시작하기", for: .normal)
         view.setTitleColor(QColor.backgroundColor, for: .normal)
-        view.titleLabel?.font = Pretendard.size18.semibold()
+        view.titleLabel?.font = Pretendard.size18.medium()
         view.backgroundColor = QColor.accentColor
         view.layer.cornerRadius = 8
-//        view.layer.borderWidth = 1
-//        view.layer.borderColor = QColor.subDeepColor.cgColor
         return view
     }()
     private let pauseButton = {
         let view = UIButton()
-//        view.setTitle("pause", for: .normal)
-//        view.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         view.setTitle("일시정지", for: .normal)
         view.titleLabel?.textColor = .white
-        view.titleLabel?.font = Pretendard.size18.semibold()
+        view.titleLabel?.font = Pretendard.size18.medium()
         view.backgroundColor = QColor.subLightColor
         view.layer.cornerRadius = 8
 
@@ -97,7 +90,6 @@ class TimerViewController: BaseViewController {
     private let resetButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "arrow.circlepath"), for: .normal)
-//        view.setImage(UIImage(systemName: "xmark"), for: .normal)
         view.tintColor = QColor.accentColor
         return view
     }()
@@ -169,21 +161,15 @@ class TimerViewController: BaseViewController {
             switch todoType{
             case .soon:
                 let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
                 
             case .today:
                 let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
             }
-            print(_id)
-            
-            
-            
-            
+
         }
         self.present(todoSelectionViewController, animated: true)
     }
@@ -192,8 +178,6 @@ class TimerViewController: BaseViewController {
         
         if timerStatus == .reset {// 첫 시작
             timerStatus = .running
-//            isTimerRunning = true
-//            isPaused = false
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
@@ -220,7 +204,7 @@ class TimerViewController: BaseViewController {
             timer.invalidate()
             timerStatus = .pause
 //            isPaused = true
-            leftTimeInterval = endTime.timeIntervalSince(Date.now)// + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
+            leftTimeInterval = endTime.timeIntervalSince(Date.now)
             Task{ await pauseLiveActivity()}
         
     }
@@ -228,9 +212,6 @@ class TimerViewController: BaseViewController {
             Task{ await endLiveActivity()}
             timer.invalidate()
         timerStatus = .reset
-//            isTimerRunning = false
-//            isPaused = false
-            
             seconds = onePomoInterval
             leftTimeInterval = onePomoInterval
             timeLabel.text = seconds.timeFormatString

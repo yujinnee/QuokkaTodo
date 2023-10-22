@@ -22,6 +22,15 @@ class TodoSelectionViewController: BaseViewController {
         view.text = "진행 할 투두 선택하기"
         return view
     }()
+    private let emptyViewLabel = {
+        let view = UILabel()
+        view.font = Pretendard.size15.semibold()
+        view.textColor = QColor.fontColor
+        view.textAlignment = .center
+        view.numberOfLines = 2
+        view.text = "오늘 진행 할 투두가 없습니다.\n투두 탭에서 투두를 추가해주세요."
+        return view
+    }()
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -48,13 +57,15 @@ class TodoSelectionViewController: BaseViewController {
         fetchTodayUncompletedTodoData()
         fetchSpareUncompletedTodoData()
         
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         todoCollectionView.reloadData()
+        toggleEmptyView()
     }
     override func setConstraints() {
-        view.addSubviews([titleLabel,todoCollectionView])
+        view.addSubviews([titleLabel,emptyViewLabel,todoCollectionView])
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(30)
             make.horizontalEdges.equalToSuperview().inset(30)
@@ -62,6 +73,20 @@ class TodoSelectionViewController: BaseViewController {
         todoCollectionView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel).offset(40)
             make.horizontalEdges.bottom.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().offset(-10)
+        }
+        emptyViewLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel).offset(10)
+            make.horizontalEdges.bottom.equalToSuperview().inset(20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
+        }
+    }
+    private func toggleEmptyView() {
+        if(todayArray?.count == 0 && soonArray?.count == 0){
+            todoCollectionView.isHidden = true
+            
+        }else {
+            todoCollectionView.isHidden = false
         }
     }
     
