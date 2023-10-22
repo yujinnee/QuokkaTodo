@@ -13,14 +13,6 @@ class QuokkaViewController: BaseViewController {
     let feedLeafRepository = FeedLeafRepository()
     let feedNutritionRepository = FeedNutritionRepository()
     
-//    var leafNum = 0
-//    var feedLeafNum = 0
-//    var feedNutritionNum = 0
-//    var level = 0
-//    var exp = 0
-//    
-   
-    
     private let brownButtonConfiguration = {
         var config = UIButton.Configuration.filled()
         config.cornerStyle = .capsule
@@ -38,7 +30,6 @@ class QuokkaViewController: BaseViewController {
         let view = UIButton()
         view.setImage(UIImage(systemName: "tshirt"), for: .normal)
         view.configuration = brownButtonConfiguration
-//        view.configuration?.attributedTitle = AttributedString("꾸미기", attributes: titleContainer)
         return view
     }()
     private lazy var diaryButton = {
@@ -64,7 +55,7 @@ class QuokkaViewController: BaseViewController {
         view.progressViewStyle = .default
         view.progressTintColor = QColor.accentColor
         view.trackTintColor = QColor.grayColor
-        view.progress = 0.2
+        view.progress = 0.0
 //        view.transform = view.transform.scaledBy(x: 1, y: 8)
         view.clipsToBounds = true
         view.layer.cornerRadius = 8
@@ -104,6 +95,7 @@ class QuokkaViewController: BaseViewController {
         super.viewDidLoad()
         addTargets()
         view.backgroundColor = QColor.backgroundColor
+        setExpProgressBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -117,6 +109,10 @@ class QuokkaViewController: BaseViewController {
         let imageName = Costume(rawValue: idx)?.quokkaImage ?? ""
         
         quokkaImageView.image = UIImage(named: imageName) ?? UIImage()
+    }
+    func setExpProgressBar() {
+        let (_,exp) = getLevelAndExp()
+        progressBarView.progress = Float(exp/100)
     }
     
     override func configureView() {
