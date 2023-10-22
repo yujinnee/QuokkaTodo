@@ -84,9 +84,11 @@ class TodoSelectionViewController: BaseViewController {
     private func toggleEmptyView() {
         if(todayArray?.count == 0 && soonArray?.count == 0){
             todoCollectionView.isHidden = true
+            emptyViewLabel.isHidden = false
             
         }else {
             todoCollectionView.isHidden = false
+            emptyViewLabel.isHidden = true
         }
     }
     
