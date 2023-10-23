@@ -12,6 +12,7 @@ class QuokkaViewController: BaseViewController {
     let bagRepository = BagRepository()
     let feedLeafRepository = FeedLeafRepository()
     let feedNutritionRepository = FeedNutritionRepository()
+    var nowLevel = 0
     
     private let brownButtonConfiguration = {
         var config = UIButton.Configuration.filled()
@@ -103,6 +104,7 @@ class QuokkaViewController: BaseViewController {
         fetchLevelAndExp()
         print(#function)
         setQuokkaImage()
+        nowLevel = getLevelAndExp().level
     }
     func setQuokkaImage() {
         var idx = UserDefaultsHelper.standard.selectedCostume
@@ -141,6 +143,7 @@ class QuokkaViewController: BaseViewController {
     }
     func fetchLevelAndExp(){
         let (level,exp) = getLevelAndExp()
+        var newLevel = level
         levelLabel.text = "Lv.\(level)"
         expLabel.text = "\(String(format: "%.2f",exp))%"
     }
@@ -154,7 +157,11 @@ class QuokkaViewController: BaseViewController {
         
         levelRepository.updateLeafNum(num: feedLeafNum)
        
-        let (_,exp) = getLevelAndExp()
+        let (level,exp) = getLevelAndExp()
+        if(level>nowLevel){
+            view.makeToastAnimation(message: "Level Up! 새로운 악세사리를 확인해보세요!✨")
+            nowLevel = level
+        }
         animateProgressBar(progress: Float(exp/100))
         fetchLeafNum()
         fetchLevelAndExp()

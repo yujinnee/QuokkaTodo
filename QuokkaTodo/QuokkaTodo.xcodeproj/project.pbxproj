@@ -39,6 +39,7 @@
 		6A2C231C2AE176B7007807EF /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C231B2AE176B7007807EF /* UserDefaultsHelper.swift */; };
 		6A2C23202AE177C0007807EF /* Costume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C231F2AE177C0007807EF /* Costume.swift */; };
 		6A2C23232AE1A301007807EF /* DiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C23222AE1A301007807EF /* DiaryViewController.swift */; };
+		6A3FC7502AE6415900E8A16C /* ToastMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3FC74F2AE6415900E8A16C /* ToastMessageView.swift */; };
 		6A60843E2AC95887005B85C7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60843D2AC95887005B85C7 /* MenuViewController.swift */; };
 		6A67B1092ADA6ADD00FC8D9D /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A67B1082ADA6ADD00FC8D9D /* ChartViewController.swift */; };
 		6A67B10B2ADA6AF500FC8D9D /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A67B10A2ADA6AF500FC8D9D /* SettingViewController.swift */; };
@@ -145,6 +146,7 @@
 		6A2C231B2AE176B7007807EF /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		6A2C231F2AE177C0007807EF /* Costume.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Costume.swift; sourceTree = "<group>"; };
 		6A2C23222AE1A301007807EF /* DiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewController.swift; sourceTree = "<group>"; };
+		6A3FC74F2AE6415900E8A16C /* ToastMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMessageView.swift; sourceTree = "<group>"; };
 		6A60843D2AC95887005B85C7 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		6A67B1082ADA6ADD00FC8D9D /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		6A67B10A2ADA6AF500FC8D9D /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				6AB2B8862AC3380A00830760 /* Color.swift */,
+				6A3FC74F2AE6415900E8A16C /* ToastMessageView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -687,6 +690,7 @@
 				6ABF94EB2ADE10D70038F075 /* FeedLeaf.swift in Sources */,
 				6A1FCC732AE2954300345E8D /* DiaryTableViewCell.swift in Sources */,
 				6A09164F2AC720020014FE2D /* TodoRepository.swift in Sources */,
+				6A3FC7502AE6415900E8A16C /* ToastMessageView.swift in Sources */,
 				6ABF94F22ADFBFFE0038F075 /* FeedLeafRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

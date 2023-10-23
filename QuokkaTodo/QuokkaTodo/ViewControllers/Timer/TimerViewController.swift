@@ -180,6 +180,10 @@ class TimerViewController: BaseViewController {
     }
     
     @objc private func startButtonDidTap(){
+        guard let todo = selectedTodoId else {
+            view.makeToastAnimation(message: "투두를 선택 해 주세요")
+            return
+        }
         
         if timerStatus == .reset {// 첫 시작
             timerStatus = .running
@@ -240,6 +244,7 @@ class TimerViewController: BaseViewController {
     @objc func timerTimeChanged() {
         
         if(seconds <= 0){
+            view.makeToastAnimation(message: "뽀모도로를 완료하여 나뭇잎 1개를 \n획득하였습니다!🌱")
             circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
