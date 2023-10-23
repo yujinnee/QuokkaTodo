@@ -34,7 +34,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
     private let todoTextField = {
         let view = UITextField()
         view.isHidden = true
-        view.font = Pretendard.size13.regular()
+        view.font = Pretendard.size15.regular()
         view.returnKeyType = .done
         return view
     }()
@@ -136,13 +136,13 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         todoLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(1)
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
-            make.trailing.equalTo(menuButton.snp.leading).offset(-20)
+            make.trailing.equalTo(menuButton.snp.leading).offset(-10)
             make.bottom.equalTo(leafStackView.snp.top)
         }
         todoTextField.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
-            make.trailing.equalToSuperview()
+            make.trailing.equalTo(menuButton.snp.leading).offset(-10)
         }
         leafStackView.snp.makeConstraints { make in
             make.leading.equalTo(checkboxImageView.snp.trailing).offset(10)
@@ -152,8 +152,9 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         }
         menuButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-10)
+            make.width.equalTo(30)
             make.verticalEdges.equalToSuperview()
-            make.width.equalTo(menuButton.snp.height)
+//            make.width.equalTo(menuButton.snp.height)
         }
         firstLeafImageView.snp.makeConstraints { make in
             make.width.equalTo(firstLeafImageView.snp.height)
