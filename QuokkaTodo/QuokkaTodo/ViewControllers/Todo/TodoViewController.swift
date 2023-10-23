@@ -21,6 +21,7 @@ class TodoViewController: BaseViewController{
     var todoType: TodoType = .soon
     var soonEditing = false
     var todayEditing = false
+    let maxLength = 10
     
     var selectedDate = Date() {
         didSet {
@@ -45,10 +46,17 @@ class TodoViewController: BaseViewController{
         view.text = DateFormatter.getYearMonth(date: now)
         return view
     }()
+    private let todayButton = {
+        let view = UIButton()
+        view.setImage(UIImage(systemName: "clock.arrow.circlepath"), for: .normal)
+        view.tintColor = QColor.accentColor
+        return view
+    }()
     
     private let calendarView = {
         let view = FSCalendar()
         view.tintColor = QColor.accentColor
+        view.backgroundColor = QColor.backgroundColor
         view.allowsSelection = true
         return view
     }()
@@ -61,13 +69,15 @@ class TodoViewController: BaseViewController{
         label.text = DateFormatter.getMonthDayWeekDay(date: now)
         return label
     }()
+   
     
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = CGFloat(16)
+        //        layout.minimumInteritemSpacing = CGFloat(1.0)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: view.frame.width, height: 20)
+        //        layout.itemSize = CGSize(width: view.frame.width, height: 20)
+        layout.minimumLineSpacing = 3
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
         view.bounces = true
@@ -95,6 +105,9 @@ class TodoViewController: BaseViewController{
         view.titleLabel?.font = Pretendard.size18.bold()
         view.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         view.isEnabled = false
+//        view.layer.borderColor = QColor.accentColor.cgColor
+//        view.layer.borderWidth = 1
+//        view.layer.cornerRadius = 10
         return view
     }()
     private let textField = {
@@ -111,12 +124,13 @@ class TodoViewController: BaseViewController{
         
         setDelegate()
         setTextFieldIsHidden(isHidden: true)
-        //        dismissKeyboardWhenTappedAround()
+        dismissKeyboardWhenTappedAround()
         addTarget()
         fetchTodoData()
         fetchSpareTodoData()
         print(todoRepository.findFileURL())
-
+        setKeyboardObserver()
+    
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -130,19 +144,15 @@ class TodoViewController: BaseViewController{
         let tap: UITapGestureRecognizer =
         UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
+        todoCollectionView.addGestureRecognizer(tap)
     }
     func addTarget() {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        todayButton.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
+//        headerLabel.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
     }
-    @objc func textFieldDidChange(){
-        if(textField.text!.count == 0){
-            registerButton.setTitleColor(QColor.grayColor, for: .normal)
-            registerButton.isEnabled = false
-        }else {
-            registerButton.setTitleColor(QColor.accentColor, for: .normal)
-            registerButton.isEnabled = true
-        }
+    @objc func todayButtonTapped() {
+        calendarView.setCurrentPage(Date(), animated: true)
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -152,14 +162,19 @@ class TodoViewController: BaseViewController{
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
+        navigationController?.navigationBar.backgroundColor = QColor.backgroundColor
         view.backgroundColor = QColor.backgroundColor
+//        preferredStatusBarStyle = .darkContent
     }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+            return .darkContent
+        }
     
     override func setConstraints() {
         //        view.addSubview(scrollView)
         //        scrollView.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         //        textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
-        view.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
+        view.addSubviews([headerLabel,todayButton,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         textFieldBorderview.addSubview(textField)
         //        scrollView.snp.makeConstraints { make in
@@ -167,13 +182,20 @@ class TodoViewController: BaseViewController{
         //        }
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.horizontalEdges.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().inset(20)
+            make.width.equalTo(150)
+            make.height.equalTo(32)
+        }
+        todayButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.trailing.equalToSuperview().inset(20)
+            make.width.equalTo(50)
             make.height.equalTo(32)
         }
         calendarView.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom)
             make.horizontalEdges.equalToSuperview().inset(20)
-            make.height.equalTo(view).multipliedBy(0.35)
+            make.height.equalTo(view).multipliedBy(0.3)
         }
         
         dateLabel.snp.makeConstraints { make in
@@ -194,14 +216,16 @@ class TodoViewController: BaseViewController{
             make.verticalEdges.equalToSuperview().inset(6)
             make.leading.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
-            make.trailing.equalTo(registerButton.snp.leading).offset(-10)
+            make.trailing.equalTo(registerButton.snp.leading).offset(-2)
         }
         textField.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(10)
         }
         registerButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(16)
+            
+            make.trailing.equalToSuperview().inset(2)
+            make.width.equalTo(60)
             make.centerY.equalToSuperview()
         }
         
@@ -213,7 +237,7 @@ class TodoViewController: BaseViewController{
         textField.delegate = self
     }
     func addTodo(){
-        if textField.text != nil{
+        if textField.text!.count != 0{
             let text = textField.text ?? ""
             
             let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
@@ -225,6 +249,7 @@ class TodoViewController: BaseViewController{
                 calendarView.reloadData()//이벤트 점 표시용 reloadData()
             }
             textField.text = ""
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
             todoCollectionView.reloadData()
         }
     }
@@ -377,7 +402,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 isCompleted = true
             }
             spareTodoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-//            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
+            //            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
             var isCompleted = false
@@ -387,11 +412,11 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 isCompleted = true
             }
             todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-//            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
+            //            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         default:
             break
         }
-//        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
+        //        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
         todoCollectionView.reloadData()
     }
     
@@ -443,11 +468,71 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
 }
 extension TodoViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
         return CGSize(width: view.frame.width-40, height: 40)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let width = view.frame.width
+        let estimatedHeight: CGFloat = 300.0
+        let dummyCell = TodoCollectionViewCell(frame: CGRect(x: 0, y: 0, width: width, height: estimatedHeight))
+        
+        switch indexPath.section{
+        case 0:
+            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            dummyCell.todoLabel.text = item.contents
+        case 1:
+            let item = todayArray?[indexPath.row] ?? Todo()
+            dummyCell.todoLabel.text = item.contents
+        default:
+            break
+        }
+        dummyCell.contentView.setNeedsLayout()
+        dummyCell.contentView.layoutIfNeeded()
+        var height = dummyCell.contentView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)).height
+        dummyCell.prepareForReuse()
+        print(indexPath.row)
+        print(height)
+        return CGSize(width: width, height: height)
+        
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1.0
     }
 }
 
 extension TodoViewController: UITextFieldDelegate {
+    @objc func textFieldDidChange(){
+        if(textField.text!.count == 0){
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
+            registerButton.isEnabled = false
+        }else {
+            registerButton.setTitleColor(QColor.accentColor, for: .normal)
+            registerButton.isEnabled = true
+        }
+        let textString = textField.text!
+        if textString.count >= maxLength {
+            let index = textString.index(textString.startIndex, offsetBy: maxLength)
+            let fixedText = textString[textString.startIndex..<index]
+            textField.text = fixedText + " "
+            
+            let when = DispatchTime.now() + 0.01
+            DispatchQueue.main.asyncAfter(deadline: when) {
+                self.textField.text = String(fixedText)
+            }
+        }
+        
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+       
+        if(textField.text!.count == 0){
+            registerButton.setTitleColor(QColor.grayColor, for: .normal)
+            registerButton.isEnabled = false
+        }else {
+            registerButton.setTitleColor(QColor.accentColor, for: .normal)
+            registerButton.isEnabled = true
+        }
+    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         setTextFieldIsHidden(isHidden: true)
@@ -457,9 +542,8 @@ extension TodoViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if(textField.text?.count ?? 0 > 0){
+        if(textField.text!.count > 0){
             addTodo()
-            
             todoCollectionView.reloadData()
             return true
         } else {
@@ -468,3 +552,47 @@ extension TodoViewController: UITextFieldDelegate {
     }
 }
 
+extension TodoViewController {
+    
+    func setKeyboardObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(TodoViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(TodoViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object:nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+          if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                  let keyboardRectangle = keyboardFrame.cgRectValue
+                  let keyboardHeight = keyboardRectangle.height
+              let tabbarHeight = 45.0
+              UIView.animate(withDuration: 1) {
+
+                  self.headerLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  self.dateLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  self.calendarView.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
+                  print(self.textFieldBackgroundView.frame.origin.y)
+//                  self.textFieldBackgroundView.frame.origin.y -= keyboardHeight
+                  
+              }
+          }
+      }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.window?.frame.origin.y != 0 {
+            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                    let keyboardRectangle = keyboardFrame.cgRectValue
+                    let keyboardHeight = keyboardRectangle.height
+                let tabbarHeight = 45.0
+                UIView.animate(withDuration: 1) {
+
+                    self.headerLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
+                    self.dateLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
+                    self.calendarView.frame.origin.y += (keyboardHeight - tabbarHeight)
+//                    self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
+//                    self.view.window?.frame.origin.y += (keyboardHeight - tabbarHeight)
+                }
+            }
+        }
+    }
+}

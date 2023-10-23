@@ -17,25 +17,30 @@ extension Int {
         return CGFloat(self) * .pi / 180
     }
 }
+enum TimerStatus {
+    case running
+    case pause
+    case reset
+}
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
-    var seconds = Double(){
-        didSet{
-            circularProgressView.progress = seconds/10
-        }
-    }
-    var isTimerRunning = false
-    var isPaused = false
+    var seconds = Double()
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 10
+    let onePomoInterval:TimeInterval = 10// 60*25
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
         didSet{
             todoSelectionButton.setTitle(selectedTodoContents, for: .normal)
+        }
+    }
+    let timeUnit = 0.01
+    var timerStatus:TimerStatus = .reset {
+        didSet{
+            setButton(status: timerStatus)
         }
     }
     
@@ -52,6 +57,7 @@ class TimerViewController: BaseViewController {
         view.layer.cornerRadius = 8
         view.setTitleColor(QColor.fontColor, for: .normal)
         view.titleLabel?.font = Pretendard.size15.bold()
+        view.titleLabel?.lineBreakMode = .byTruncatingTail
         return view
     }()
     private let timeLabel = {
@@ -60,87 +66,46 @@ class TimerViewController: BaseViewController {
         return view
     }()
     private lazy var circularProgressView = {
-        let view = CircularProgressView(seconds:seconds)
+        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval)
         return view
     }()
-//    private lazy var circularPath: UIBezierPath = {
-//        return UIBezierPath(arcCenter: CGPoint(x: view.bounds.midX, y: view.bounds.midY-70),
-//                            radius: 140, // 반지름
-//                            startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
-//                            endAngle: 270.degreesToRadians, // 2시 방향
-//                            clockwise: true)
-//    }()
-//    
-//    private lazy var trackLayer: CAShapeLayer = {
-//        let layer = CAShapeLayer()
-//        layer.path = circularPath.cgPath
-//        layer.fillColor = UIColor.clear.cgColor
-//        layer.strokeColor = QColor.subLightColor.cgColor
-//        layer.lineWidth = 15
-//        return layer
-//    }()
-//    
-//    private lazy var barLayer: CAShapeLayer = {
-//        let layer = CAShapeLayer()
-//        layer.path = circularPath.cgPath
-//        layer.fillColor = UIColor.clear.cgColor
-//        layer.strokeColor = QColor.accentColor.cgColor
-//        layer.lineWidth = 15
-//        return layer
-//    }()
     private let startButton = {
         let view = UIButton()
-//        view.setTitle("start", for: .normal)
-        view.setImage(UIImage(systemName: "play.fill"), for: .normal)
-        view.tintColor = QColor.accentColor
+        view.setTitle("뽀모도로 시작하기", for: .normal)
+        view.setTitleColor(QColor.backgroundColor, for: .normal)
+        view.titleLabel?.font = Pretendard.size18.medium()
+        view.backgroundColor = QColor.accentColor
         view.layer.cornerRadius = 8
-        view.layer.borderWidth = 1
-        view.layer.borderColor = QColor.accentColor.cgColor
         return view
     }()
     private let pauseButton = {
         let view = UIButton()
-//        view.setTitle("pause", for: .normal)
-        view.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-        view.tintColor = QColor.accentColor
+        view.setTitle("일시정지", for: .normal)
+        view.titleLabel?.textColor = .white
+        view.titleLabel?.font = Pretendard.size18.medium()
+        view.backgroundColor = QColor.subLightColor
         view.layer.cornerRadius = 8
-
-        view.layer.borderWidth = 1
-        view.layer.borderColor = QColor.accentColor.cgColor
-
+        
         return view
     }()
     private let resetButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "arrow.circlepath"), for: .normal)
-        view.tintColor = QColor.accentColor
-        view.layer.cornerRadius = 8
-
-        view.layer.borderWidth = 1
-        view.layer.borderColor = QColor.accentColor.cgColor
-
+        view.tintColor = .systemGray2
+        view.layer.borderWidth = 1.0
+        view.layer.cornerRadius = 5
+        view.layer.borderColor = UIColor.systemGray2.cgColor
         return view
     }()
-    //    private let liveActivityButton = {
-    //        let view = UIButton()
-    //        view.setTitle("liveActivity", for: .normal)
-    //        view.tintColor = QColor.accentColor
-    //        view.setTitleColor(QColor.accentColor, for: .normal)
-    //        return view
-    //    }()
-    //    private let endLiveActivityButton = {
-    //        let view = UIButton()
-    //        view.setTitle("EndLiveActivity", for: .normal)
-    //        view.tintColor = QColor.accentColor
-    //        view.setTitleColor(QColor.accentColor, for: .normal)
-    //        return view
-    //    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
         addTargets()
         setTimeInterval(num: onePomoInterval)
+        setButton(status: timerStatus)
+        
+        
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
@@ -148,9 +113,27 @@ class TimerViewController: BaseViewController {
         
         
     }
-    func setTimeInterval(num: Double){
+    private func setTimeInterval(num: Double){
         seconds = num
         leftTimeInterval = num
+    }
+    private func setButton(status: TimerStatus){
+        switch status{
+        case .running:
+            startButton.isHidden = true
+            pauseButton.isHidden = false
+            resetButton.isHidden = false
+        case .pause:
+            startButton.setTitle("다시 시작하기", for: .normal)
+            startButton.isHidden = false
+            pauseButton.isHidden = true
+            resetButton.isHidden = false
+        case .reset:
+            startButton.setTitle("뽀모도로 시작하기", for: .normal)
+            startButton.isHidden = false
+            pauseButton.isHidden = true
+            resetButton.isHidden = true
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidLoad()
@@ -159,6 +142,7 @@ class TimerViewController: BaseViewController {
             print(seconds)
             print(seconds.timeFormatString)
             timeLabel.text = seconds.timeFormatString
+            
         }else{
             leftTimeInterval = endTime.timeIntervalSince(.now)
             seconds = leftTimeInterval
@@ -172,19 +156,8 @@ class TimerViewController: BaseViewController {
         startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(pauseButtonDidTap), for: .touchUpInside)
         resetButton.addTarget(self, action: #selector(resetButtonDidTap), for: .touchUpInside)
-        //        liveActivityButton.addTarget(self, action: #selector(liveActivityButtonDidTap), for: .touchUpInside)
-        //        endLiveActivityButton.addTarget(self, action: #selector(endLiveActivityButtonDidTap), for: .touchUpInside)
-        
     }
-//    private func animateToBarLayer() {
-//        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
-//        strokeAnimation.fromValue = 0
-//        strokeAnimation.toValue = 1
-//        strokeAnimation.duration = seconds
-//        
-//        barLayer.add(strokeAnimation, forKey: nil)
-//    }
-    @objc private func todoSelectionButtonDidTap() {
+    @objc func todoSelectionButtonDidTap() {
         let todoSelectionViewController = TodoSelectionViewController()
         todoSelectionViewController.modalPresentationStyle = .pageSheet
         todoSelectionViewController.todoCellTappedClosure = { _id ,todoType in
@@ -193,107 +166,86 @@ class TimerViewController: BaseViewController {
             switch todoType{
             case .soon:
                 let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
                 
             case .today:
                 let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                //                self.todoSelectionButton.setTitle(item.contents, for: .normal)
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
             }
-            print(_id)
-            
-            
-            
             
         }
         self.present(todoSelectionViewController, animated: true)
     }
     
     @objc private func startButtonDidTap(){
-        
-        if !isTimerRunning && !isPaused {// 첫 시작
-            isTimerRunning = true
-            isPaused = false
-            startTime = Date.now
-            endTime = Date(timeInterval: onePomoInterval, since: startTime)
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-//            animateToBarLayer()
-            startLiveActivity()
+        guard let todo = selectedTodoId else {
+            view.makeToastAnimation(message: "투두를 선택 해 주세요")
+            return
         }
         
-        if isTimerRunning && isPaused{//일시 정지 했다가 재시작
-            isPaused = false
+        if timerStatus == .reset {// 첫 시작
+            timerStatus = .running
+            startTime = Date.now
+            endTime = Date(timeInterval: onePomoInterval, since: startTime)
+            timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            //            animateToBarLayer()
+            startLiveActivity()
+        }else if timerStatus == .pause{//일시 정지 했다가 재시작
+            timerStatus = .running
+            //            isPaused = false
             startTime = Date.now
             endTime = Date.now.addingTimeInterval(leftTimeInterval)
             seconds = leftTimeInterval
             
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             Task{
                 await restartTimerInLiveActivity()
             }
             
         }
-        
-        
-        //        if(isTimerRunning == false){
-        //            isTimerRunning = true
-        //
-        //            timer.invalidate()// 확실하게 다른 타이머 돌아가는게 없도록 하기
-        //
-        //
-        //            DispatchQueue.global().async {
-        //                print(RunLoop.current == RunLoop.main)
-        //
-        //                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-        //                    print(Date())
-        //                    self.seconds -= 1
-        //                    DispatchQueue.main.sync{
-        //                        self.timeLabel.text = self.seconds.timeFormatString
-        //                    }
-        //
-        //
-        //                    if(self.seconds == 0){
-        //                        timer.invalidate()
-        //                    }
-        //                }
-        //
-        //                while self.shouldKeepRunning {
-        //                    RunLoop.current.run(until: .now + 0.1)
-        //                }
-        //            }
-        //        }
+        circularProgressView.progress = seconds/onePomoInterval
         
     }
     @objc private func pauseButtonDidTap(){
-        if(isTimerRunning){
-            timer.invalidate()
-            //            isTimerRunning = false
-            isPaused = true
-            leftTimeInterval = endTime.timeIntervalSince(Date.now) + 1 //다시 시작할때 초가 자꾸 튀어서 1초 더해서 저장함..
-            Task{ await pauseLiveActivity()}
-        }
+        circularProgressView.setPauseStatus()
+        timer.invalidate()
+        timerStatus = .pause
+        //            isPaused = true
+        leftTimeInterval = endTime.timeIntervalSince(Date.now)
+        Task{ await pauseLiveActivity()}
         
     }
     @objc private func resetButtonDidTap() {
-        if isTimerRunning{
-            Task{ await endLiveActivity()}
-            timer.invalidate()
-            isTimerRunning = false
-            isPaused = false
-            
-            seconds = onePomoInterval
-            leftTimeInterval = onePomoInterval
-            timeLabel.text = seconds.timeFormatString
-            
+        let alert = UIAlertController(title: "뽀모도로 초기화", message: "측정 중인 시간이 사라지게 됩니다. 초기화 하시겠습니까?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        let ok = UIAlertAction(title: "확인", style: .default) { _ in
+            self.setReset()
         }
+        cancel.setValue(QColor.accentColor, forKey: "titleTextColor")
+        ok.setValue(QColor.accentColor, forKey: "titleTextColor")
+
+        alert.addAction(cancel)
+        alert.addAction(ok)
+        present(alert, animated: true)
         
+    }
+    private func setReset() {
+        Task{ await endLiveActivity()}
+        timer.invalidate()
+        timerStatus = .reset
+        seconds = onePomoInterval
+        leftTimeInterval = onePomoInterval
+        timeLabel.text = seconds.timeFormatString
+        circularProgressView.resetStatus()
     }
     
     @objc func timerTimeChanged() {
+        
         if(seconds <= 0){
+            view.makeToastAnimation(message: "뽀모도로를 완료하여 나뭇잎 1개를 \n획득하였습니다!🌱")
+            circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
             switch todoType {
@@ -308,10 +260,14 @@ class TimerViewController: BaseViewController {
             let leafNum = bagRepository.readLeafNum()
             feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
             bagRepository.updateLeafNum(num: leafNum+1)
-        }else{
-            seconds -= 1
-            timeLabel.text = seconds.timeFormatString
+            setReset()
         }
+        else{
+            seconds -= timeUnit
+            timeLabel.text = seconds.timeFormatString
+            circularProgressView.progress = seconds/onePomoInterval
+        }
+        
     }
     @objc private func liveActivityButtonDidTap(){
         startLiveActivity()
@@ -319,6 +275,7 @@ class TimerViewController: BaseViewController {
     @objc private func endLiveActivityButtonDidTap()  {
         Task{ await endLiveActivity() }
     }
+    
     
     
     private func startLiveActivity() {
@@ -386,8 +343,6 @@ class TimerViewController: BaseViewController {
     override func setConstraints() {
         view.addSubviews([todoSelectionButton,circularProgressView,startButton,pauseButton,resetButton])
         circularProgressView.addSubview(timeLabel)
-//        view.layer.addSublayer(trackLayer)
-//        view.layer.addSublayer(barLayer)
         
         todoSelectionButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -396,7 +351,7 @@ class TimerViewController: BaseViewController {
             make.height.equalTo(35)
         }
         circularProgressView.snp.makeConstraints { make in
-            make.top.equalTo(todoSelectionButton.snp.bottom).offset(30)
+            make.centerY.equalToSuperview().offset(-50)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(30)
             make.height.equalTo(circularProgressView.snp.width)
@@ -405,31 +360,22 @@ class TimerViewController: BaseViewController {
             make.center.equalToSuperview()
         }
         startButton.snp.makeConstraints { make in
-            make.centerY.equalTo(pauseButton)
-            make.width.equalTo(80)
-            make.height.equalTo(40)
-            make.trailing.equalTo(pauseButton.snp.leading).offset(-30)
+            make.horizontalEdges.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(30)
         }
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(80)
-            make.height.equalTo(40)
-            make.top.equalTo(circularProgressView.snp.bottom).offset(50)
+            make.horizontalEdges.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(30)
         }
         resetButton.snp.makeConstraints { make in
-            make.centerY.equalTo(pauseButton)
-            make.width.equalTo(80)
-            make.height.equalTo(40)
-            make.leading.equalTo(pauseButton.snp.trailing).offset(30)
+            make.top.equalTo(circularProgressView.snp.bottom).offset(100)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(50)
+            make.height.equalTo(30)
         }
-        //        liveActivityButton.snp.makeConstraints { make in
-        //            make.centerX.equalToSuperview()
-        //            make.top.equalTo(resetButton.snp.bottom).offset(10)
-        //        }
-        //        endLiveActivityButton.snp.makeConstraints { make in
-        //            make.centerX.equalToSuperview()
-        //            make.top.equalTo(liveActivityButton.snp.bottom).offset(10)
-        //        }
     }
     
 }

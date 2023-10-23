@@ -12,14 +12,7 @@ class QuokkaViewController: BaseViewController {
     let bagRepository = BagRepository()
     let feedLeafRepository = FeedLeafRepository()
     let feedNutritionRepository = FeedNutritionRepository()
-    
-//    var leafNum = 0
-//    var feedLeafNum = 0
-//    var feedNutritionNum = 0
-//    var level = 0
-//    var exp = 0
-//    
-   
+    var nowLevel = 0
     
     private let brownButtonConfiguration = {
         var config = UIButton.Configuration.filled()
@@ -38,7 +31,6 @@ class QuokkaViewController: BaseViewController {
         let view = UIButton()
         view.setImage(UIImage(systemName: "tshirt"), for: .normal)
         view.configuration = brownButtonConfiguration
-//        view.configuration?.attributedTitle = AttributedString("꾸미기", attributes: titleContainer)
         return view
     }()
     private lazy var diaryButton = {
@@ -64,7 +56,7 @@ class QuokkaViewController: BaseViewController {
         view.progressViewStyle = .default
         view.progressTintColor = QColor.accentColor
         view.trackTintColor = QColor.grayColor
-        view.progress = 0.2
+        view.progress = 0.0
 //        view.transform = view.transform.scaledBy(x: 1, y: 8)
         view.clipsToBounds = true
         view.layer.cornerRadius = 8
@@ -104,6 +96,7 @@ class QuokkaViewController: BaseViewController {
         super.viewDidLoad()
         addTargets()
         view.backgroundColor = QColor.backgroundColor
+        setExpProgressBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -111,12 +104,17 @@ class QuokkaViewController: BaseViewController {
         fetchLevelAndExp()
         print(#function)
         setQuokkaImage()
+        nowLevel = getLevelAndExp().level
     }
     func setQuokkaImage() {
         var idx = UserDefaultsHelper.standard.selectedCostume
         let imageName = Costume(rawValue: idx)?.quokkaImage ?? ""
         
         quokkaImageView.image = UIImage(named: imageName) ?? UIImage()
+    }
+    func setExpProgressBar() {
+        let (_,exp) = getLevelAndExp()
+        progressBarView.progress = Float(exp/100)
     }
     
     override func configureView() {
@@ -145,6 +143,7 @@ class QuokkaViewController: BaseViewController {
     }
     func fetchLevelAndExp(){
         let (level,exp) = getLevelAndExp()
+        var newLevel = level
         levelLabel.text = "Lv.\(level)"
         expLabel.text = "\(String(format: "%.2f",exp))%"
     }
@@ -158,7 +157,11 @@ class QuokkaViewController: BaseViewController {
         
         levelRepository.updateLeafNum(num: feedLeafNum)
        
-        let (_,exp) = getLevelAndExp()
+        let (level,exp) = getLevelAndExp()
+        if(level>nowLevel){
+            view.makeToastAnimation(message: "Level Up! 새로운 악세사리를 확인해보세요!✨")
+            nowLevel = level
+        }
         animateProgressBar(progress: Float(exp/100))
         fetchLeafNum()
         fetchLevelAndExp()
