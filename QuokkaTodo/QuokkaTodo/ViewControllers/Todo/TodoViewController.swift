@@ -21,7 +21,7 @@ class TodoViewController: BaseViewController{
     var todoType: TodoType = .soon
     var soonEditing = false
     var todayEditing = false
-    let maxLength = 10
+    let maxLength = 200
     
     var selectedDate = Date() {
         didSet {
@@ -561,11 +561,12 @@ extension TodoViewController {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        print("show")
           if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
                   let keyboardRectangle = keyboardFrame.cgRectValue
                   let keyboardHeight = keyboardRectangle.height
               let tabbarHeight = 45.0
-              UIView.animate(withDuration: 1) {
+//              UIView.animate(withDuration:0) {
 
                   self.headerLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
                   self.dateLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
@@ -574,24 +575,25 @@ extension TodoViewController {
                   print(self.textFieldBackgroundView.frame.origin.y)
 //                  self.textFieldBackgroundView.frame.origin.y -= keyboardHeight
                   
-              }
+//              }
           }
       }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        print("hide")
         if self.view.window?.frame.origin.y != 0 {
             if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
                     let keyboardRectangle = keyboardFrame.cgRectValue
                     let keyboardHeight = keyboardRectangle.height
                 let tabbarHeight = 45.0
-                UIView.animate(withDuration: 1) {
+//                UIView.animate(withDuration: 1) {
 
                     self.headerLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
                     self.dateLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
                     self.calendarView.frame.origin.y += (keyboardHeight - tabbarHeight)
 //                    self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
 //                    self.view.window?.frame.origin.y += (keyboardHeight - tabbarHeight)
-                }
+//                }
             }
         }
     }

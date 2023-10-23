@@ -29,7 +29,7 @@ class TimerViewController: BaseViewController {
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 10// 60*25
+    let onePomoInterval:TimeInterval = 60*25
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
