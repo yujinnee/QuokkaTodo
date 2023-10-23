@@ -124,12 +124,13 @@ class TodoViewController: BaseViewController{
         
         setDelegate()
         setTextFieldIsHidden(isHidden: true)
-        //        dismissKeyboardWhenTappedAround()
+        dismissKeyboardWhenTappedAround()
         addTarget()
         fetchTodoData()
         fetchSpareTodoData()
         print(todoRepository.findFileURL())
         setKeyboardObserver()
+    
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -143,7 +144,7 @@ class TodoViewController: BaseViewController{
         let tap: UITapGestureRecognizer =
         UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
+        todoCollectionView.addGestureRecognizer(tap)
     }
     func addTarget() {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -523,6 +524,7 @@ extension TodoViewController: UITextFieldDelegate {
         
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
+       
         if(textField.text!.count == 0){
             registerButton.setTitleColor(QColor.grayColor, for: .normal)
             registerButton.isEnabled = false

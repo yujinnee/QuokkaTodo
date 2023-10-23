@@ -85,23 +85,26 @@ class TimerViewController: BaseViewController {
         view.titleLabel?.font = Pretendard.size18.medium()
         view.backgroundColor = QColor.subLightColor
         view.layer.cornerRadius = 8
-
+        
         return view
     }()
     private let resetButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "arrow.circlepath"), for: .normal)
-        view.tintColor = QColor.accentColor
+        view.tintColor = .systemGray2
+        view.layer.borderWidth = 1.0
+        view.layer.cornerRadius = 5
+        view.layer.borderColor = UIColor.systemGray2.cgColor
         return view
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
         addTargets()
         setTimeInterval(num: onePomoInterval)
         setButton(status: timerStatus)
-
+        
         
     }
     override func configureView() {
@@ -139,6 +142,7 @@ class TimerViewController: BaseViewController {
             print(seconds)
             print(seconds.timeFormatString)
             timeLabel.text = seconds.timeFormatString
+            
         }else{
             leftTimeInterval = endTime.timeIntervalSince(.now)
             seconds = leftTimeInterval
@@ -170,7 +174,7 @@ class TimerViewController: BaseViewController {
                 self.selectedTodoContents = item.contents
                 Task{await self.updateTodoLiveActivity()}
             }
-
+            
         }
         self.present(todoSelectionViewController, animated: true)
     }
@@ -182,11 +186,11 @@ class TimerViewController: BaseViewController {
             startTime = Date.now
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-//            animateToBarLayer()
+            //            animateToBarLayer()
             startLiveActivity()
         }else if timerStatus == .pause{//일시 정지 했다가 재시작
             timerStatus = .running
-//            isPaused = false
+            //            isPaused = false
             startTime = Date.now
             endTime = Date.now.addingTimeInterval(leftTimeInterval)
             seconds = leftTimeInterval
@@ -201,21 +205,32 @@ class TimerViewController: BaseViewController {
         
     }
     @objc private func pauseButtonDidTap(){
-            circularProgressView.setPauseStatus()
-            timer.invalidate()
-            timerStatus = .pause
-//            isPaused = true
-            leftTimeInterval = endTime.timeIntervalSince(Date.now)
-            Task{ await pauseLiveActivity()}
+        circularProgressView.setPauseStatus()
+        timer.invalidate()
+        timerStatus = .pause
+        //            isPaused = true
+        leftTimeInterval = endTime.timeIntervalSince(Date.now)
+        Task{ await pauseLiveActivity()}
         
     }
     @objc private func resetButtonDidTap() {
-        setReset()
+        let alert = UIAlertController(title: "뽀모도로 초기화", message: "측정 중인 시간이 사라지게 됩니다. 초기화 하시겠습니까?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        let ok = UIAlertAction(title: "확인", style: .default) { _ in
+            self.setReset()
+        }
+        cancel.setValue(QColor.accentColor, forKey: "titleTextColor")
+        ok.setValue(QColor.accentColor, forKey: "titleTextColor")
+
+        alert.addAction(cancel)
+        alert.addAction(ok)
+        present(alert, animated: true)
+        
     }
     private func setReset() {
         Task{ await endLiveActivity()}
         timer.invalidate()
-    timerStatus = .reset
+        timerStatus = .reset
         seconds = onePomoInterval
         leftTimeInterval = onePomoInterval
         timeLabel.text = seconds.timeFormatString
@@ -223,8 +238,8 @@ class TimerViewController: BaseViewController {
     }
     
     @objc func timerTimeChanged() {
-      
-        if(seconds == 0){
+        
+        if(seconds <= 0){
             circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
@@ -240,16 +255,14 @@ class TimerViewController: BaseViewController {
             let leafNum = bagRepository.readLeafNum()
             feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
             bagRepository.updateLeafNum(num: leafNum+1)
-    
-        }else if(seconds < -1){
             setReset()
         }
-            else{
+        else{
             seconds -= timeUnit
             timeLabel.text = seconds.timeFormatString
             circularProgressView.progress = seconds/onePomoInterval
         }
-       
+        
     }
     @objc private func liveActivityButtonDidTap(){
         startLiveActivity()
@@ -356,7 +369,7 @@ class TimerViewController: BaseViewController {
             make.top.equalTo(circularProgressView.snp.bottom).offset(100)
             make.centerX.equalToSuperview()
             make.width.equalTo(50)
-            make.height.equalTo(50)
+            make.height.equalTo(30)
         }
     }
     

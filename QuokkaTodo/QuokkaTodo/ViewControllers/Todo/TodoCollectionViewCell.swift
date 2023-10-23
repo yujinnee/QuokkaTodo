@@ -20,7 +20,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         let view = UIImageView()
         //        view.image = UIImage(systemName: "checkmark.square")
         view.image = UIImage(systemName: "square")
-        view.tintColor = .systemGray3
+        view.tintColor = QColor.subLightColor
         return view
     }()
     let todoLabel = {
