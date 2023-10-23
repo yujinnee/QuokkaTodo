@@ -73,15 +73,15 @@ struct QuokkaWidgetLiveActivity: Widget {
                     contentState: context.state,
                     isStale: context.isStale
                 )
+                
             } compactLeading: {
-                Text("L")
+                Image(systemName: "leaf")
             } compactTrailing: {
-                Text("T")
             } minimal: {
-                Text("M")
+                Image(systemName: "leaf")
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            
+           
         }
     }
     
@@ -90,15 +90,20 @@ struct QuokkaWidgetLiveActivity: Widget {
                                  contentState: QuokkaWidgetAttributes.ContentState,
                                  isStale: Bool) -> DynamicIslandExpandedContent<some View> {
         DynamicIslandExpandedRegion(.leading) {
-            EmptyView()
+//            Image(systemName: "leaf")
         }
         
         DynamicIslandExpandedRegion(.trailing) {
-            EmptyView()
+//            Text(systemName: "leaf")
         }
         
         DynamicIslandExpandedRegion(.bottom) {
-            EmptyView()
+            HStack{
+                Text("QuokkaTodo")
+                Image(systemName: "leaf")
+            }
+            Spacer()
+            Text("나뭇잎 얻는 중")
         }
     }
 }
