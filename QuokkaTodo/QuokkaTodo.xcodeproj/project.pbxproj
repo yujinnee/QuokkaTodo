@@ -40,8 +40,6 @@
 		6A2C23202AE177C0007807EF /* Costume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C231F2AE177C0007807EF /* Costume.swift */; };
 		6A2C23232AE1A301007807EF /* DiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2C23222AE1A301007807EF /* DiaryViewController.swift */; };
 		6A3FC7502AE6415900E8A16C /* ToastMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3FC74F2AE6415900E8A16C /* ToastMessageView.swift */; };
-		6A49060A2AE6DB5B008CED17 /* quokka_circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4906082AE6DB5B008CED17 /* quokka_circle.png */; };
-		6A49060B2AE6DB5B008CED17 /* quokka_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4906092AE6DB5B008CED17 /* quokka_logo.png */; };
 		6A60843E2AC95887005B85C7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60843D2AC95887005B85C7 /* MenuViewController.swift */; };
 		6A67B1092ADA6ADD00FC8D9D /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A67B1082ADA6ADD00FC8D9D /* ChartViewController.swift */; };
 		6A67B10B2ADA6AF500FC8D9D /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A67B10A2ADA6AF500FC8D9D /* SettingViewController.swift */; };
@@ -151,8 +149,6 @@
 		6A2C231F2AE177C0007807EF /* Costume.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Costume.swift; sourceTree = "<group>"; };
 		6A2C23222AE1A301007807EF /* DiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryViewController.swift; sourceTree = "<group>"; };
 		6A3FC74F2AE6415900E8A16C /* ToastMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMessageView.swift; sourceTree = "<group>"; };
-		6A4906082AE6DB5B008CED17 /* quokka_circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quokka_circle.png; sourceTree = "<group>"; };
-		6A4906092AE6DB5B008CED17 /* quokka_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quokka_logo.png; sourceTree = "<group>"; };
 		6A60843D2AC95887005B85C7 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		6A67B1082ADA6ADD00FC8D9D /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		6A67B10A2ADA6AF500FC8D9D /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -380,8 +376,6 @@
 		6AB2B8702AC3355700830760 /* QoukkaTodo */ = {
 			isa = PBXGroup;
 			children = (
-				6A4906082AE6DB5B008CED17 /* quokka_circle.png */,
-				6A4906092AE6DB5B008CED17 /* quokka_logo.png */,
 				6A2C231E2AE177AF007807EF /* Enum */,
 				6A2C23192AE1769B007807EF /* UserDefaults */,
 				6A0916462AC6B80F0014FE2D /* Realm */,
@@ -624,9 +618,7 @@
 				6A0916422AC6861D0014FE2D /* DINPro-Light.otf in Resources */,
 				6AB2B8952AC3407D00830760 /* Pretendard-SemiBold.otf in Resources */,
 				6AB2B89A2AC3407D00830760 /* Pretendard-ExtraLight.otf in Resources */,
-				6A49060A2AE6DB5B008CED17 /* quokka_circle.png in Resources */,
 				6AB2B8962AC3407D00830760 /* Pretendard-Medium.otf in Resources */,
-				6A49060B2AE6DB5B008CED17 /* quokka_logo.png in Resources */,
 				6A0916432AC6861D0014FE2D /* DINPro-Black.otf in Resources */,
 				6AB2B8932AC3407D00830760 /* Pretendard-Regular.otf in Resources */,
 				6AB2B8922AC3407D00830760 /* Pretendard-Black.otf in Resources */,
@@ -935,10 +927,13 @@
 				DEVELOPMENT_TEAM = 3H85AXMVD3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuokkaTodo/Info.plist;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -967,10 +962,13 @@
 				DEVELOPMENT_TEAM = 3H85AXMVD3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuokkaTodo/Info.plist;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -22,8 +22,8 @@ class CircularProgressView: BaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    init(seconds:TimeInterval,onePomo: TimeInterval) {
-        super.init(frame: .zero)
+    init(seconds:TimeInterval,onePomo: TimeInterval,frame:CGRect) {
+        super.init(frame:frame)
         progress = seconds
         onePomoInterval = onePomo
         configureView()
@@ -33,9 +33,26 @@ class CircularProgressView: BaseView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func layoutSubviews() {
+        print(bounds)
+        print(frame)
+        print(frame.midX)
+        print(frame.midY)
+        layoutIfNeeded()
+//        circularPath =  UIBezierPath(arcCenter:  CGPoint(x: frame.maxX, y: frame.maxY),
+//            
+//                                                                 radius: 140, // 반지름
+//                                                                 startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
+//                                                                 endAngle: 270.degreesToRadians, // 2시 방향
+//                                                                 clockwise: true)
+    }
     private lazy var circularPath: UIBezierPath = {
-        return UIBezierPath(arcCenter: CGPoint(x: bounds.midX+155, y: bounds.midY+155),
-                            radius: 140, // 반지름
+        print(frame)
+        print(bounds)
+        return UIBezierPath(arcCenter:  CGPoint(x: bounds.midX, y: bounds.midY),
+//                                CGPoint(x: bounds.midX+155, y: bounds.midY+155),
+                            radius: frame.size.width/2,
+                            //140 반지름
                             startAngle: -90.degreesToRadians, // 12시 방향 (0도가 3시방향)
                             endAngle: 270.degreesToRadians, // 2시 방향
                             clockwise: true)
@@ -59,6 +76,7 @@ class CircularProgressView: BaseView {
         return layer
     }()
     override func configureView() {
+        layoutIfNeeded()
         //        print(frame)
         //        print(bounds)
         //        circularPath=UIBezierPath(arcCenter: CGPoint(x: frame.width/2, y: frame.height/2),

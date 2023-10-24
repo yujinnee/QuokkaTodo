@@ -66,7 +66,7 @@ class TimerViewController: BaseViewController {
         return view
     }()
     private lazy var circularProgressView = {
-        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval)
+        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval,frame: CGRect(x: 0, y: 0, width: view.frame.width-80, height: view.frame.width-80))
         return view
     }()
     private let startButton = {
@@ -104,14 +104,11 @@ class TimerViewController: BaseViewController {
         addTargets()
         setTimeInterval(num: onePomoInterval)
         setButton(status: timerStatus)
-        
-        
+
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         timeLabel.text = seconds.timeFormatString
-        
-        
     }
     private func setTimeInterval(num: Double){
         seconds = num
@@ -350,10 +347,10 @@ class TimerViewController: BaseViewController {
             make.horizontalEdges.equalToSuperview().inset(50)
             make.height.equalTo(35)
         }
-        circularProgressView.snp.makeConstraints { make in
+        circularProgressView.snp.makeConstraints{ make in
             make.centerY.equalToSuperview().offset(-50)
             make.centerX.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(30)
+            make.leading.trailing.equalToSuperview().inset(40)
             make.height.equalTo(circularProgressView.snp.width)
         }
         timeLabel.snp.makeConstraints { make in
