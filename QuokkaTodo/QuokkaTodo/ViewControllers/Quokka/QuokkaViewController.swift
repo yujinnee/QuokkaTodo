@@ -8,10 +8,6 @@
 import UIKit
 
 class QuokkaViewController: BaseViewController {
-//    let levelRepository = LevelRepository()
-//    let bagRepository = BagRepository()
-//    let feedLeafRepository = FeedLeafRepository()
-//    let feedNutritionRepository = FeedNutritionRepository()
     let leafRepository = LeafRepository()
     let nutritionRepository = NutritionRepository()
     
@@ -152,15 +148,10 @@ class QuokkaViewController: BaseViewController {
     }
     @objc private func feedLeafButtonTapped(){
 
-//        let bagLeafNum = bagRepository.readLeafNum() - 1
+
         if(!leafRepository.checkHasFeedableLeaf()) {return}
         leafRepository.feedLeaf()
-//        bagRepository.updateLeafNum(num: bagLeafNum)
-        
-//        var feedLeafNum = levelRepository.readLeafNum() + 1
-//        feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: DateFormatter.convertToFullDateDBForm(date: Date())))
-        
-//        levelRepository.updateLeafNum(num: feedLeafNum)
+
        
         let (level,exp) = getLevelAndExp()
         if(level>nowLevel){

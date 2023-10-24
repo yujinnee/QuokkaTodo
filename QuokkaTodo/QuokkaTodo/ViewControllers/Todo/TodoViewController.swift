@@ -12,7 +12,6 @@ import RealmSwift
 
 class TodoViewController: BaseViewController{
     let todoRepository = TodoRepository()
-//    let spareTodoRepository = SpareTodoRepository()
     var todayArray: Results<Todo>?
     var soonArray: Results<Todo>?
     var todoType: TodoType = .spareTodo
@@ -28,13 +27,7 @@ class TodoViewController: BaseViewController{
             todoCollectionView.reloadSections(IndexSet(1...1))
         }
     }
-    
-    
-    //    private let scrollView = {
-    //        let view = UIcrollView()
-    //        view.backgroundColor = .green
-    //        return view
-    //    }()
+
     private let headerLabel = {
         let view  = UILabel()
         view.textColor = QColor.accentColor
@@ -71,9 +64,7 @@ class TodoViewController: BaseViewController{
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        //        layout.minimumInteritemSpacing = CGFloat(1.0)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        //        layout.itemSize = CGSize(width: view.frame.width, height: 20)
         layout.minimumLineSpacing = 3
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
@@ -175,15 +166,11 @@ class TodoViewController: BaseViewController{
     }
     
     override func setConstraints() {
-        //        view.addSubview(scrollView)
-        //        scrollView.addSubviews([headerLabel,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
-        //        textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
+
         view.addSubviews([headerLabel,todayButton,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         textFieldBorderview.addSubview(textField)
-        //        scrollView.snp.makeConstraints { make in
-        //            make.horizontalEdges.verticalEdges.equalToSuperview()
-        //        }
+
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().inset(20)
@@ -248,12 +235,11 @@ class TodoViewController: BaseViewController{
         if textField.text!.count != 0{
             let text = textField.text ?? ""
             
-//            let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
 
             switch todoType{
             case .spareTodo:
                 todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.spareTodo))
-//                spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
+//
             case .todayTodo:
                 todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.todayTodo))
                 calendarView.reloadData()//이벤트 점 표시용 reloadData()
@@ -265,11 +251,9 @@ class TodoViewController: BaseViewController{
     }
     func fetchTodoData(){
         let date = selectedDate
-//        todayArray = todoRepository.fetchSelectedDateTodo(date: date)
         todayArray = todoRepository.fetchSelectedDateTodayTodo(date: date)
     }
     func fetchSpareTodoData() {
-//        soonArray = spareTodoRepository.fetchAll()
         soonArray = todoRepository.fetchAllSpareTodo()
     }
     
@@ -408,24 +392,8 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         case 0:
             item = soonArray?[indexPath.row] ?? Todo()
             
-//            var isCompleted = false
-//            if (item.isCompleted){
-//                isCompleted = false
-//            }else {
-//                isCompleted = true
-//            }
-//            todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-            //            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         case 1:
             item = todayArray?[indexPath.row] ?? Todo()
-//            var isCompleted = false
-//            if (item.isCompleted){
-//                isCompleted = false
-//            }else {
-//                isCompleted = true
-//            }
-//            todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-            //            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         default:
             break
         }
@@ -468,7 +436,6 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.soonEditing = false
                 self.todayEditing = true
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
-                
             }
             header.setFocused(isEditing: todayEditing)
         default:

@@ -217,17 +217,6 @@ class TimerViewController: BaseViewController {
             let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
             self.selectedTodoContents = item.contents
             Task{await self.updateTodoLiveActivity()}
-//            switch todoType{
-//            case .spareTodo:
-//                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-//                self.selectedTodoContents = item.contents
-//                Task{await self.updateTodoLiveActivity()}
-//                
-//            case .todayTodo:
-//                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-//                self.selectedTodoContents = item.contents
-//                Task{await self.updateTodoLiveActivity()}
-//            }
             
         }
         self.present(todoSelectionViewController, animated: true)
@@ -317,24 +306,10 @@ class TimerViewController: BaseViewController {
             circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
-//            switch todoType {
-//            case .spareTodo:
-//                let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leaves.count
-//                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-//                let leaf = Leaf(gainLeafTime: Date())
-//                todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
-                
-//            case .todayTodo:
-//                let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leaves.count
-//                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-//            }
+
             let leaf = Leaf(gainLeafTime: Date())
             todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
-            
-//            let dateString = DateFormatter.convertToFullDateDBForm(date: Date())
-//            let leafNum = bagRepository.readLeafNum()
-//            feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
-//            bagRepository.updateLeafNum(num: leafNum+1)
+  
             setReset()
         }
         else{

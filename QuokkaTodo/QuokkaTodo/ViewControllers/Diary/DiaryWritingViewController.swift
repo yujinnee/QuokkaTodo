@@ -10,7 +10,6 @@ import UIKit
 class DiaryWritingViewController: BaseViewController {
     let diaryRepository = DiaryRepository()
     let nutritionRepository = FeedNutritionRepository()
-//    let levelRepository = LevelRepository()
     var diaryWritingCompletedCompletion: (() -> Void)?
     let maxLength = 200
     
@@ -105,11 +104,7 @@ class DiaryWritingViewController: BaseViewController {
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "완료", style: .default) { _ in
             self.diaryRepository.createDiary(Diary(contents:  self.diaryTextfield.text ?? "", createdDate: Date(), nutrition: Nutrition(feedNutritionTime: Date())))
-            //여기서 뉴트리션 만들었으니까 뉴트리션 테이블에 추가되겠찌!!??
-//            self.nutritionRepository.createFeedNutrition(FeedNutrition(feedNutritionTime: DateFormatter.convertToFullDateDBForm(date: Date())))
-//            var nutritionNum =  self.levelRepository.readNutritionNum() + 1
-//            self.nutritionRepository.createFeedNutrition(FeedNutrition(feedNutritionTime:  DateFormatter.convertToFullDateDBForm(date: Date())))
-//            self.levelRepository.updateNutirionNum(num: nutritionNum)
+
             self.diaryWritingCompletedCompletion?()
             self.dismiss(animated: true)
         }
