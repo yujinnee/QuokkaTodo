@@ -38,22 +38,23 @@ class LeafRepository: leafRepositoryType{
     }
     
     func fetchSelectedDateGainLeaf(date: Date) -> Results<Leaf> {
-        let calendar = Calendar.current
-        let selectedDate = calendar.startOfDay(for: date)
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: selectedDate)!
-        var result = realm.objects(Leaf.self).sorted(byKeyPath:"gainLeafTime", ascending: false).filter(
-        NSPredicate(format: "gainLeafTime >= %0 AND gainLeafTime < %0", selectedDate as NSDate, max as NSDate )
-        )
+        
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Leaf.self).sorted(byKeyPath:"gainLeafTime", ascending: false)
+        result = result.where{
+            $0.gainLeafTime >= start && $0.gainLeafTime <= end
+        }
         return result
    
     }
     func fetchSelectedDateFeedLeaf(date: Date) -> Results<Leaf> {
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: date)!
-        var result = realm.objects(Leaf.self).sorted(byKeyPath:"feedLeafTime", ascending: false).filter(
-        NSPredicate(format: "feedLeafTime >= %0 AND feedLeafTime < %0", date as NSDate, max as NSDate )
-        )
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Leaf.self).sorted(byKeyPath:"feedLeafTime", ascending: false)
+        result = result.where{
+            $0.feedLeafTime >= start && $0.feedLeafTime <= end
+        }
         return result
     }
     
@@ -68,7 +69,10 @@ class LeafRepository: leafRepositoryType{
         }
     }
     func feedLeaf() {
-        let _id = realm.objects(Leaf.self).sorted(byKeyPath: "gainLeafTime",ascending: true).first!
+        let _id = realm.objects(Leaf.self).sorted(byKeyPath: "gainLeafTime",ascending: true).where {
+            $0.feedLeafTime == nil
+        }.first!._id
+        
         do {
             try realm.write {
                 realm.create(Leaf.self, value: ["_id": _id,"feedLeafTime": Date()], update:.modified)
@@ -76,6 +80,7 @@ class LeafRepository: leafRepositoryType{
         } catch {
             print("error")
         }
+         
     }
     func checkHasFeedableLeaf()->Bool{
         let result = realm.objects(Leaf.self).where {

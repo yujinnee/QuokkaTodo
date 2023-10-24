@@ -33,20 +33,18 @@ class NutritionRepository: nutritionRepositoryType{
     }
     
     func fetchAll() -> RealmSwift.Results<Nutrition> {
-        let data = realm.objects(Nutrition.self).sorted(byKeyPath: "createdTime",ascending: false)
+        let data = realm.objects(Nutrition.self).sorted(byKeyPath: "feedNutritionTime",ascending: false)
         return data
     }
     
     func fetchSelectedDateNutrition(date: Date) -> RealmSwift.Results<Nutrition> {
-        let calendar = Calendar.current
-        let selectedDate = calendar.startOfDay(for: date)
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: selectedDate)!
-        var result = realm.objects(Nutrition.self).sorted(byKeyPath:"feedNutritionTime", ascending: false).filter(
-        NSPredicate(format: "feedNutritionTime >= %0 AND feedNutritionTime < %0", selectedDate as NSDate, max as NSDate )
-        )
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Nutrition.self).sorted(byKeyPath:"feedNutritionTime", ascending: false)
+        result = result.where{
+            $0.feedNutritionTime >= start && $0.feedNutritionTime <= end
+        }
         return result
-        
     }
     
     func createNutrition(_ item: Nutrition) {
@@ -61,7 +59,7 @@ class NutritionRepository: nutritionRepositoryType{
     }
     
     func getNumOfNutrition()->Int{
-        let data = realm.objects(Nutrition.self).sorted(byKeyPath: "createdTime",ascending: false)
+        let data = realm.objects(Nutrition.self).sorted(byKeyPath: "feedNutritionTime",ascending: false)
         return data.count
     }
   

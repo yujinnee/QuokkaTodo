@@ -252,10 +252,10 @@ class TodoViewController: BaseViewController{
 
             switch todoType{
             case .spareTodo:
-                todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.spareTodo.rawValue))
+                todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.spareTodo))
 //                spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
             case .todayTodo:
-                todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.todayTodo.rawValue))
+                todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.todayTodo))
                 calendarView.reloadData()//이벤트 점 표시용 reloadData()
             }
             textField.text = ""

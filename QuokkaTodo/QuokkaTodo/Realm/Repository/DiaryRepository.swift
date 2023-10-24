@@ -39,14 +39,16 @@ class DiaryRepository: diaryRepositoryType{
         return data
     }
     func fetchSelectedDateDiary(date:Date) -> Results<Diary>{
-        let calendar = Calendar.current
-        let selectedDate = calendar.startOfDay(for: date)
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: selectedDate)!
-        var result = realm.objects(Diary.self).sorted(byKeyPath:"createdDate", ascending: false).filter(
-        NSPredicate(format: "createdDate >= %0 AND createdDate < %0", selectedDate as NSDate, max as NSDate )
-        )
+        
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Diary.self).sorted(byKeyPath:"createdDate", ascending: false)
+        result = result.where{
+            $0.createdDate >= start && $0.createdDate <= end
+        }
         return result
+        
+        
     }
     
     func createDiary(_ item: Diary) {

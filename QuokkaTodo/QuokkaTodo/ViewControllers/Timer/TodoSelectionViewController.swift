@@ -98,7 +98,7 @@ class TodoSelectionViewController: BaseViewController {
     }
     func fetchTodayUncompletedTodoData(){
         let today = Date()
-        todayArray = todoRepository.fetchSelectedDateUnCompletedTodo(date: today)
+        todayArray = todoRepository.fetchSelectedDateUnCompletedTodayTodo(date: today)
     }
     func fetchSpareUncompletedTodoData() {
         soonArray = todoRepository.fetchUnCompletedSpareTodo()
@@ -112,19 +112,18 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         guard let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: TodoPlayCollectionViewCell.identifier, for: indexPath) as? TodoPlayCollectionViewCell else {
             return UICollectionViewCell()}
         
-//        switch indexPath.section{
-//        case 0:
-//            let item = soonArray?[indexPath.row] ?? Todo()
-//            cell.setData(todo: item.contents)
-//           
-//        case 1:
-//            let item = todayArray?[indexPath.row] ?? Todo()
-//            cell.setData(todo: item.contents)
-//        default:
-//            break
-//        }
-        let item = soonArray?[indexPath.row] ?? Todo()
-        cell.setData(todo: item.contents)
+        switch indexPath.section{
+        case 0:
+            let item = soonArray?[indexPath.row] ?? Todo()
+            cell.setData(todo: item.contents)
+           
+        case 1:
+            let item = todayArray?[indexPath.row] ?? Todo()
+            cell.setData(todo: item.contents)
+        default:
+            break
+        }
+
         cell.setLayout()
         return cell
     }

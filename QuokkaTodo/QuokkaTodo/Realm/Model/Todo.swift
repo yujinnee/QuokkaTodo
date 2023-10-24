@@ -19,14 +19,14 @@ class Todo: Object {
     @Persisted var leaves: List<Leaf>
     
     
-    convenience init(contents: String, planDate: Date,createdDate: Date,position: Int,todoType: Int) {
+    convenience init(contents: String, planDate: Date,createdDate: Date,position: Int,todoType: TodoType) {
         self.init()
         
         self.contents = contents
         self.planDate = planDate
         self.createdDate = createdDate
         self.position = position
-        self.todoType = todoType
+        self.todoType = todoType.rawValue
         
     }
 }

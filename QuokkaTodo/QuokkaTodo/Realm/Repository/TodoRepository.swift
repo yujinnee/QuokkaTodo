@@ -52,15 +52,11 @@ class TodoRepository: todoRepositoryType{
         return result
     }
     func fetchSelectedDateTodayTodo(date: Date) -> Results<Todo> {
-        let calendar = Calendar.current
-        let selectedDate = calendar.startOfDay(for: date)
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: selectedDate)!
-        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false).filter(
-            NSPredicate(format: "date >= %0 AND date < %0", selectedDate as NSDate, max as NSDate )
-        )
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false)
         result = result.where{
-            $0.todoType == TodoType.todayTodo.rawValue
+            $0.planDate >= start && $0.planDate <= end &&  $0.todoType == TodoType.todayTodo.rawValue
         }
         return result
     }
@@ -72,28 +68,20 @@ class TodoRepository: todoRepositoryType{
     //        return result
     //    }
     func fetchSelectedDateSpareTodo(date:Date) -> Results<Todo>{
-        let calendar = Calendar.current
-        let selectedDate = calendar.startOfDay(for: date)
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: selectedDate)!
-        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false).filter(
-            NSPredicate(format: "date >= %0 AND date < %0", selectedDate as NSDate, max as NSDate )
-        )
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false)
         result = result.where{
-            $0.todoType == TodoType.spareTodo.rawValue
+            $0.planDate >= start && $0.planDate <= end &&  $0.todoType == TodoType.spareTodo.rawValue
         }
         return result
     }
-    func fetchSelectedDateUnCompletedTodo(date:Date) -> Results<Todo>{
-        let calendar = Calendar.current
-        let selectedDate = calendar.startOfDay(for: date)
-        let max = Calendar.current.date(byAdding: .day, value: 1,
-                                        to: selectedDate)!
-        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false).filter(
-            NSPredicate(format: "date >= %0 AND date < %0", selectedDate as NSDate, max as NSDate )
-        )
+    func fetchSelectedDateUnCompletedTodayTodo(date:Date) -> Results<Todo>{        
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false)
         result = result.where{
-            $0.isCompleted == false
+            $0.planDate >= start && $0.planDate <= end && $0.isCompleted == false && $0.todoType == TodoType.todayTodo.rawValue
         }
         return result
         
