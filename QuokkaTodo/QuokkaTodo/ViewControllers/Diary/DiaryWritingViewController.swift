@@ -10,7 +10,7 @@ import UIKit
 class DiaryWritingViewController: BaseViewController {
     let diaryRepository = DiaryRepository()
     let nutritionRepository = FeedNutritionRepository()
-    let levelRepository = LevelRepository()
+//    let levelRepository = LevelRepository()
     var diaryWritingCompletedCompletion: (() -> Void)?
     let maxLength = 200
     
@@ -104,11 +104,12 @@ class DiaryWritingViewController: BaseViewController {
         let alert = UIAlertController(title: "확인 사항", message: "오늘의 행복 일기는 하루에 한 번 작성 가능하며 수정 및 삭제가 불가능 합니다. 작성 완료하시겠습니까?", preferredStyle: .alert)
         let cancel = UIAlertAction(title: "취소", style: .cancel)
         let ok = UIAlertAction(title: "완료", style: .default) { _ in
-            self.diaryRepository.createDiary(Diary(contents:  self.diaryTextfield.text ?? "", createdDate: DateFormatter.convertToFullDateDBForm(date: Date())))
-            self.nutritionRepository.createFeedNutrition(FeedNutrition(feedNutritionTime: DateFormatter.convertToFullDateDBForm(date: Date())))
-            var nutritionNum =  self.levelRepository.readNutritionNum() + 1
-            self.nutritionRepository.createFeedNutrition(FeedNutrition(feedNutritionTime:  DateFormatter.convertToFullDateDBForm(date: Date())))
-            self.levelRepository.updateNutirionNum(num: nutritionNum)
+            self.diaryRepository.createDiary(Diary(contents:  self.diaryTextfield.text ?? "", createdDate: Date(), nutrition: Nutrition(feedNutritionTime: Date())))
+            //여기서 뉴트리션 만들었으니까 뉴트리션 테이블에 추가되겠찌!!??
+//            self.nutritionRepository.createFeedNutrition(FeedNutrition(feedNutritionTime: DateFormatter.convertToFullDateDBForm(date: Date())))
+//            var nutritionNum =  self.levelRepository.readNutritionNum() + 1
+//            self.nutritionRepository.createFeedNutrition(FeedNutrition(feedNutritionTime:  DateFormatter.convertToFullDateDBForm(date: Date())))
+//            self.levelRepository.updateNutirionNum(num: nutritionNum)
             self.diaryWritingCompletedCompletion?()
             self.dismiss(animated: true)
         }

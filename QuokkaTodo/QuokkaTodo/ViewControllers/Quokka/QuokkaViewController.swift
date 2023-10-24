@@ -8,10 +8,13 @@
 import UIKit
 
 class QuokkaViewController: BaseViewController {
-    let levelRepository = LevelRepository()
-    let bagRepository = BagRepository()
-    let feedLeafRepository = FeedLeafRepository()
-    let feedNutritionRepository = FeedNutritionRepository()
+//    let levelRepository = LevelRepository()
+//    let bagRepository = BagRepository()
+//    let feedLeafRepository = FeedLeafRepository()
+//    let feedNutritionRepository = FeedNutritionRepository()
+    let leafRepository = LeafRepository()
+    let nutritionRepository = NutritionRepository()
+    
     var nowLevel = 0
     
     private let brownButtonConfiguration = {
@@ -134,8 +137,8 @@ class QuokkaViewController: BaseViewController {
         diaryButton.addTarget(self, action: #selector(diaryButtonTapped), for: .touchUpInside)
     }
     private func getLevelAndExp() -> (level:Int,exp:Double){
-        let feedLeafNum = levelRepository.readLeafNum()
-        let feedNutritionNum = levelRepository.readNutritionNum()
+        let feedLeafNum = leafRepository.getNumOfEatenLeaf()
+        let feedNutritionNum = nutritionRepository.getNumOfNutrition()
         let sum = Double(feedLeafNum)*3.323 + Double(feedNutritionNum)*6.216
         let level = Int(sum/100)
         let exp = Double(sum).truncatingRemainder(dividingBy: 100)
@@ -148,14 +151,16 @@ class QuokkaViewController: BaseViewController {
         expLabel.text = "\(String(format: "%.2f",exp))%"
     }
     @objc private func feedLeafButtonTapped(){
-        let bagLeafNum = bagRepository.readLeafNum() - 1
-        if(bagLeafNum<0) {return}
-        bagRepository.updateLeafNum(num: bagLeafNum)
+
+//        let bagLeafNum = bagRepository.readLeafNum() - 1
+        if(!leafRepository.checkHasFeedableLeaf()) {return}
+        leafRepository.feedLeaf()
+//        bagRepository.updateLeafNum(num: bagLeafNum)
         
-        var feedLeafNum = levelRepository.readLeafNum() + 1
-        feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: DateFormatter.convertToFullDateDBForm(date: Date())))
+//        var feedLeafNum = levelRepository.readLeafNum() + 1
+//        feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: DateFormatter.convertToFullDateDBForm(date: Date())))
         
-        levelRepository.updateLeafNum(num: feedLeafNum)
+//        levelRepository.updateLeafNum(num: feedLeafNum)
        
         let (level,exp) = getLevelAndExp()
         if(level>nowLevel){
@@ -166,7 +171,7 @@ class QuokkaViewController: BaseViewController {
         fetchLeafNum()
         fetchLevelAndExp()
         
-        leafLabel.text = "쿼카에게 줄 수 있는 나뭇잎 \(bagLeafNum)개"
+        leafLabel.text = "쿼카에게 줄 수 있는 나뭇잎 \(leafRepository.getNumOfLeaf())개"
        
     }
     private func animateProgressBar(progress:Float){
@@ -206,7 +211,7 @@ class QuokkaViewController: BaseViewController {
         
     }
     func fetchLeafNum(){
-        leafLabel.text = "쿼카에게 줄 수 있는 나뭇잎 \(bagRepository.readLeafNum()) 개"
+        leafLabel.text = "쿼카에게 줄 수 있는 나뭇잎 \(leafRepository.getNumOfLeaf()) 개"
     }
                                     
     override func setConstraints() {

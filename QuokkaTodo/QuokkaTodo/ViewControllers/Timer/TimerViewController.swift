@@ -30,7 +30,7 @@ class TimerViewController: BaseViewController {
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
     let onePomoInterval:TimeInterval = 60*25
-    var todoType: TodoType = .today
+    var todoType: TodoType = .todayTodo
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
         didSet{
@@ -44,10 +44,10 @@ class TimerViewController: BaseViewController {
         }
     }
     
-    let spareTodoRepository = SpareTodoRepository()
+//    let spareTodoRepository = SpareTodoRepository()
     let todoRepository = TodoRepository()
-    let feedLeafRepository = FeedLeafRepository()
-    let bagRepository = BagRepository()
+//    let feedLeafRepository = FeedLeafRepository()
+//    let bagRepository = BagRepository()
     
     private let todoSelectionButton = {
         let view = UIButton()
@@ -213,17 +213,21 @@ class TimerViewController: BaseViewController {
             UserDefaultsHelper.standard.selectedTodo = _id.stringValue
             
             self.todoType = todoType
-            switch todoType{
-            case .soon:
-                let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                self.selectedTodoContents = item.contents
-                Task{await self.updateTodoLiveActivity()}
-                
-            case .today:
-                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                self.selectedTodoContents = item.contents
-                Task{await self.updateTodoLiveActivity()}
-            }
+            
+            let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+            self.selectedTodoContents = item.contents
+            Task{await self.updateTodoLiveActivity()}
+//            switch todoType{
+//            case .spareTodo:
+//                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+//                self.selectedTodoContents = item.contents
+//                Task{await self.updateTodoLiveActivity()}
+//                
+//            case .todayTodo:
+//                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+//                self.selectedTodoContents = item.contents
+//                Task{await self.updateTodoLiveActivity()}
+//            }
             
         }
         self.present(todoSelectionViewController, animated: true)
@@ -313,18 +317,24 @@ class TimerViewController: BaseViewController {
             circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
-            switch todoType {
-            case .soon:
-                let currentLeafNum = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
-                spareTodoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-            case .today:
-                let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
-                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-            }
-            let dateString = DateFormatter.convertToFullDateDBForm(date: Date())
-            let leafNum = bagRepository.readLeafNum()
-            feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
-            bagRepository.updateLeafNum(num: leafNum+1)
+//            switch todoType {
+//            case .spareTodo:
+//                let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leaves.count
+//                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+//                let leaf = Leaf(gainLeafTime: Date())
+//                todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
+                
+//            case .todayTodo:
+//                let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leaves.count
+//                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+//            }
+            let leaf = Leaf(gainLeafTime: Date())
+            todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
+            
+//            let dateString = DateFormatter.convertToFullDateDBForm(date: Date())
+//            let leafNum = bagRepository.readLeafNum()
+//            feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
+//            bagRepository.updateLeafNum(num: leafNum+1)
             setReset()
         }
         else{

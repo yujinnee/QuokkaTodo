@@ -8,21 +8,26 @@
 import Foundation
 import RealmSwift
 
+enum TodoType:Int {
+    case spareTodo = 0
+    case todayTodo = 1
+}
+
 protocol todoRepositoryType: AnyObject {
     func findFileURL() -> URL?
     func fetchAll() -> Results<Todo>
-    func fetchSelectedDateTodo(date: Date) -> Results<Todo>
+    func fetchSelectedDateTodayTodo(date: Date) -> Results<Todo>
+    func fetchSelectedDateSpareTodo(date: Date) -> Results<Todo>
     func createTodo(_ item: Todo)
     func updateContents(_id: ObjectId, contents: String)
     func updateDate(_id: ObjectId, date: String)
     func updateCompleted(_id: ObjectId, isCompleted: Bool)
-    func updateLeafNum(_id: ObjectId, leafNum: Int)
     func deleteTodo(_id : ObjectId)
 }
 
 class TodoRepository: todoRepositoryType{
     private let realm = try! Realm()
-        
+    
     func checkSchemaVersion() {
         do{
             let version = try schemaVersionAtURL(realm.configuration.fileURL!)
@@ -40,17 +45,62 @@ class TodoRepository: todoRepositoryType{
         let data = realm.objects(Todo.self).sorted(byKeyPath: "createdDate",ascending: false)
         return data
     }
-    func fetchSelectedDateTodo(date:Date) -> Results<Todo>{
-        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
+    func fetchAllSpareTodo() -> Results<Todo> {
         let result = realm.objects(Todo.self).where {
-            $0.planDate.contains(dateString)
+            $0.todoType == TodoType.spareTodo.rawValue
+        }
+        return result
+    }
+    func fetchSelectedDateTodayTodo(date: Date) -> Results<Todo> {
+        let calendar = Calendar.current
+        let selectedDate = calendar.startOfDay(for: date)
+        let max = Calendar.current.date(byAdding: .day, value: 1,
+                                        to: selectedDate)!
+        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false).filter(
+            NSPredicate(format: "date >= %0 AND date < %0", selectedDate as NSDate, max as NSDate )
+        )
+        result = result.where{
+            $0.todoType == TodoType.todayTodo.rawValue
+        }
+        return result
+    }
+    //    func fetchSelectedDateTodayTodo(date:Date) -> Results<Todo>{
+    //        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
+    //        let result = realm.objects(Todo.self).where {
+    //            $0.planDate.contains(dateString)
+    //        }
+    //        return result
+    //    }
+    func fetchSelectedDateSpareTodo(date:Date) -> Results<Todo>{
+        let calendar = Calendar.current
+        let selectedDate = calendar.startOfDay(for: date)
+        let max = Calendar.current.date(byAdding: .day, value: 1,
+                                        to: selectedDate)!
+        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false).filter(
+            NSPredicate(format: "date >= %0 AND date < %0", selectedDate as NSDate, max as NSDate )
+        )
+        result = result.where{
+            $0.todoType == TodoType.spareTodo.rawValue
         }
         return result
     }
     func fetchSelectedDateUnCompletedTodo(date:Date) -> Results<Todo>{
-        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
+        let calendar = Calendar.current
+        let selectedDate = calendar.startOfDay(for: date)
+        let max = Calendar.current.date(byAdding: .day, value: 1,
+                                        to: selectedDate)!
+        var result = realm.objects(Todo.self).sorted(byKeyPath:"planDate", ascending: false).filter(
+            NSPredicate(format: "date >= %0 AND date < %0", selectedDate as NSDate, max as NSDate )
+        )
+        result = result.where{
+            $0.isCompleted == false
+        }
+        return result
+        
+    }
+    func fetchUnCompletedSpareTodo() -> Results<Todo>{//수정하기
         let result = realm.objects(Todo.self).where {
-            $0.planDate.contains(dateString) && $0.isCompleted == false
+            $0.isCompleted == false && $0.todoType == TodoType.spareTodo.rawValue
         }
         return result
     }
@@ -99,11 +149,13 @@ class TodoRepository: todoRepositoryType{
             print("error")
         }
     }
-    
-    func updateLeafNum(_id: RealmSwift.ObjectId, leafNum: Int) {
+    func updateLeaves(_id: ObjectId, leaf: Leaf) {
+        let todo = realm.objects(Todo.self).where {
+            $0._id == _id
+        }.first!
         do {
             try realm.write {
-                realm.create(Todo.self, value: ["_id": _id,"leafNum": leafNum], update:.modified)
+                todo.leaves.append(leaf)
             }
         } catch {
             print("error")
@@ -121,6 +173,6 @@ class TodoRepository: todoRepositoryType{
             print(error)
         }
     }
-
-  
+    
+    
 }

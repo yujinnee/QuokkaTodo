@@ -9,16 +9,13 @@ import UIKit
 import FSCalendar
 import RealmSwift
 
-enum TodoType{
-    case soon
-    case today
-}
+
 class TodoViewController: BaseViewController{
     let todoRepository = TodoRepository()
-    let spareTodoRepository = SpareTodoRepository()
+//    let spareTodoRepository = SpareTodoRepository()
     var todayArray: Results<Todo>?
-    var soonArray: Results<SpareTodo>?
-    var todoType: TodoType = .soon
+    var soonArray: Results<Todo>?
+    var todoType: TodoType = .spareTodo
     var soonEditing = false
     var todayEditing = false
     let maxLength = 200
@@ -251,12 +248,14 @@ class TodoViewController: BaseViewController{
         if textField.text!.count != 0{
             let text = textField.text ?? ""
             
-            let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
+//            let date = DateFormatter.convertToFullDateDBForm(date: selectedDate)
+
             switch todoType{
-            case .soon:
-                spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
-            case .today:
-                todoRepository.createTodo(Todo(contents: text, planDate: date, createdDate: date, position: 0, leafNum: 0))
+            case .spareTodo:
+                todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.spareTodo.rawValue))
+//                spareTodoRepository.createTodo(SpareTodo(contents: text, planDate:date, createdDate: date, position: 0, leafNum: 0))
+            case .todayTodo:
+                todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.todayTodo.rawValue))
                 calendarView.reloadData()//이벤트 점 표시용 reloadData()
             }
             textField.text = ""
@@ -266,10 +265,12 @@ class TodoViewController: BaseViewController{
     }
     func fetchTodoData(){
         let date = selectedDate
-        todayArray = todoRepository.fetchSelectedDateTodo(date: date)
+//        todayArray = todoRepository.fetchSelectedDateTodo(date: date)
+        todayArray = todoRepository.fetchSelectedDateTodayTodo(date: date)
     }
     func fetchSpareTodoData() {
-        soonArray = spareTodoRepository.fetchAll()
+//        soonArray = spareTodoRepository.fetchAll()
+        soonArray = todoRepository.fetchAllSpareTodo()
     }
     
 }
@@ -301,7 +302,7 @@ extension TodoViewController:  FSCalendarDelegate, FSCalendarDataSource {
         
     }
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
-        if todoRepository.fetchSelectedDateTodo(date: date).count>0{
+        if todoRepository.fetchSelectedDateTodayTodo(date: date).count>0{
             return 1
         }else {
             return 0
@@ -337,13 +338,13 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         
         switch indexPath.section{
         case 0:
-            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            let item = soonArray?[indexPath.row] ?? Todo()
             cell.setData(todo: item.contents)
-            cell.setLeaf(leafNum: item.leafNum)
+            cell.setLeaf(leafNum: item.leaves.count)
             cell.menuButtonTappedClosure = {
                 let menuViewController = MenuViewController()
                 menuViewController.modalPresentationStyle = .pageSheet
-                menuViewController.todoType = .soon
+                menuViewController.todoType = .spareTodo
                 menuViewController._id = item._id
                 menuViewController.deleteButtonTappedClosure = {
                     self.todoCollectionView.reloadSections(IndexSet(0...0))
@@ -357,18 +358,18 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 
             }
             cell.reviseCompleteButtonTappedClosure = { todoText in
-                self.spareTodoRepository.updateContents(_id: item._id, contents: todoText)
+                self.todoRepository.updateContents(_id: item._id, contents: todoText)
                 self.todoCollectionView.reloadItems(at: [indexPath])
             }
             cell.setCheckBox(isCompleted: item.isCompleted)
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
             cell.setData(todo: item.contents)
-            cell.setLeaf(leafNum: item.leafNum)
+            cell.setLeaf(leafNum: item.leaves.count)
             cell.menuButtonTappedClosure = {
                 let menuViewController = MenuViewController()
                 menuViewController.modalPresentationStyle = .pageSheet
-                menuViewController.todoType = .today
+                menuViewController.todoType = .todayTodo
                 menuViewController._id = item._id
                 menuViewController.deleteButtonTappedClosure = {
                     self.todoCollectionView.reloadSections(IndexSet(1...1))
@@ -402,31 +403,39 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        var item = Todo()
         switch indexPath.section{
         case 0:
-            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            item = soonArray?[indexPath.row] ?? Todo()
             
-            var isCompleted = false
-            if (item.isCompleted){
-                isCompleted = false
-            }else {
-                isCompleted = true
-            }
-            spareTodoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
+//            var isCompleted = false
+//            if (item.isCompleted){
+//                isCompleted = false
+//            }else {
+//                isCompleted = true
+//            }
+//            todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
             //            todoCollectionView.reloadSections(IndexSet(0...0)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         case 1:
-            let item = todayArray?[indexPath.row] ?? Todo()
-            var isCompleted = false
-            if (item.isCompleted){
-                isCompleted = false
-            }else {
-                isCompleted = true
-            }
-            todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
+            item = todayArray?[indexPath.row] ?? Todo()
+//            var isCompleted = false
+//            if (item.isCompleted){
+//                isCompleted = false
+//            }else {
+//                isCompleted = true
+//            }
+//            todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
             //            todoCollectionView.reloadSections(IndexSet(1...1)) 체크 설정해제가 애니메이션처럼 되어서 별로임
         default:
             break
         }
+        var isCompleted = false
+        if (item.isCompleted){
+            isCompleted = false
+        }else {
+            isCompleted = true
+        }
+        todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
         //        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
         todoCollectionView.reloadData()
     }
@@ -443,7 +452,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
             header.addButtonComletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
-                self.todoType = .soon
+                self.todoType = .spareTodo
                 self.soonEditing = true
                 self.todayEditing = false
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
@@ -455,7 +464,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
             header.addButtonComletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
-                self.todoType = .today
+                self.todoType = .todayTodo
                 self.soonEditing = false
                 self.todayEditing = true
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
@@ -490,7 +499,7 @@ extension TodoViewController: UICollectionViewDelegateFlowLayout{
         
         switch indexPath.section{
         case 0:
-            let item = soonArray?[indexPath.row] ?? SpareTodo()
+            let item = soonArray?[indexPath.row] ?? Todo()
             dummyCell.todoLabel.text = item.contents
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()

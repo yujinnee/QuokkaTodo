@@ -10,9 +10,9 @@ import RealmSwift
 
 class TodoSelectionViewController: BaseViewController {
     let todoRepository = TodoRepository()
-    let spareTodoRepository = SpareTodoRepository()
+//    let spareTodoRepository = SpareTodoRepository()
     var todayArray: Results<Todo>?
-    var soonArray: Results<SpareTodo>?
+    var soonArray: Results<Todo>?
     var todoCellTappedClosure: ((ObjectId,TodoType)->Void)?
  
     private let titleLabel = {
@@ -101,7 +101,7 @@ class TodoSelectionViewController: BaseViewController {
         todayArray = todoRepository.fetchSelectedDateUnCompletedTodo(date: today)
     }
     func fetchSpareUncompletedTodoData() {
-        soonArray = spareTodoRepository.fetchUnCompletedTodo()
+        soonArray = todoRepository.fetchUnCompletedSpareTodo()
     }
 
 }
@@ -112,17 +112,19 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         guard let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: TodoPlayCollectionViewCell.identifier, for: indexPath) as? TodoPlayCollectionViewCell else {
             return UICollectionViewCell()}
         
-        switch indexPath.section{
-        case 0:
-            let item = soonArray?[indexPath.row] ?? SpareTodo()
-            cell.setData(todo: item.contents)
-           
-        case 1:
-            let item = todayArray?[indexPath.row] ?? Todo()
-            cell.setData(todo: item.contents)
-        default:
-            break
-        }
+//        switch indexPath.section{
+//        case 0:
+//            let item = soonArray?[indexPath.row] ?? Todo()
+//            cell.setData(todo: item.contents)
+//           
+//        case 1:
+//            let item = todayArray?[indexPath.row] ?? Todo()
+//            cell.setData(todo: item.contents)
+//        default:
+//            break
+//        }
+        let item = soonArray?[indexPath.row] ?? Todo()
+        cell.setData(todo: item.contents)
         cell.setLayout()
         return cell
     }
@@ -140,13 +142,13 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section{
         case 0:
-            let item = soonArray?[indexPath.row] ?? SpareTodo()
-            todoCellTappedClosure?(item._id,.soon)
+            let item = soonArray?[indexPath.row] ?? Todo()
+            todoCellTappedClosure?(item._id,.spareTodo)
             dismiss(animated: true)
             
         case 1:
             let item = todayArray?[indexPath.row] ?? Todo()
-            todoCellTappedClosure?(item._id,.today)
+            todoCellTappedClosure?(item._id,.todayTodo)
             dismiss(animated: true)
         default:
             break

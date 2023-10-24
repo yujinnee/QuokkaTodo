@@ -70,7 +70,7 @@
 		6AB2B8AF2AC349B900830760 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8AE2AC349B900830760 /* TodoViewController.swift */; };
 		6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B02AC349CE00830760 /* TimerViewController.swift */; };
 		6AB2B8B32AC349F000830760 /* QuokkaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */; };
-		6ABF94EB2ADE10D70038F075 /* FeedLeaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EA2ADE10D70038F075 /* FeedLeaf.swift */; };
+		6ABF94EB2ADE10D70038F075 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EA2ADE10D70038F075 /* Leaf.swift */; };
 		6ABF94ED2ADE10E40038F075 /* FeedNutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EC2ADE10E40038F075 /* FeedNutrition.swift */; };
 		6ABF94F22ADFBFFE0038F075 /* FeedLeafRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94F12ADFBFFE0038F075 /* FeedLeafRepository.swift */; };
 		6ABF94F42ADFC14A0038F075 /* FeedNutiritionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94F32ADFC14A0038F075 /* FeedNutiritionRepository.swift */; };
@@ -88,6 +88,9 @@
 		6ACADDFD2AC4728E00382143 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6ACADDFF2AC4728E00382143 /* Localizable.strings */; };
 		6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACADE012AC479AD00382143 /* String+Extension.swift */; };
 		6ACADE062AC4958400382143 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 6ACADE052AC4958400382143 /* FSCalendar */; };
+		6AE6206A2AE8196000791480 /* Nutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE620692AE8196000791480 /* Nutrition.swift */; };
+		6AE6206C2AE81D2E00791480 /* LeafRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6206B2AE81D2E00791480 /* LeafRepository.swift */; };
+		6AE6206E2AE81E3D00791480 /* NutritionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */; };
 		6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */; };
 		6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -180,7 +183,7 @@
 		6AB2B8AE2AC349B900830760 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
 		6AB2B8B02AC349CE00830760 /* TimerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
 		6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuokkaViewController.swift; sourceTree = "<group>"; };
-		6ABF94EA2ADE10D70038F075 /* FeedLeaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLeaf.swift; sourceTree = "<group>"; };
+		6ABF94EA2ADE10D70038F075 /* Leaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		6ABF94EC2ADE10E40038F075 /* FeedNutrition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedNutrition.swift; sourceTree = "<group>"; };
 		6ABF94F12ADFBFFE0038F075 /* FeedLeafRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLeafRepository.swift; sourceTree = "<group>"; };
 		6ABF94F32ADFC14A0038F075 /* FeedNutiritionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedNutiritionRepository.swift; sourceTree = "<group>"; };
@@ -199,6 +202,9 @@
 		6ACADDFE2AC4728E00382143 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE002AC4729200382143 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE012AC479AD00382143 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		6AE620692AE8196000791480 /* Nutrition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nutrition.swift; sourceTree = "<group>"; };
+		6AE6206B2AE81D2E00791480 /* LeafRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeafRepository.swift; sourceTree = "<group>"; };
+		6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionRepository.swift; sourceTree = "<group>"; };
 		6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFromatter+Extension.swift"; sourceTree = "<group>"; };
 		6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -231,13 +237,14 @@
 			children = (
 				6A0916472AC6B8350014FE2D /* Todo.swift */,
 				6A09164C2AC71FD30014FE2D /* SpareTodo.swift */,
-				6ABF94EA2ADE10D70038F075 /* FeedLeaf.swift */,
+				6ABF94EA2ADE10D70038F075 /* Leaf.swift */,
 				6ABF94EC2ADE10E40038F075 /* FeedNutrition.swift */,
 				6ABF94F52ADFC91F0038F075 /* GainLeaf.swift */,
 				6ABF94F72ADFC9510038F075 /* GainNutrition.swift */,
 				6ABF94FF2ADFCE680038F075 /* Bag.swift */,
 				6ABF95012ADFCF050038F075 /* Level.swift */,
 				6ABF95092AE03F130038F075 /* Diary.swift */,
+				6AE620692AE8196000791480 /* Nutrition.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -483,6 +490,8 @@
 				6ABF95032ADFCF260038F075 /* BagRepository.swift */,
 				6ABF95052ADFCF330038F075 /* LevelRepository.swift */,
 				6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */,
+				6AE6206B2AE81D2E00791480 /* LeafRepository.swift */,
+				6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -675,6 +684,7 @@
 				6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */,
 				6ABF94ED2ADE10E40038F075 /* FeedNutrition.swift in Sources */,
 				6AB2B8872AC3380A00830760 /* Color.swift in Sources */,
+				6AE6206A2AE8196000791480 /* Nutrition.swift in Sources */,
 				6A2C23132AE0FF3B007807EF /* CostumeViewController.swift in Sources */,
 				6ABF95082AE0098C0038F075 /* DiaryWritingViewController.swift in Sources */,
 				6AB2B8A52AC3463B00830760 /* BaseViewController.swift in Sources */,
@@ -682,6 +692,7 @@
 				6A0CA0BD2AD3E7B500C5C1FD /* QuokkaWidgetLiveActivity.swift in Sources */,
 				6A2C23202AE177C0007807EF /* Costume.swift in Sources */,
 				6A2C23152AE10247007807EF /* CostumeCollectionViewCell.swift in Sources */,
+				6AE6206C2AE81D2E00791480 /* LeafRepository.swift in Sources */,
 				6A1A88CB2AD47FD700A51E10 /* TodoSelectionViewController.swift in Sources */,
 				6A1A88CD2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift in Sources */,
 				6A0916482AC6B8350014FE2D /* Todo.swift in Sources */,
@@ -691,11 +702,12 @@
 				6A6ED6642ACDD39B00CD902B /* Int+Extension.swift in Sources */,
 				6AB2B8A22AC3461A00830760 /* ReusableViewProtocol.swift in Sources */,
 				6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */,
+				6AE6206E2AE81E3D00791480 /* NutritionRepository.swift in Sources */,
 				6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */,
 				6A2C231C2AE176B7007807EF /* UserDefaultsHelper.swift in Sources */,
 				6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */,
 				6ABF94F42ADFC14A0038F075 /* FeedNutiritionRepository.swift in Sources */,
-				6ABF94EB2ADE10D70038F075 /* FeedLeaf.swift in Sources */,
+				6ABF94EB2ADE10D70038F075 /* Leaf.swift in Sources */,
 				6A1FCC732AE2954300345E8D /* DiaryTableViewCell.swift in Sources */,
 				6A09164F2AC720020014FE2D /* TodoRepository.swift in Sources */,
 				6A3FC7502AE6415900E8A16C /* ToastMessageView.swift in Sources */,

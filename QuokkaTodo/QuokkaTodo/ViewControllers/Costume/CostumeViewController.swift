@@ -8,10 +8,12 @@
 import UIKit
 
 class CostumeViewController: BaseViewController {
-    let levelRepository = LevelRepository()
+//    let levelRepository = LevelRepository()
     
     var costumeArray = Array<CostumeModel>()
     var selectedIndex = 0
+    let leafRepository = LeafRepository()
+    let nutritionRepository = NutritionRepository()
 
 //    static let badgeElementKind = "badge-element-kind"
     enum Section {
@@ -112,8 +114,8 @@ extension CostumeViewController {
     }
     
     private func calculateLevel()->Int{
-        let feedLeafNum = levelRepository.readLeafNum()
-        let feedNutritionNum = levelRepository.readNutritionNum()
+        let feedLeafNum = leafRepository.getNumOfEatenLeaf()
+        let feedNutritionNum = nutritionRepository.getNumOfNutrition()
         let sum = Double(feedLeafNum)*3.323 + Double(feedNutritionNum)*6.216
         let level = Int(sum/100)
         return level
