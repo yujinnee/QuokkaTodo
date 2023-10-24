@@ -21,7 +21,7 @@ class TodoViewController: BaseViewController{
     var todoType: TodoType = .soon
     var soonEditing = false
     var todayEditing = false
-    let maxLength = 10
+    let maxLength = 200
     
     var selectedDate = Date() {
         didSet {
@@ -69,7 +69,7 @@ class TodoViewController: BaseViewController{
         label.text = DateFormatter.getMonthDayWeekDay(date: now)
         return label
     }()
-   
+    
     
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -105,9 +105,9 @@ class TodoViewController: BaseViewController{
         view.titleLabel?.font = Pretendard.size18.bold()
         view.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         view.isEnabled = false
-//        view.layer.borderColor = QColor.accentColor.cgColor
-//        view.layer.borderWidth = 1
-//        view.layer.cornerRadius = 10
+        //        view.layer.borderColor = QColor.accentColor.cgColor
+        //        view.layer.borderWidth = 1
+        //        view.layer.cornerRadius = 10
         return view
     }()
     private let textField = {
@@ -130,7 +130,14 @@ class TodoViewController: BaseViewController{
         fetchSpareTodoData()
         print(todoRepository.findFileURL())
         setKeyboardObserver()
-    
+        setStatusBarBackgroundColor()
+        
+        
+    }
+    private func setStatusBarBackgroundColor() {
+        let statusBar = UIView(frame: UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame ?? CGRect.zero)
+        statusBar.backgroundColor = .white
+        UIApplication.shared.keyWindow?.addSubview(statusBar)
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -149,7 +156,7 @@ class TodoViewController: BaseViewController{
     func addTarget() {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         todayButton.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
-//        headerLabel.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
+        //        headerLabel.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
     }
     @objc func todayButtonTapped() {
         calendarView.setCurrentPage(Date(), animated: true)
@@ -164,11 +171,11 @@ class TodoViewController: BaseViewController{
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         navigationController?.navigationBar.backgroundColor = QColor.backgroundColor
         view.backgroundColor = QColor.backgroundColor
-//        preferredStatusBarStyle = .darkContent
+        //        preferredStatusBarStyle = .darkContent
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
-            return .darkContent
-        }
+        return .darkContent
+    }
     
     override func setConstraints() {
         //        view.addSubview(scrollView)
@@ -230,6 +237,10 @@ class TodoViewController: BaseViewController{
         }
         
     }
+    deinit {
+           NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+           NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+       }
     
     func setDelegate(){
         todoCollectionView.delegate = self
@@ -491,8 +502,6 @@ extension TodoViewController: UICollectionViewDelegateFlowLayout{
         dummyCell.contentView.layoutIfNeeded()
         var height = dummyCell.contentView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)).height
         dummyCell.prepareForReuse()
-        print(indexPath.row)
-        print(height)
         return CGSize(width: width, height: height)
         
     }
@@ -524,7 +533,7 @@ extension TodoViewController: UITextFieldDelegate {
         
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-       
+        
         if(textField.text!.count == 0){
             registerButton.setTitleColor(QColor.grayColor, for: .normal)
             registerButton.isEnabled = false
@@ -556,43 +565,22 @@ extension TodoViewController {
     
     func setKeyboardObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(TodoViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(TodoViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object:nil)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-          if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-                  let keyboardRectangle = keyboardFrame.cgRectValue
-                  let keyboardHeight = keyboardRectangle.height
-              let tabbarHeight = 45.0
-              UIView.animate(withDuration: 1) {
-
-                  self.headerLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
-                  self.dateLabel.frame.origin.y -= (keyboardHeight - tabbarHeight)
-                  self.calendarView.frame.origin.y -= (keyboardHeight - tabbarHeight)
-                  self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
-                  print(self.textFieldBackgroundView.frame.origin.y)
-//                  self.textFieldBackgroundView.frame.origin.y -= keyboardHeight
-                  
-              }
-          }
-      }
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            let tabbarHeight = 45.0
+            view.frame.origin.y -= keyboardHeight
+        }
+    }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.window?.frame.origin.y != 0 {
-            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-                    let keyboardRectangle = keyboardFrame.cgRectValue
-                    let keyboardHeight = keyboardRectangle.height
-                let tabbarHeight = 45.0
-                UIView.animate(withDuration: 1) {
-
-                    self.headerLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
-                    self.dateLabel.frame.origin.y += (keyboardHeight - tabbarHeight)
-                    self.calendarView.frame.origin.y += (keyboardHeight - tabbarHeight)
-//                    self.todoCollectionView.frame.origin.y -= (keyboardHeight - tabbarHeight)
-//                    self.view.window?.frame.origin.y += (keyboardHeight - tabbarHeight)
-                }
-            }
+        if self.view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
         }
     }
 }
+

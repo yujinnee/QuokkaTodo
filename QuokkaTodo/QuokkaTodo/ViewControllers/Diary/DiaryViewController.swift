@@ -19,6 +19,11 @@ class DiaryViewController: BaseViewController {
         view.estimatedRowHeight = 500
         return view
     }()
+    private let diaryLockedImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "img_locked_diary")
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +41,13 @@ class DiaryViewController: BaseViewController {
         diaryArray = diaryRepository.fetchAll()
     }
     override func setConstraints() {
-        view.addSubview(diaryTableView)
+        view.addSubviews([diaryTableView,diaryLockedImageView])
         
         diaryTableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        diaryLockedImageView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -53,12 +61,7 @@ extension DiaryViewController: UITableViewDelegate,UITableViewDataSource{
         
         return cell
     }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 120
-//    }
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return diaryArray?.count ?? 0
     }

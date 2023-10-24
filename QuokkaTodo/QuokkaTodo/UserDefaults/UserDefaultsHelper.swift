@@ -17,6 +17,8 @@ class UserDefaultsHelper {
     enum Key: String {
         case selectedCostume = "selectedCostume"
         case endTime = "endTime"
+        case selectedTodo = "selectredTodo"
+        case todoType = "todoType"
     }
     
     var selectedCostume: Int {
@@ -33,6 +35,22 @@ class UserDefaultsHelper {
         }
         set {
             userDefaults.set(newValue,forKey: Key.endTime.rawValue)
+        }
+    }
+    var selectedTodo: String {
+        get{
+            return userDefaults.string(forKey: Key.selectedTodo.rawValue) ?? ""
+        }
+        set {
+            userDefaults.set(newValue,forKey: Key.selectedTodo.rawValue)
+        }
+    }
+    var todoType: String {
+        get{
+            return userDefaults.string(forKey: Key.todoType.rawValue) ?? ""
+        }
+        set {
+            userDefaults.set(newValue,forKey: Key.todoType.rawValue)
         }
     }
    

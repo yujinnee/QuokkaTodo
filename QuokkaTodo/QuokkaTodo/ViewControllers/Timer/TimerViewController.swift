@@ -29,7 +29,7 @@ class TimerViewController: BaseViewController {
     var startTime = Date()
     var endTime =  Date()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 10// 60*25
+    let onePomoInterval:TimeInterval = 60*25
     var todoType: TodoType = .today
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -66,7 +66,7 @@ class TimerViewController: BaseViewController {
         return view
     }()
     private lazy var circularProgressView = {
-        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval)
+        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval,frame: CGRect(x: 0, y: 0, width: view.frame.width-80, height: view.frame.width-80))
         return view
     }()
     private let startButton = {
@@ -104,14 +104,12 @@ class TimerViewController: BaseViewController {
         addTargets()
         setTimeInterval(num: onePomoInterval)
         setButton(status: timerStatus)
-        
+        setIsRunningOrFinish()
         
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
         timeLabel.text = seconds.timeFormatString
-        
-        
     }
     private func setTimeInterval(num: Double){
         seconds = num
@@ -136,7 +134,12 @@ class TimerViewController: BaseViewController {
         }
     }
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidLoad()
+        super.viewWillAppear(animated)
+        endTime = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
+        print(endTime)
+        print(leftTimeInterval)
+        
+        //!!!!!!!!!!!나뭇잎 추가하는 로직 넣어야함 !!
         if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 시간 지났을 때
             seconds = onePomoInterval
             print(seconds)
@@ -144,10 +147,54 @@ class TimerViewController: BaseViewController {
             timeLabel.text = seconds.timeFormatString
             
         }else{
+            if(timerStatus == .running){
+                print(leftTimeInterval)
+                leftTimeInterval = endTime.timeIntervalSince(.now)
+                seconds = leftTimeInterval
+                timeLabel.text = seconds.timeFormatString
+            }
+            
+        }
+        
+        
+    }
+    private func setIsRunningOrFinish() {
+        print(#function)
+        endTime = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
+        print(endTime)
+        print(leftTimeInterval)
+        
+        //!!!!!!!!!!!나뭇잎 추가하는 로직 넣어야함 !!
+        if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 시간 지났을 때
+            seconds = onePomoInterval
+            print(seconds)
+            print(seconds.timeFormatString)
+            timeLabel.text = seconds.timeFormatString
+            
+        }else{
+            print(leftTimeInterval)
             leftTimeInterval = endTime.timeIntervalSince(.now)
             seconds = leftTimeInterval
             timeLabel.text = seconds.timeFormatString
+            
         }
+        
+        timerStatus = .running
+        //            isPaused = false
+        startTime = Date.now
+        
+        endTime = Date.now.addingTimeInterval(leftTimeInterval)
+        print(endTime)
+        print(leftTimeInterval)
+        UserDefaultsHelper.standard.endTime = DateFormatter.convertToFullDateDBForm(date: endTime)
+        
+        seconds = leftTimeInterval
+        
+        timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+        
+        
+        circularProgressView.progress = seconds/onePomoInterval
+        
         
     }
     
@@ -161,7 +208,10 @@ class TimerViewController: BaseViewController {
         let todoSelectionViewController = TodoSelectionViewController()
         todoSelectionViewController.modalPresentationStyle = .pageSheet
         todoSelectionViewController.todoCellTappedClosure = { _id ,todoType in
+            
             self.selectedTodoId = _id
+            UserDefaultsHelper.standard.selectedTodo = _id.stringValue
+            
             self.todoType = todoType
             switch todoType{
             case .soon:
@@ -188,7 +238,15 @@ class TimerViewController: BaseViewController {
         if timerStatus == .reset {// 첫 시작
             timerStatus = .running
             startTime = Date.now
+            
             endTime = Date(timeInterval: onePomoInterval, since: startTime)
+            
+            UserDefaultsHelper.standard.endTime = DateFormatter.convertToFullDateDBForm(date: endTime)
+            print("saveEndtime:\(endTime)")
+            
+            let savedEndTime:Date = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
+            print("savdeEndtime:\(savedEndTime)")
+            
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             //            animateToBarLayer()
             startLiveActivity()
@@ -196,7 +254,12 @@ class TimerViewController: BaseViewController {
             timerStatus = .running
             //            isPaused = false
             startTime = Date.now
+            
             endTime = Date.now.addingTimeInterval(leftTimeInterval)
+            print(endTime)
+            print(leftTimeInterval)
+            UserDefaultsHelper.standard.endTime = DateFormatter.convertToFullDateDBForm(date: endTime)
+            
             seconds = leftTimeInterval
             
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
@@ -212,8 +275,10 @@ class TimerViewController: BaseViewController {
         circularProgressView.setPauseStatus()
         timer.invalidate()
         timerStatus = .pause
-        //            isPaused = true
+        
+        endTime = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
         leftTimeInterval = endTime.timeIntervalSince(Date.now)
+        
         Task{ await pauseLiveActivity()}
         
     }
@@ -225,7 +290,7 @@ class TimerViewController: BaseViewController {
         }
         cancel.setValue(QColor.accentColor, forKey: "titleTextColor")
         ok.setValue(QColor.accentColor, forKey: "titleTextColor")
-
+        
         alert.addAction(cancel)
         alert.addAction(ok)
         present(alert, animated: true)
@@ -350,10 +415,10 @@ class TimerViewController: BaseViewController {
             make.horizontalEdges.equalToSuperview().inset(50)
             make.height.equalTo(35)
         }
-        circularProgressView.snp.makeConstraints { make in
+        circularProgressView.snp.makeConstraints{ make in
             make.centerY.equalToSuperview().offset(-50)
             make.centerX.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(30)
+            make.leading.trailing.equalToSuperview().inset(40)
             make.height.equalTo(circularProgressView.snp.width)
         }
         timeLabel.snp.makeConstraints { make in
