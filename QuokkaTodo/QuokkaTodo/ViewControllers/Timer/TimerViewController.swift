@@ -27,7 +27,7 @@ class TimerViewController: BaseViewController {
     var timer = Timer()
     let todoRepository = TodoRepository()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 60*25
+    let onePomoInterval:TimeInterval = 30//60*25
     var todoType: TodoType = .todayTodo
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -186,7 +186,6 @@ class TimerViewController: BaseViewController {
             
         }
         else if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 타이머 돌려놓은 상태이고 시간 지났을 때
-            print("???????")
             timerStatus = .reset
             setButton(status: .reset)
             do {
