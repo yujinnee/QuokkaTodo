@@ -94,6 +94,7 @@ class TimerViewController: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
         addTargets()
+        addLifeCycleObserver()
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
@@ -192,7 +193,10 @@ class TimerViewController: BaseViewController {
             }
             let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
             self.selectedTodoContents = item.contents
-            todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: Leaf(gainLeafTime: Date()))
+            if(selectedTodoId != nil){
+                todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: Leaf(gainLeafTime: Date()))
+            }
+            
             leftTimeInterval = onePomoInterval
             timeLabel.text = leftTimeInterval.timeFormatString
             Task{ await endLiveActivity()}
@@ -212,21 +216,21 @@ class TimerViewController: BaseViewController {
             self.selectedTodoContents = item.contents
         }
     }
-//    private func addLifeCycleObserver(){
-//        //옵저버 등록
-//            NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-//            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-//    }
-//    @objc func didEnterBackground() {
-//        print("didEnterBackgroud")
-//        timer.invalidate()
-//    }
-//        
-//    //앱 foreground시 호출
-//    @objc func willEnterForeground() {
-//        print("willEnterForeground")
-//        setTimerProcess()
-//    }
+    private func addLifeCycleObserver(){
+        //옵저버 등록
+            NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    @objc func didEnterBackground() {
+        print("didEnterBackgroud")
+        timer.invalidate()
+    }
+        
+    //앱 foreground시 호출
+    @objc func willEnterForeground() {
+        print("willEnterForeground")
+        setTimerProcess()
+    }
   
     override func viewWillDisappear(_ animated: Bool) {
         print(#function)
@@ -314,6 +318,7 @@ class TimerViewController: BaseViewController {
             timeLabel.text = 0.timeFormatString
             
             let leaf = Leaf(gainLeafTime: Date())
+            print(selectedTodoId)
             if(selectedTodoId != nil){
                 todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
             }
