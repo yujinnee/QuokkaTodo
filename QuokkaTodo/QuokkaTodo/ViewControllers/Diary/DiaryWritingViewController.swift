@@ -9,7 +9,6 @@ import UIKit
 
 class DiaryWritingViewController: BaseViewController {
     let diaryRepository = DiaryRepository()
-    let nutritionRepository = FeedNutritionRepository()
     var diaryWritingCompletedCompletion: (() -> Void)?
     let maxLength = 200
     

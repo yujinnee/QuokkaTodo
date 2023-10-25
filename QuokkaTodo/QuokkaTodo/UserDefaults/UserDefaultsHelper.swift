@@ -18,18 +18,20 @@ class UserDefaultsHelper {
         case selectedCostume = "selectedCostume"
         case endTime = "endTime"
         case selectedTodo = "selectredTodo"
-        case todoType = "todoType"
+        case leftTimeInterval = "leftTimeInterval"
+        case timerStatus = "timerStatus"
+        case isPause = "isPause"
     }
     
     var selectedCostume: Int {
         get {
-            return userDefaults.integer(forKey: Key.selectedCostume.rawValue) ?? 0
+            return userDefaults.integer(forKey: Key.selectedCostume.rawValue) 
         }
         set {
             userDefaults.set(newValue,forKey: Key.selectedCostume.rawValue)
         }
     }
-    var endTime: String {
+    var endTime: String? {
         get{
             return userDefaults.string(forKey: Key.endTime.rawValue) ?? ""
         }
@@ -37,6 +39,7 @@ class UserDefaultsHelper {
             userDefaults.set(newValue,forKey: Key.endTime.rawValue)
         }
     }
+
     var selectedTodo: String {
         get{
             return userDefaults.string(forKey: Key.selectedTodo.rawValue) ?? ""
@@ -45,12 +48,28 @@ class UserDefaultsHelper {
             userDefaults.set(newValue,forKey: Key.selectedTodo.rawValue)
         }
     }
-    var todoType: String {
+    var leftTimeInterval: Double {
         get{
-            return userDefaults.string(forKey: Key.todoType.rawValue) ?? ""
+            return userDefaults.double(forKey: Key.leftTimeInterval.rawValue)
         }
         set {
-            userDefaults.set(newValue,forKey: Key.todoType.rawValue)
+            userDefaults.set(newValue,forKey: Key.leftTimeInterval.rawValue)
+        }
+    }
+    var timerStatus: Int {
+        get{
+            return userDefaults.integer(forKey: Key.timerStatus.rawValue)
+        }
+        set {
+            userDefaults.set(newValue,forKey: Key.timerStatus.rawValue)
+        }
+    }
+    var isPause: Bool {
+        get{
+            return userDefaults.bool(forKey: Key.isPause.rawValue)
+        }
+        set {
+            userDefaults.set(newValue,forKey: Key.isPause.rawValue)
         }
     }
    
