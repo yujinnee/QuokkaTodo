@@ -15,9 +15,7 @@
 		6A0916452AC6A44C0014FE2D /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916442AC6A44C0014FE2D /* UIView+Extension.swift */; };
 		6A0916482AC6B8350014FE2D /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916472AC6B8350014FE2D /* Todo.swift */; };
 		6A09164B2AC6B9410014FE2D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6A09164A2AC6B9410014FE2D /* RealmSwift */; };
-		6A09164D2AC71FD30014FE2D /* SpareTodo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A09164C2AC71FD30014FE2D /* SpareTodo.swift */; };
 		6A09164F2AC720020014FE2D /* TodoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A09164E2AC720020014FE2D /* TodoRepository.swift */; };
-		6A0916522AC7201A0014FE2D /* SpareTodoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916512AC7201A0014FE2D /* SpareTodoRepository.swift */; };
 		6A0916562AC73C190014FE2D /* TodoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916552AC73C190014FE2D /* TodoHeaderView.swift */; };
 		6A0916582AC73D5E0014FE2D /* BaseCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0916572AC73D5E0014FE2D /* BaseCollectionReusableView.swift */; };
 		6A0CA0A92AD3E28000C5C1FD /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A0CA08D2AD3E0A100C5C1FD /* WidgetKit.framework */; };
@@ -70,24 +68,19 @@
 		6AB2B8AF2AC349B900830760 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8AE2AC349B900830760 /* TodoViewController.swift */; };
 		6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B02AC349CE00830760 /* TimerViewController.swift */; };
 		6AB2B8B32AC349F000830760 /* QuokkaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */; };
-		6ABF94EB2ADE10D70038F075 /* FeedLeaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EA2ADE10D70038F075 /* FeedLeaf.swift */; };
-		6ABF94ED2ADE10E40038F075 /* FeedNutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EC2ADE10E40038F075 /* FeedNutrition.swift */; };
-		6ABF94F22ADFBFFE0038F075 /* FeedLeafRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94F12ADFBFFE0038F075 /* FeedLeafRepository.swift */; };
-		6ABF94F42ADFC14A0038F075 /* FeedNutiritionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94F32ADFC14A0038F075 /* FeedNutiritionRepository.swift */; };
-		6ABF94F62ADFC91F0038F075 /* GainLeaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94F52ADFC91F0038F075 /* GainLeaf.swift */; };
-		6ABF94F82ADFC9510038F075 /* GainNutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94F72ADFC9510038F075 /* GainNutrition.swift */; };
-		6ABF94FC2ADFCCEC0038F075 /* GainLeafRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94FB2ADFCCEC0038F075 /* GainLeafRepository.swift */; };
-		6ABF94FE2ADFCD640038F075 /* GainNutiritionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94FD2ADFCD640038F075 /* GainNutiritionRepository.swift */; };
-		6ABF95002ADFCE680038F075 /* Bag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94FF2ADFCE680038F075 /* Bag.swift */; };
-		6ABF95022ADFCF050038F075 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95012ADFCF050038F075 /* Level.swift */; };
-		6ABF95042ADFCF260038F075 /* BagRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95032ADFCF260038F075 /* BagRepository.swift */; };
-		6ABF95062ADFCF330038F075 /* LevelRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95052ADFCF330038F075 /* LevelRepository.swift */; };
+		6ABB242F2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 6ABB242E2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		6ABB24312AE949FD00E32838 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6ABB24302AE949FD00E32838 /* FirebaseCrashlytics */; };
+		6ABB24342AE94D0200E32838 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6ABB24332AE94D0200E32838 /* GoogleService-Info.plist */; };
+		6ABF94EB2ADE10D70038F075 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EA2ADE10D70038F075 /* Leaf.swift */; };
 		6ABF95082AE0098C0038F075 /* DiaryWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95072AE0098C0038F075 /* DiaryWritingViewController.swift */; };
 		6ABF950A2AE03F130038F075 /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95092AE03F130038F075 /* Diary.swift */; };
 		6ABF950C2AE0406F0038F075 /* DiaryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */; };
 		6ACADDFD2AC4728E00382143 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6ACADDFF2AC4728E00382143 /* Localizable.strings */; };
 		6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACADE012AC479AD00382143 /* String+Extension.swift */; };
 		6ACADE062AC4958400382143 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 6ACADE052AC4958400382143 /* FSCalendar */; };
+		6AE6206A2AE8196000791480 /* Nutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE620692AE8196000791480 /* Nutrition.swift */; };
+		6AE6206C2AE81D2E00791480 /* LeafRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6206B2AE81D2E00791480 /* LeafRepository.swift */; };
+		6AE6206E2AE81E3D00791480 /* NutritionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */; };
 		6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */; };
 		6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -124,9 +117,7 @@
 		6A09163E2AC6861D0014FE2D /* DINPro-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DINPro-Black.otf"; sourceTree = "<group>"; };
 		6A0916442AC6A44C0014FE2D /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		6A0916472AC6B8350014FE2D /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
-		6A09164C2AC71FD30014FE2D /* SpareTodo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpareTodo.swift; sourceTree = "<group>"; };
 		6A09164E2AC720020014FE2D /* TodoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRepository.swift; sourceTree = "<group>"; };
-		6A0916512AC7201A0014FE2D /* SpareTodoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpareTodoRepository.swift; sourceTree = "<group>"; };
 		6A0916552AC73C190014FE2D /* TodoHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoHeaderView.swift; sourceTree = "<group>"; };
 		6A0916572AC73D5E0014FE2D /* BaseCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionReusableView.swift; sourceTree = "<group>"; };
 		6A0CA08D2AD3E0A100C5C1FD /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -180,18 +171,8 @@
 		6AB2B8AE2AC349B900830760 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
 		6AB2B8B02AC349CE00830760 /* TimerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
 		6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuokkaViewController.swift; sourceTree = "<group>"; };
-		6ABF94EA2ADE10D70038F075 /* FeedLeaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLeaf.swift; sourceTree = "<group>"; };
-		6ABF94EC2ADE10E40038F075 /* FeedNutrition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedNutrition.swift; sourceTree = "<group>"; };
-		6ABF94F12ADFBFFE0038F075 /* FeedLeafRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLeafRepository.swift; sourceTree = "<group>"; };
-		6ABF94F32ADFC14A0038F075 /* FeedNutiritionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedNutiritionRepository.swift; sourceTree = "<group>"; };
-		6ABF94F52ADFC91F0038F075 /* GainLeaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainLeaf.swift; sourceTree = "<group>"; };
-		6ABF94F72ADFC9510038F075 /* GainNutrition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainNutrition.swift; sourceTree = "<group>"; };
-		6ABF94FB2ADFCCEC0038F075 /* GainLeafRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainLeafRepository.swift; sourceTree = "<group>"; };
-		6ABF94FD2ADFCD640038F075 /* GainNutiritionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainNutiritionRepository.swift; sourceTree = "<group>"; };
-		6ABF94FF2ADFCE680038F075 /* Bag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bag.swift; sourceTree = "<group>"; };
-		6ABF95012ADFCF050038F075 /* Level.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
-		6ABF95032ADFCF260038F075 /* BagRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BagRepository.swift; sourceTree = "<group>"; };
-		6ABF95052ADFCF330038F075 /* LevelRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelRepository.swift; sourceTree = "<group>"; };
+		6ABB24332AE94D0200E32838 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6ABF94EA2ADE10D70038F075 /* Leaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		6ABF95072AE0098C0038F075 /* DiaryWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingViewController.swift; sourceTree = "<group>"; };
 		6ABF95092AE03F130038F075 /* Diary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
 		6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepository.swift; sourceTree = "<group>"; };
@@ -199,6 +180,9 @@
 		6ACADDFE2AC4728E00382143 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE002AC4729200382143 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6ACADE012AC479AD00382143 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		6AE620692AE8196000791480 /* Nutrition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nutrition.swift; sourceTree = "<group>"; };
+		6AE6206B2AE81D2E00791480 /* LeafRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeafRepository.swift; sourceTree = "<group>"; };
+		6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionRepository.swift; sourceTree = "<group>"; };
 		6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFromatter+Extension.swift"; sourceTree = "<group>"; };
 		6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -219,7 +203,9 @@
 			files = (
 				6A09164B2AC6B9410014FE2D /* RealmSwift in Frameworks */,
 				6AB2B8AC2AC346A300830760 /* SnapKit in Frameworks */,
+				6ABB24312AE949FD00E32838 /* FirebaseCrashlytics in Frameworks */,
 				6ACADE062AC4958400382143 /* FSCalendar in Frameworks */,
+				6ABB242F2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,14 +216,9 @@
 			isa = PBXGroup;
 			children = (
 				6A0916472AC6B8350014FE2D /* Todo.swift */,
-				6A09164C2AC71FD30014FE2D /* SpareTodo.swift */,
-				6ABF94EA2ADE10D70038F075 /* FeedLeaf.swift */,
-				6ABF94EC2ADE10E40038F075 /* FeedNutrition.swift */,
-				6ABF94F52ADFC91F0038F075 /* GainLeaf.swift */,
-				6ABF94F72ADFC9510038F075 /* GainNutrition.swift */,
-				6ABF94FF2ADFCE680038F075 /* Bag.swift */,
-				6ABF95012ADFCF050038F075 /* Level.swift */,
+				6ABF94EA2ADE10D70038F075 /* Leaf.swift */,
 				6ABF95092AE03F130038F075 /* Diary.swift */,
+				6AE620692AE8196000791480 /* Nutrition.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -391,6 +372,7 @@
 				6AB2B87A2AC3355B00830760 /* Assets.xcassets */,
 				6AB2B87C2AC3355B00830760 /* LaunchScreen.storyboard */,
 				6AB2B87F2AC3355B00830760 /* Info.plist */,
+				6ABB24332AE94D0200E32838 /* GoogleService-Info.plist */,
 			);
 			name = QoukkaTodo;
 			path = QuokkaTodo;
@@ -475,14 +457,9 @@
 			isa = PBXGroup;
 			children = (
 				6A09164E2AC720020014FE2D /* TodoRepository.swift */,
-				6A0916512AC7201A0014FE2D /* SpareTodoRepository.swift */,
-				6ABF94F12ADFBFFE0038F075 /* FeedLeafRepository.swift */,
-				6ABF94FB2ADFCCEC0038F075 /* GainLeafRepository.swift */,
-				6ABF94F32ADFC14A0038F075 /* FeedNutiritionRepository.swift */,
-				6ABF94FD2ADFCD640038F075 /* GainNutiritionRepository.swift */,
-				6ABF95032ADFCF260038F075 /* BagRepository.swift */,
-				6ABF95052ADFCF330038F075 /* LevelRepository.swift */,
 				6ABF950B2AE0406F0038F075 /* DiaryRepository.swift */,
+				6AE6206B2AE81D2E00791480 /* LeafRepository.swift */,
+				6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -535,6 +512,7 @@
 				6AB2B86B2AC3355700830760 /* Frameworks */,
 				6AB2B86C2AC3355700830760 /* Resources */,
 				6A0CA0A02AD3E0A600C5C1FD /* Embed Foundation Extensions */,
+				6ABB24322AE94A4A00E32838 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -546,6 +524,8 @@
 				6AB2B8AB2AC346A300830760 /* SnapKit */,
 				6ACADE052AC4958400382143 /* FSCalendar */,
 				6A09164A2AC6B9410014FE2D /* RealmSwift */,
+				6ABB242E2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				6ABB24302AE949FD00E32838 /* FirebaseCrashlytics */,
 			);
 			productName = QoukkaTodo;
 			productReference = 6AB2B86E2AC3355700830760 /* QuokkaTodo.app */;
@@ -583,6 +563,7 @@
 				6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				6A0916492AC6B9410014FE2D /* XCRemoteSwiftPackageReference "realm-swift" */,
+				6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 6AB2B86F2AC3355700830760 /* Products */;
 			projectDirPath = "";
@@ -618,6 +599,7 @@
 				6A0916422AC6861D0014FE2D /* DINPro-Light.otf in Resources */,
 				6AB2B8952AC3407D00830760 /* Pretendard-SemiBold.otf in Resources */,
 				6AB2B89A2AC3407D00830760 /* Pretendard-ExtraLight.otf in Resources */,
+				6ABB24342AE94D0200E32838 /* GoogleService-Info.plist in Resources */,
 				6AB2B8962AC3407D00830760 /* Pretendard-Medium.otf in Resources */,
 				6A0916432AC6861D0014FE2D /* DINPro-Black.otf in Resources */,
 				6AB2B8932AC3407D00830760 /* Pretendard-Regular.otf in Resources */,
@@ -628,6 +610,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6ABB24322AE94A4A00E32838 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6A0CA0A42AD3E28000C5C1FD /* Sources */ = {
@@ -646,35 +653,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				6ABF950A2AE03F130038F075 /* Diary.swift in Sources */,
-				6ABF95022ADFCF050038F075 /* Level.swift in Sources */,
-				6ABF95002ADFCE680038F075 /* Bag.swift in Sources */,
 				6A67B10B2ADA6AF500FC8D9D /* SettingViewController.swift in Sources */,
-				6ABF94F62ADFC91F0038F075 /* GainLeaf.swift in Sources */,
 				6AB2B8AF2AC349B900830760 /* TodoViewController.swift in Sources */,
 				6A2C23232AE1A301007807EF /* DiaryViewController.swift in Sources */,
-				6ABF94FE2ADFCD640038F075 /* GainNutiritionRepository.swift in Sources */,
 				6A67B1092ADA6ADD00FC8D9D /* ChartViewController.swift in Sources */,
 				6A7A91D42AD7E44A00633C06 /* CircularProgressView.swift in Sources */,
-				6ABF95042ADFCF260038F075 /* BagRepository.swift in Sources */,
-				6ABF94F82ADFC9510038F075 /* GainNutrition.swift in Sources */,
 				6A8C60CA2AE6BA090027B4AC /* SettingTableViewCell.swift in Sources */,
 				6A0916562AC73C190014FE2D /* TodoHeaderView.swift in Sources */,
 				6A0916582AC73D5E0014FE2D /* BaseCollectionReusableView.swift in Sources */,
 				6AB2B8722AC3355700830760 /* AppDelegate.swift in Sources */,
 				6AB2B8A92AC3467000830760 /* BaseCollectionViewCell.swift in Sources */,
-				6ABF94FC2ADFCCEC0038F075 /* GainLeafRepository.swift in Sources */,
 				6A0916452AC6A44C0014FE2D /* UIView+Extension.swift in Sources */,
 				6AB2B8742AC3355700830760 /* SceneDelegate.swift in Sources */,
-				6A09164D2AC71FD30014FE2D /* SpareTodo.swift in Sources */,
-				6ABF95062ADFCF330038F075 /* LevelRepository.swift in Sources */,
 				6ACADE022AC479AE00382143 /* String+Extension.swift in Sources */,
 				6A8C60CC2AE6BE0F0027B4AC /* WebViewController.swift in Sources */,
 				6ABF950C2AE0406F0038F075 /* DiaryRepository.swift in Sources */,
 				6AB2B89C2AC3418D00830760 /* UIFont+Extension.swift in Sources */,
 				6A1FCC752AE2956400345E8D /* BaseTableViewCell.swift in Sources */,
 				6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */,
-				6ABF94ED2ADE10E40038F075 /* FeedNutrition.swift in Sources */,
 				6AB2B8872AC3380A00830760 /* Color.swift in Sources */,
+				6AE6206A2AE8196000791480 /* Nutrition.swift in Sources */,
 				6A2C23132AE0FF3B007807EF /* CostumeViewController.swift in Sources */,
 				6ABF95082AE0098C0038F075 /* DiaryWritingViewController.swift in Sources */,
 				6AB2B8A52AC3463B00830760 /* BaseViewController.swift in Sources */,
@@ -682,24 +680,23 @@
 				6A0CA0BD2AD3E7B500C5C1FD /* QuokkaWidgetLiveActivity.swift in Sources */,
 				6A2C23202AE177C0007807EF /* Costume.swift in Sources */,
 				6A2C23152AE10247007807EF /* CostumeCollectionViewCell.swift in Sources */,
+				6AE6206C2AE81D2E00791480 /* LeafRepository.swift in Sources */,
 				6A1A88CB2AD47FD700A51E10 /* TodoSelectionViewController.swift in Sources */,
 				6A1A88CD2AD4822600A51E10 /* TodoPlayCollectionViewCell.swift in Sources */,
 				6A0916482AC6B8350014FE2D /* Todo.swift in Sources */,
 				6A60843E2AC95887005B85C7 /* MenuViewController.swift in Sources */,
-				6A0916522AC7201A0014FE2D /* SpareTodoRepository.swift in Sources */,
 				6A2C23182AE106CC007807EF /* CostumeModel.swift in Sources */,
 				6A6ED6642ACDD39B00CD902B /* Int+Extension.swift in Sources */,
 				6AB2B8A22AC3461A00830760 /* ReusableViewProtocol.swift in Sources */,
 				6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */,
+				6AE6206E2AE81E3D00791480 /* NutritionRepository.swift in Sources */,
 				6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */,
 				6A2C231C2AE176B7007807EF /* UserDefaultsHelper.swift in Sources */,
 				6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */,
-				6ABF94F42ADFC14A0038F075 /* FeedNutiritionRepository.swift in Sources */,
-				6ABF94EB2ADE10D70038F075 /* FeedLeaf.swift in Sources */,
+				6ABF94EB2ADE10D70038F075 /* Leaf.swift in Sources */,
 				6A1FCC732AE2954300345E8D /* DiaryTableViewCell.swift in Sources */,
 				6A09164F2AC720020014FE2D /* TodoRepository.swift in Sources */,
 				6A3FC7502AE6415900E8A16C /* ToastMessageView.swift in Sources */,
-				6ABF94F22ADFBFFE0038F075 /* FeedLeafRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -750,7 +747,7 @@
 				INFOPLIST_FILE = QuokkaWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuokkaWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -783,7 +780,7 @@
 				INFOPLIST_FILE = QuokkaWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuokkaWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -924,6 +921,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3H85AXMVD3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuokkaTodo/Info.plist;
@@ -1035,6 +1033,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.16.0;
+			};
+		};
 		6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
@@ -1055,6 +1061,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		6ABB242E2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		6ABB24302AE949FD00E32838 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		6ACADE052AC4958400382143 /* FSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;

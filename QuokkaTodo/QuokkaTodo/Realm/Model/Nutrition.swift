@@ -1,23 +1,21 @@
 //
-//  FeedNutrition.swift
+//  Nutrition.swift
 //  QuokkaTodo
 //
-//  Created by 이유진 on 10/17/23.
+//  Created by 이유진 on 10/25/23.
 //
 
 import Foundation
 import RealmSwift
 
-class FeedNutrition: Object {
+class Nutrition: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var feedNutritionTime: String
+    @Persisted var feedNutritionTime: Date?
 
-    convenience init(feedNutritionTime: String) {
+    convenience init(feedNutritionTime: Date) {
         self.init()
         
         self.feedNutritionTime = feedNutritionTime
     }
 }
-
-
 

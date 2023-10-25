@@ -39,11 +39,16 @@ class DiaryRepository: diaryRepositoryType{
         return data
     }
     func fetchSelectedDateDiary(date:Date) -> Results<Diary>{
-        let dateString = DateFormatter.convertToOnlyDateDBForm(date: date)
-        let result = realm.objects(Diary.self).where {
-            $0.createdDate.contains(dateString)
+        
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Diary.self).sorted(byKeyPath:"createdDate", ascending: false)
+        result = result.where{
+            $0.createdDate >= start && $0.createdDate <= end
         }
         return result
+        
+        
     }
     
     func createDiary(_ item: Diary) {
@@ -87,6 +92,19 @@ class DiaryRepository: diaryRepositoryType{
             }
         } catch {
             print(error)
+        }
+    }
+    func checkHasTodayDiary(date:Date)->Bool {
+        let start = Calendar.current.startOfDay(for: date)
+        let end = start.addingTimeInterval(24*60*60-1)
+        var result = realm.objects(Diary.self).sorted(byKeyPath:"createdDate", ascending: false)
+        result = result.where{
+            $0.createdDate >= start && $0.createdDate <= end
+        }
+        if(result.count>0){
+            return true
+        }else {
+            return false
         }
     }
 

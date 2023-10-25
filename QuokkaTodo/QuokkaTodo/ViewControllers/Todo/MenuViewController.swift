@@ -10,7 +10,7 @@ import RealmSwift
 
 class MenuViewController: BaseViewController {
     let todoRepository = TodoRepository()
-    let spareTodoRepository = SpareTodoRepository()
+//    let spareTodoRepository = SpareTodoRepository()
     var todoType: TodoType?
     var deleteButtonTappedClosure: (()->Void)?
     var reviseButtonTappedClosure: (()->Void)?
@@ -84,9 +84,9 @@ class MenuViewController: BaseViewController {
     }
     private func setTodoTypeLabel() {
         switch todoType {
-        case .soon:
+        case .spareTodo:
             todoTypeLabel.text = "곧 할 일"
-        case .today:
+        case .todayTodo:
             todoTypeLabel.text = "오늘 할 일"
         default :
             break
@@ -95,14 +95,15 @@ class MenuViewController: BaseViewController {
     }
     private func setTodoLabel() {
         guard let _id = _id else {return}
-        switch todoType {
-        case .soon:
-            todoLabel.text = spareTodoRepository.readTodo(_id: _id).contents
-        case .today:
-            todoLabel.text = todoRepository.readTodo(_id: _id).contents
-        default :
-            break
-        }
+        todoLabel.text = todoRepository.readTodo(_id: _id).contents
+//        switch todoType {
+//        case .spareTodo:
+//            todoLabel.text = todoRepository.readTodo(_id: _id).contents
+//        case .todayTodo:
+//            todoLabel.text = todoRepository.readTodo(_id: _id).contents
+//        default :
+//            break
+//        }
         
     }
     private func addTargets(){
@@ -110,14 +111,15 @@ class MenuViewController: BaseViewController {
         reviseButton.addTarget(self, action: #selector(reviseButtonDidTapped), for: .touchUpInside)
     }
     @objc func deleteButtonDidTapped() {
-        switch todoType{
-        case .soon:
-            spareTodoRepository.deleteTodo(_id: _id ?? ObjectId())
-        case .today:
-            todoRepository.deleteTodo(_id: _id ?? ObjectId())
-        default:
-            break
-        }
+        todoRepository.deleteTodo(_id: _id ?? ObjectId())
+//        switch todoType{
+//        case .spareTodo:
+//            todoRepository.deleteTodo(_id: _id ?? ObjectId())
+//        case .todayTodo:
+//            todoRepository.deleteTodo(_id: _id ?? ObjectId())
+//        default:
+//            break
+//        }
         dismiss(animated: true)
         deleteButtonTappedClosure?()
     }

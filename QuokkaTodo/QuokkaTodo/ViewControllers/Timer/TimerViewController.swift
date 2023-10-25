@@ -17,20 +17,18 @@ extension Int {
         return CGFloat(self) * .pi / 180
     }
 }
-enum TimerStatus {
-    case running
-    case pause
-    case reset
+enum TimerStatus: Int {
+    case reset = 0
+    case running = 1
+    case pause = 2
 }
 
 class TimerViewController: BaseViewController {
     var timer = Timer()
-    var seconds = Double()
-    var startTime = Date()
-    var endTime =  Date()
+    let todoRepository = TodoRepository()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 60*25
-    var todoType: TodoType = .today
+    let onePomoInterval:TimeInterval = 30//60*25
+    var todoType: TodoType = .todayTodo
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
         didSet{
@@ -43,12 +41,6 @@ class TimerViewController: BaseViewController {
             setButton(status: timerStatus)
         }
     }
-    
-    let spareTodoRepository = SpareTodoRepository()
-    let todoRepository = TodoRepository()
-    let feedLeafRepository = FeedLeafRepository()
-    let bagRepository = BagRepository()
-    
     private let todoSelectionButton = {
         let view = UIButton()
         view.setTitle("투두 선택하기", for: .normal)
@@ -66,7 +58,7 @@ class TimerViewController: BaseViewController {
         return view
     }()
     private lazy var circularProgressView = {
-        let view = CircularProgressView(seconds:seconds,onePomo: onePomoInterval,frame: CGRect(x: 0, y: 0, width: view.frame.width-80, height: view.frame.width-80))
+        let view = CircularProgressView(seconds:leftTimeInterval,onePomo: onePomoInterval,frame: CGRect(x: 0, y: 0, width: view.frame.width-80, height: view.frame.width-80))
         return view
     }()
     private let startButton = {
@@ -102,19 +94,16 @@ class TimerViewController: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = QColor.backgroundColor
         addTargets()
-        setTimeInterval(num: onePomoInterval)
-        setButton(status: timerStatus)
-        setIsRunningOrFinish()
-        
+        addLifeCycleObserver()
     }
     override func configureView() {
         navigationItem.titleView = UIImageView(image: UIImage(named: "Logo"))
-        timeLabel.text = seconds.timeFormatString
+        timeLabel.text = leftTimeInterval.timeFormatString
     }
-    private func setTimeInterval(num: Double){
-        seconds = num
-        leftTimeInterval = num
+    private func initTimer() {
+        leftTimeInterval = UserDefaultsHelper.standard.leftTimeInterval
     }
+
     private func setButton(status: TimerStatus){
         switch status{
         case .running:
@@ -131,73 +120,9 @@ class TimerViewController: BaseViewController {
             startButton.isHidden = false
             pauseButton.isHidden = true
             resetButton.isHidden = true
-        }
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        endTime = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
-        print(endTime)
-        print(leftTimeInterval)
-        
-        //!!!!!!!!!!!나뭇잎 추가하는 로직 넣어야함 !!
-        if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 시간 지났을 때
-            seconds = onePomoInterval
-            print(seconds)
-            print(seconds.timeFormatString)
-            timeLabel.text = seconds.timeFormatString
-            
-        }else{
-            if(timerStatus == .running){
-                print(leftTimeInterval)
-                leftTimeInterval = endTime.timeIntervalSince(.now)
-                seconds = leftTimeInterval
-                timeLabel.text = seconds.timeFormatString
-            }
             
         }
-        
-        
     }
-    private func setIsRunningOrFinish() {
-        print(#function)
-        endTime = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
-        print(endTime)
-        print(leftTimeInterval)
-        
-        //!!!!!!!!!!!나뭇잎 추가하는 로직 넣어야함 !!
-        if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 시간 지났을 때
-            seconds = onePomoInterval
-            print(seconds)
-            print(seconds.timeFormatString)
-            timeLabel.text = seconds.timeFormatString
-            
-        }else{
-            print(leftTimeInterval)
-            leftTimeInterval = endTime.timeIntervalSince(.now)
-            seconds = leftTimeInterval
-            timeLabel.text = seconds.timeFormatString
-            
-        }
-        
-        timerStatus = .running
-        //            isPaused = false
-        startTime = Date.now
-        
-        endTime = Date.now.addingTimeInterval(leftTimeInterval)
-        print(endTime)
-        print(leftTimeInterval)
-        UserDefaultsHelper.standard.endTime = DateFormatter.convertToFullDateDBForm(date: endTime)
-        
-        seconds = leftTimeInterval
-        
-        timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-        
-        
-        circularProgressView.progress = seconds/onePomoInterval
-        
-        
-    }
-    
     private func addTargets(){
         todoSelectionButton.addTarget(self, action: #selector(todoSelectionButtonDidTap), for: .touchUpInside)
         startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
@@ -213,73 +138,175 @@ class TimerViewController: BaseViewController {
             UserDefaultsHelper.standard.selectedTodo = _id.stringValue
             
             self.todoType = todoType
-            switch todoType{
-            case .soon:
-                let item = self.spareTodoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                self.selectedTodoContents = item.contents
-                Task{await self.updateTodoLiveActivity()}
-                
-            case .today:
-                let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
-                self.selectedTodoContents = item.contents
-                Task{await self.updateTodoLiveActivity()}
-            }
+            
+            let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+            self.selectedTodoContents = item.contents
+            Task{await self.updateTodoLiveActivity()}
             
         }
         self.present(todoSelectionViewController, animated: true)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print(#function)
+        setTimerProcess()
+    }
+    private func setTimerProcess() {
+        
+        guard let endTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") else {//돌려놓은 타이머가 없을 때
+            timerStatus = .reset
+            setButton(status: .reset)
+            leftTimeInterval = onePomoInterval
+            selectedTodoId = nil
+            self.selectedTodoContents = "투두 선택하기"
+            Task{ await endLiveActivity()}
+            timeLabel.text = leftTimeInterval.timeFormatString
+           
+//            circularProgressView.resetStatus()
+            return
+        }
+        let isPause = UserDefaultsHelper.standard.isPause
+        if(isPause == true){// 정지 되어있는 상태
+            timerStatus = .pause
+            setButton(status: .pause)
+            let leftTimeInterval = UserDefaultsHelper.standard.leftTimeInterval
+            print("viewWillPause\(leftTimeInterval)")
+            self.leftTimeInterval = leftTimeInterval
+            circularProgressView.progress = leftTimeInterval/onePomoInterval
+            circularProgressView.setPauseStatus()
+            timer.invalidate()
+            timeLabel.text = leftTimeInterval.timeFormatString
+            do {
+                selectedTodoId = try ObjectId(string: UserDefaultsHelper.standard.selectedTodo)
+            } catch {
+                print(error)
+            }
+            let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+            self.selectedTodoContents = item.contents
+            
+        }
+        else if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 타이머 돌려놓은 상태이고 시간 지났을 때
+            timerStatus = .reset
+            setButton(status: .reset)
+            do {
+                selectedTodoId = try ObjectId(string: UserDefaultsHelper.standard.selectedTodo)
+            } catch {
+                print(error)
+            }
+            let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+            self.selectedTodoContents = item.contents
+            if(selectedTodoId != nil){
+                todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: Leaf(gainLeafTime: Date()))
+                view.makeToastAnimation(message: "뽀모도로를 완료하여 나뭇잎 1개를 \n획득하였습니다!🌱")
+            }
+            UserDefaultsHelper.standard.endTime = nil
+            
+            leftTimeInterval = onePomoInterval
+            timeLabel.text = leftTimeInterval.timeFormatString
+            
+            Task{ await endLiveActivity()}
+            circularProgressView.resetStatus()
+            timer.invalidate()
+            
+        }
+        else{ // 달리고 있을 떄
+            timerStatus = .running
+            leftTimeInterval = endTime.timeIntervalSince(.now)
+            print(#function)
+            print(endTime)
+            print(leftTimeInterval)
+            print(#function)
+            timeLabel.text = leftTimeInterval.timeFormatString
+            timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
+            do {
+                selectedTodoId = try ObjectId(string: UserDefaultsHelper.standard.selectedTodo)
+            } catch {
+                print(error)
+            }
+            let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
+            self.selectedTodoContents = item.contents
+        }
+    }
+    private func addLifeCycleObserver(){
+        //옵저버 등록
+            NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        timer.invalidate()
+    }
+    @objc func didEnterBackground() {
+        print("didEnterBackgroud")
+        timer.invalidate()
+    }
+        
+    //앱 foreground시 호출
+    @objc func willEnterForeground() {
+        print("willEnterForeground")
+        setTimerProcess()
+    }
+  
+
+    deinit{
+        NotificationCenter.default.removeObserver(self)
+    }
     
     @objc private func startButtonDidTap(){
-        guard let todo = selectedTodoId else {
+        guard let _ = selectedTodoId else {
             view.makeToastAnimation(message: "투두를 선택 해 주세요")
             return
         }
         
         if timerStatus == .reset {// 첫 시작
             timerStatus = .running
-            startTime = Date.now
-            
-            endTime = Date(timeInterval: onePomoInterval, since: startTime)
-            
-            UserDefaultsHelper.standard.endTime = DateFormatter.convertToFullDateDBForm(date: endTime)
-            print("saveEndtime:\(endTime)")
-            
-            let savedEndTime:Date = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
-            print("savdeEndtime:\(savedEndTime)")
+            leftTimeInterval = onePomoInterval
+            let endTime = Date(timeInterval: onePomoInterval, since: Date.now)
+            UserDefaultsHelper.standard.endTime = DateFormatter.convertFromDateToString(date:endTime)
             
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
-            //            animateToBarLayer()
             startLiveActivity()
+            
         }else if timerStatus == .pause{//일시 정지 했다가 재시작
             timerStatus = .running
-            //            isPaused = false
-            startTime = Date.now
             
-            endTime = Date.now.addingTimeInterval(leftTimeInterval)
+            let leftTimeInterval = UserDefaultsHelper.standard.leftTimeInterval
+            self.leftTimeInterval = leftTimeInterval
+            let endTime = Date.now.addingTimeInterval(leftTimeInterval)
+            UserDefaultsHelper.standard.endTime = DateFormatter.convertFromDateToString(date:endTime)
+            print(#function)
             print(endTime)
             print(leftTimeInterval)
-            UserDefaultsHelper.standard.endTime = DateFormatter.convertToFullDateDBForm(date: endTime)
-            
-            seconds = leftTimeInterval
+            print(#function)
             
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             Task{
                 await restartTimerInLiveActivity()
             }
+            UserDefaultsHelper.standard.isPause = false
             
         }
-        circularProgressView.progress = seconds/onePomoInterval
+        circularProgressView.progress = leftTimeInterval/onePomoInterval
+        
         
     }
     @objc private func pauseButtonDidTap(){
-        circularProgressView.setPauseStatus()
-        timer.invalidate()
         timerStatus = .pause
-        
-        endTime = DateFormatter.convertToStringFromDate(date: UserDefaultsHelper.standard.endTime)
+        let endTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") ?? Date()
+        print("pauseEndtime\(endTime)")
         leftTimeInterval = endTime.timeIntervalSince(Date.now)
+        print("pauseLfetTimeInterval\(leftTimeInterval)")
         
+        print(#function)
+        print(endTime)
+        print(leftTimeInterval)
+        print(#function)
+        
+        UserDefaultsHelper.standard.leftTimeInterval = leftTimeInterval
+        UserDefaultsHelper.standard.isPause = true
+        
+        timer.invalidate()
         Task{ await pauseLiveActivity()}
+        circularProgressView.setPauseStatus()
         
     }
     @objc private func resetButtonDidTap() {
@@ -297,40 +324,39 @@ class TimerViewController: BaseViewController {
         
     }
     private func setReset() {
-        Task{ await endLiveActivity()}
-        timer.invalidate()
         timerStatus = .reset
-        seconds = onePomoInterval
+        UserDefaultsHelper.standard.endTime = nil
+        UserDefaultsHelper.standard.isPause = false
         leftTimeInterval = onePomoInterval
-        timeLabel.text = seconds.timeFormatString
+//        Task{ await endLiveActivity()}지울까말까..1?!?
+        timer.invalidate()
+        timeLabel.text = leftTimeInterval.timeFormatString
         circularProgressView.resetStatus()
     }
     
     @objc func timerTimeChanged() {
-        
-        if(seconds <= 0){
+        if(leftTimeInterval <= 0){
             view.makeToastAnimation(message: "뽀모도로를 완료하여 나뭇잎 1개를 \n획득하였습니다!🌱")
             circularProgressView.setEndStatus()
             timer.invalidate()
             timeLabel.text = 0.timeFormatString
-            switch todoType {
-            case .soon:
-                let currentLeafNum = spareTodoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
-                spareTodoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
-            case .today:
-                let currentLeafNum = todoRepository.readTodo(_id: selectedTodoId ?? ObjectId()).leafNum
-                todoRepository.updateLeafNum(_id: selectedTodoId ?? ObjectId(), leafNum: currentLeafNum + 1)
+            
+            let leaf = Leaf(gainLeafTime: Date())
+            print(#function)
+            print(selectedTodoId)
+            print(#function)
+            if(selectedTodoId != nil){
+                todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
             }
-            let dateString = DateFormatter.convertToFullDateDBForm(date: Date())
-            let leafNum = bagRepository.readLeafNum()
-            feedLeafRepository.createFeedLeaf(FeedLeaf(feedLeafTime: dateString))
-            bagRepository.updateLeafNum(num: leafNum+1)
+            UserDefaultsHelper.standard.endTime = nil
+            
             setReset()
         }
         else{
-            seconds -= timeUnit
-            timeLabel.text = seconds.timeFormatString
-            circularProgressView.progress = seconds/onePomoInterval
+            leftTimeInterval -= timeUnit
+            timeLabel.text = leftTimeInterval.timeFormatString
+            circularProgressView.progress = leftTimeInterval/onePomoInterval
+
         }
         
     }
@@ -382,7 +408,7 @@ class TimerViewController: BaseViewController {
     }
     private func updateTodoLiveActivity() async {
         if #available(iOS 16.2, *) {
-            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: seconds, isPaused: false)
+            let updateStatus = QuokkaWidgetAttributes.ContentState(todo: selectedTodoContents,seconds: leftTimeInterval, isPaused: false)
             let updateContent = ActivityContent(state: updateStatus, staleDate: nil)
             
             for activity in Activity<QuokkaWidgetAttributes>.activities {

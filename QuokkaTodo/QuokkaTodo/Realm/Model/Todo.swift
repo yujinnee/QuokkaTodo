@@ -11,20 +11,23 @@ import RealmSwift
 class Todo: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var contents: String
-    @Persisted var planDate: String
-    @Persisted var createdDate: String
+    @Persisted var planDate: Date
+    @Persisted var createdDate: Date
     @Persisted var isCompleted = false
     @Persisted var position: Int
-    @Persisted var leafNum: Int
+    @Persisted var todoType: Int
+    @Persisted var leaves: List<Leaf>
     
-    convenience init(contents: String, planDate: String,createdDate: String,position: Int,leafNum: Int) {
+    
+    convenience init(contents: String, planDate: Date,createdDate: Date,position: Int,todoType: TodoType) {
         self.init()
         
         self.contents = contents
         self.planDate = planDate
         self.createdDate = createdDate
         self.position = position
-        self.leafNum = leafNum
+        self.todoType = todoType.rawValue
+        
     }
 }
 

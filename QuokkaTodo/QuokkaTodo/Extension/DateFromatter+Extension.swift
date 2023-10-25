@@ -16,15 +16,15 @@ extension DateFormatter {
         return format.string(from: Date())
     }
     
-    static func convertToFullDateDBForm(date: Date) -> String {
+    static func convertFromDateToString(date: Date) -> String {
         let format = DateFormatter()
         format.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return format.string(from:date)
     }
-    static func convertToStringFromDate(date: String) -> Date {
+    static func convertFromStringToDate(date: String) -> Date? {
         let format = DateFormatter()
         format.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return format.date(from:date) ?? Date()
+        return format.date(from:date)
     }
     static func convertToOnlyDateDBForm(date: Date) -> String {
         let format = DateFormatter()
