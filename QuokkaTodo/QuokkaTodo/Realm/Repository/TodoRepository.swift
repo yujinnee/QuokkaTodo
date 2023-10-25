@@ -139,9 +139,13 @@ class TodoRepository: todoRepositoryType{
         }
     }
     func updateLeaves(_id: ObjectId, leaf: Leaf) {
-        let todo = realm.objects(Todo.self).where {
+         let todoList = realm.objects(Todo.self).where{
             $0._id == _id
-        }.first!
+        }
+        
+        guard let todo = todoList.first else{
+            return
+        }
         do {
             try realm.write {
                 todo.leaves.append(leaf)

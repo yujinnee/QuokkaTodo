@@ -10,7 +10,7 @@ import UIKit
 class QuokkaViewController: BaseViewController {
     let leafRepository = LeafRepository()
     let nutritionRepository = NutritionRepository()
-    
+    let diaryRepository = DiaryRepository()
     var nowLevel = 0
     
     private let brownButtonConfiguration = {
@@ -171,6 +171,11 @@ class QuokkaViewController: BaseViewController {
         }
     }
     @objc private func feedNutritionButtonTapped(){
+        if diaryRepository.checkHasTodayDiary(date: Date()) == true{
+            view.makeToastAnimation(message: "오늘의 행복일기를 이미 작성하였어요!🤎")
+            return
+        }
+      
         let vc = DiaryWritingViewController()
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .coverVertical
