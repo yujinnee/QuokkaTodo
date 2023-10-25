@@ -68,6 +68,9 @@
 		6AB2B8AF2AC349B900830760 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8AE2AC349B900830760 /* TodoViewController.swift */; };
 		6AB2B8B12AC349CE00830760 /* TimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B02AC349CE00830760 /* TimerViewController.swift */; };
 		6AB2B8B32AC349F000830760 /* QuokkaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */; };
+		6ABB242F2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 6ABB242E2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		6ABB24312AE949FD00E32838 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6ABB24302AE949FD00E32838 /* FirebaseCrashlytics */; };
+		6ABB24342AE94D0200E32838 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6ABB24332AE94D0200E32838 /* GoogleService-Info.plist */; };
 		6ABF94EB2ADE10D70038F075 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF94EA2ADE10D70038F075 /* Leaf.swift */; };
 		6ABF95082AE0098C0038F075 /* DiaryWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95072AE0098C0038F075 /* DiaryWritingViewController.swift */; };
 		6ABF950A2AE03F130038F075 /* Diary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF95092AE03F130038F075 /* Diary.swift */; };
@@ -168,6 +171,7 @@
 		6AB2B8AE2AC349B900830760 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
 		6AB2B8B02AC349CE00830760 /* TimerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewController.swift; sourceTree = "<group>"; };
 		6AB2B8B22AC349F000830760 /* QuokkaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuokkaViewController.swift; sourceTree = "<group>"; };
+		6ABB24332AE94D0200E32838 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6ABF94EA2ADE10D70038F075 /* Leaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		6ABF95072AE0098C0038F075 /* DiaryWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingViewController.swift; sourceTree = "<group>"; };
 		6ABF95092AE03F130038F075 /* Diary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diary.swift; sourceTree = "<group>"; };
@@ -199,7 +203,9 @@
 			files = (
 				6A09164B2AC6B9410014FE2D /* RealmSwift in Frameworks */,
 				6AB2B8AC2AC346A300830760 /* SnapKit in Frameworks */,
+				6ABB24312AE949FD00E32838 /* FirebaseCrashlytics in Frameworks */,
 				6ACADE062AC4958400382143 /* FSCalendar in Frameworks */,
+				6ABB242F2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +372,7 @@
 				6AB2B87A2AC3355B00830760 /* Assets.xcassets */,
 				6AB2B87C2AC3355B00830760 /* LaunchScreen.storyboard */,
 				6AB2B87F2AC3355B00830760 /* Info.plist */,
+				6ABB24332AE94D0200E32838 /* GoogleService-Info.plist */,
 			);
 			name = QoukkaTodo;
 			path = QuokkaTodo;
@@ -505,6 +512,7 @@
 				6AB2B86B2AC3355700830760 /* Frameworks */,
 				6AB2B86C2AC3355700830760 /* Resources */,
 				6A0CA0A02AD3E0A600C5C1FD /* Embed Foundation Extensions */,
+				6ABB24322AE94A4A00E32838 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -516,6 +524,8 @@
 				6AB2B8AB2AC346A300830760 /* SnapKit */,
 				6ACADE052AC4958400382143 /* FSCalendar */,
 				6A09164A2AC6B9410014FE2D /* RealmSwift */,
+				6ABB242E2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				6ABB24302AE949FD00E32838 /* FirebaseCrashlytics */,
 			);
 			productName = QoukkaTodo;
 			productReference = 6AB2B86E2AC3355700830760 /* QuokkaTodo.app */;
@@ -553,6 +563,7 @@
 				6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				6A0916492AC6B9410014FE2D /* XCRemoteSwiftPackageReference "realm-swift" */,
+				6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 6AB2B86F2AC3355700830760 /* Products */;
 			projectDirPath = "";
@@ -588,6 +599,7 @@
 				6A0916422AC6861D0014FE2D /* DINPro-Light.otf in Resources */,
 				6AB2B8952AC3407D00830760 /* Pretendard-SemiBold.otf in Resources */,
 				6AB2B89A2AC3407D00830760 /* Pretendard-ExtraLight.otf in Resources */,
+				6ABB24342AE94D0200E32838 /* GoogleService-Info.plist in Resources */,
 				6AB2B8962AC3407D00830760 /* Pretendard-Medium.otf in Resources */,
 				6A0916432AC6861D0014FE2D /* DINPro-Black.otf in Resources */,
 				6AB2B8932AC3407D00830760 /* Pretendard-Regular.otf in Resources */,
@@ -598,6 +610,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6ABB24322AE94A4A00E32838 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6A0CA0A42AD3E28000C5C1FD /* Sources */ = {
@@ -710,7 +747,7 @@
 				INFOPLIST_FILE = QuokkaWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuokkaWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -743,7 +780,7 @@
 				INFOPLIST_FILE = QuokkaWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuokkaWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -884,6 +921,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3H85AXMVD3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuokkaTodo/Info.plist;
@@ -995,6 +1033,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.16.0;
+			};
+		};
 		6ACADE042AC4958300382143 /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
@@ -1015,6 +1061,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6AB2B8AA2AC346A300830760 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		6ABB242E2AE949FD00E32838 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		6ABB24302AE949FD00E32838 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6ABB242D2AE949FD00E32838 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		6ACADE052AC4958400382143 /* FSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;
