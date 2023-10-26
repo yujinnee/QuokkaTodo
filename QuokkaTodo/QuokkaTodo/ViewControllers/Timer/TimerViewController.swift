@@ -27,7 +27,7 @@ class TimerViewController: BaseViewController {
     var timer = Timer()
     let todoRepository = TodoRepository()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 30//60*25
+    let onePomoInterval:TimeInterval = 60*25
     var todoType: TodoType = .todayTodo
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
