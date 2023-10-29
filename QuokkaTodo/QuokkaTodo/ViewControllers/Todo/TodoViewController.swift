@@ -548,7 +548,8 @@ extension TodoViewController {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
-            view.frame.origin.y -= keyboardHeight-100
+            view.frame.origin.y = 0
+            view.frame.origin.y -= keyboardHeight-20
         }
     }
     
