@@ -152,6 +152,10 @@ class TimerViewController: BaseViewController {
         setTimerProcess()
     }
     private func setTimerProcess() {
+        if(timer.isValid){
+            timer.invalidate()
+            print("made timer invalid")
+        }
         
         guard let endTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") else {//돌려놓은 타이머가 없을 때
             timerStatus = .reset
@@ -252,16 +256,21 @@ class TimerViewController: BaseViewController {
     }
     
     @objc private func startButtonDidTap(){
+        
         guard let _ = selectedTodoId else {
             view.makeToastAnimation(message: "투두를 선택 해 주세요")
             return
         }
-        
+        if(timer.isValid){
+            timer.invalidate()
+            print("made timer invalid")
+        }
         if timerStatus == .reset {// 첫 시작
             timerStatus = .running
             leftTimeInterval = onePomoInterval
             let endTime = Date(timeInterval: onePomoInterval, since: Date.now)
             UserDefaultsHelper.standard.endTime = DateFormatter.convertFromDateToString(date:endTime)
+            
             
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             startLiveActivity()
