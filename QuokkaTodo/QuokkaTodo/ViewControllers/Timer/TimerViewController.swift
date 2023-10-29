@@ -328,10 +328,11 @@ class TimerViewController: BaseViewController {
         UserDefaultsHelper.standard.endTime = nil
         UserDefaultsHelper.standard.isPause = false
         leftTimeInterval = onePomoInterval
-//        Task{ await endLiveActivity()}지울까말까..1?!?
         timer.invalidate()
         timeLabel.text = leftTimeInterval.timeFormatString
         circularProgressView.resetStatus()
+        Task{ await endLiveActivity() }
+     
     }
     
     @objc func timerTimeChanged() {
