@@ -548,8 +548,7 @@ extension TodoViewController {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
-            let tabbarHeight = 45.0
-            view.frame.origin.y -= keyboardHeight
+            view.frame.origin.y -= keyboardHeight-100
         }
     }
     
