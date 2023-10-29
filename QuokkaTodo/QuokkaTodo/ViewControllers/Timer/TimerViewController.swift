@@ -474,8 +474,8 @@ class TimerViewController: BaseViewController {
         resetButton.snp.makeConstraints { make in
             make.top.equalTo(circularProgressView.snp.bottom).offset(100)
             make.centerX.equalToSuperview()
-            make.width.equalTo(50)
-            make.height.equalTo(30)
+            make.width.equalToSuperview().multipliedBy(0.2)
+            make.height.equalTo(resetButton.snp.width).multipliedBy(0.5)
         }
     }
     
