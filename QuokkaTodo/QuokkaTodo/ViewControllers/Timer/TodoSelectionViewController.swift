@@ -77,7 +77,7 @@ class TodoSelectionViewController: BaseViewController {
         }
         emptyViewLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel).offset(10)
-            make.horizontalEdges.bottom.equalToSuperview().inset(20)
+            make.horizontalEdges.equalToSuperview().inset(20)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
         }
     }
