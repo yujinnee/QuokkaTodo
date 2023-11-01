@@ -27,7 +27,7 @@ class TimerViewController: BaseViewController {
     var timer = Timer()
     let todoRepository = TodoRepository()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 30//60*25
+    let onePomoInterval:TimeInterval = 60*25
     var todoType: TodoType = .todayTodo
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -148,13 +148,11 @@ class TimerViewController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(#function)
         setTimerProcess()
     }
     private func setTimerProcess() {
         if(timer.isValid){
             timer.invalidate()
-            print("made timer invalid")
         }
         
         guard let endTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") else {//돌려놓은 타이머가 없을 때
@@ -173,7 +171,6 @@ class TimerViewController: BaseViewController {
             timerStatus = .pause
             setButton(status: .pause)
             let leftTimeInterval = UserDefaultsHelper.standard.leftTimeInterval
-            print("viewWillPause\(leftTimeInterval)")
             self.leftTimeInterval = leftTimeInterval
             circularProgressView.progress = leftTimeInterval/onePomoInterval
             circularProgressView.setPauseStatus()
@@ -217,10 +214,6 @@ class TimerViewController: BaseViewController {
         else{ // 달리고 있을 떄
             timerStatus = .running
             leftTimeInterval = endTime.timeIntervalSince(.now)
-            print(#function)
-            print(endTime)
-            print(leftTimeInterval)
-            print(#function)
             timeLabel.text = leftTimeInterval.timeFormatString
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             do {
@@ -257,11 +250,10 @@ class TimerViewController: BaseViewController {
         let alertTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") ?? Date()
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute,.second], from: alertTime), repeats: false)
         
-        let request = UNNotificationRequest(identifier: "timerAlert", content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: "\(Date())", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request){ error in
                     print(error)
                 }
-       
     }
     @objc func didEnterBackground() {
         print("didEnterBackgroud")
@@ -307,10 +299,6 @@ class TimerViewController: BaseViewController {
             let endTime = Date.now.addingTimeInterval(leftTimeInterval)
             UserDefaultsHelper.standard.endTime = DateFormatter.convertFromDateToString(date:endTime)
             reSetNotification()
-            print(#function)
-            print(endTime)
-            print(leftTimeInterval)
-            print(#function)
             
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             Task{
@@ -326,15 +314,8 @@ class TimerViewController: BaseViewController {
     @objc private func pauseButtonDidTap(){
         timerStatus = .pause
         let endTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") ?? Date()
-        print("pauseEndtime\(endTime)")
+
         leftTimeInterval = endTime.timeIntervalSince(Date.now)
-        print("pauseLfetTimeInterval\(leftTimeInterval)")
-        
-        print(#function)
-        print(endTime)
-        print(leftTimeInterval)
-        print(#function)
-        
         UserDefaultsHelper.standard.leftTimeInterval = leftTimeInterval
         UserDefaultsHelper.standard.isPause = true
         
@@ -378,9 +359,6 @@ class TimerViewController: BaseViewController {
             timeLabel.text = 0.timeFormatString
             
             let leaf = Leaf(gainLeafTime: Date())
-            print(#function)
-            print(selectedTodoId)
-            print(#function)
             if(selectedTodoId != nil){
                 todoRepository.updateLeaves(_id: selectedTodoId ?? ObjectId(), leaf: leaf)
             }

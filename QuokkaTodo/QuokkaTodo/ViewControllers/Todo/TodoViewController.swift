@@ -27,7 +27,7 @@ class TodoViewController: BaseViewController{
             todoCollectionView.reloadSections(IndexSet(1...1))
         }
     }
-
+    
     private let headerLabel = {
         let view  = UILabel()
         view.textColor = QColor.accentColor
@@ -119,7 +119,7 @@ class TodoViewController: BaseViewController{
         print(todoRepository.findFileURL())
         setKeyboardObserver()
         setStatusBarBackgroundColor()
-        
+        sendNotification()
         
     }
     private func setStatusBarBackgroundColor() {
@@ -166,11 +166,11 @@ class TodoViewController: BaseViewController{
     }
     
     override func setConstraints() {
-
+        
         view.addSubviews([headerLabel,todayButton,calendarView,dateLabel,todoCollectionView,textFieldBackgroundView])
         textFieldBackgroundView.addSubviews([textFieldBorderview,registerButton])
         textFieldBorderview.addSubview(textField)
-
+        
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().inset(20)
@@ -222,9 +222,9 @@ class TodoViewController: BaseViewController{
         
     }
     deinit {
-           NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-           NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-       }
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
     
     func setDelegate(){
         todoCollectionView.delegate = self
@@ -235,11 +235,11 @@ class TodoViewController: BaseViewController{
         if textField.text!.count != 0{
             let text = textField.text ?? ""
             
-
+            
             switch todoType{
             case .spareTodo:
                 todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.spareTodo))
-//
+                //
             case .todayTodo:
                 todoRepository.createTodo(Todo(contents: text, planDate: selectedDate, createdDate: selectedDate, position: 0, todoType: TodoType.todayTodo))
                 calendarView.reloadData()//이벤트 점 표시용 reloadData()
@@ -450,6 +450,25 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         textField.isHidden = isHidden
         textFieldBorderview.isHidden = isHidden
         textFieldBackgroundView.isHidden = isHidden
+    }
+    private func sendNotification() {
+        
+        
+        let content = UNMutableNotificationContent()
+        content.title = "쿼카투두"
+        content.body = "오늘의 행복일기를 남기셨나요?🤎"
+        
+        var component = DateComponents()
+        component.minute = 30
+        component.hour = 21
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: component, repeats: true)
+        
+        let request = UNNotificationRequest(identifier: "timerAlert", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request){ error in
+            print(error)
+        }
+        
     }
     
 }
