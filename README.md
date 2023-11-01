@@ -116,5 +116,5 @@ private func setTimerProcess() {
 
 
 ## 📑 개발일지
-[바로가기](https://www.notion.so/8ee0c1ac594e434ab8224980177d0dbb](https://succulent-stallion-ac8.notion.site/f8c8b6ae2d5d4d1f9095077393c01f20?v=b25bc72663a84af8a517ffff374e91db&pvs=4)https://succulent-stallion-ac8.notion.site/f8c8b6ae2d5d4d1f9095077393c01f20?v=b25bc72663a84af8a517ffff374e91db&pvs=4)
+[바로가기](https://succulent-stallion-ac8.notion.site/f8c8b6ae2d5d4d1f9095077393c01f20?v=b25bc72663a84af8a517ffff374e91db&pvs=4)
 
