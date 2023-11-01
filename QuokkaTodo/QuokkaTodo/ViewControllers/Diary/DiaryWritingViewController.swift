@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StoreKit
 
 class DiaryWritingViewController: BaseViewController {
     let diaryRepository = DiaryRepository()
@@ -106,6 +107,8 @@ class DiaryWritingViewController: BaseViewController {
 
             self.diaryWritingCompletedCompletion?()
             self.dismiss(animated: true)
+            guard let windowScene = self.view.window?.windowScene else{return}
+            SKStoreReviewController.requestReview(in: windowScene)
         }
         cancel.setValue(QColor.accentColor, forKey: "titleTextColor")
         ok.setValue(QColor.accentColor, forKey: "titleTextColor")
