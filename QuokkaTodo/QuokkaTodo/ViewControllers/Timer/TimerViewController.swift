@@ -103,7 +103,7 @@ class TimerViewController: BaseViewController {
     private func initTimer() {
         leftTimeInterval = UserDefaultsHelper.standard.leftTimeInterval
     }
-
+    
     private func setButton(status: TimerStatus){
         switch status{
         case .running:
@@ -165,8 +165,7 @@ class TimerViewController: BaseViewController {
             self.selectedTodoContents = "투두 선택하기"
             Task{ await endLiveActivity()}
             timeLabel.text = leftTimeInterval.timeFormatString
-           
-//            circularProgressView.resetStatus()
+            
             return
         }
         let isPause = UserDefaultsHelper.standard.isPause
@@ -233,24 +232,47 @@ class TimerViewController: BaseViewController {
     }
     private func addLifeCycleObserver(){
         //옵저버 등록
-            NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     override func viewWillDisappear(_ animated: Bool) {
         timer.invalidate()
+    }
+    private func reSetNotification() {
+        removePendingNotification()
+        sendNotification()
+    }
+
+    private func removePendingNotification() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+    private func sendNotification() {
+        
+        let content = UNMutableNotificationContent()
+        content.title = "나뭇잎을 획득하였습니다🌱"
+        content.body = "잠시 휴식을 취한 뒤 새 뽀모도로를 시작해주세요!"
+        
+        let alertTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") ?? Date()
+        let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.hour, .minute,.second], from: alertTime), repeats: false)
+        
+        let request = UNNotificationRequest(identifier: "timerAlert", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request){ error in
+                    print(error)
+                }
+       
     }
     @objc func didEnterBackground() {
         print("didEnterBackgroud")
         timer.invalidate()
     }
-        
+    
     //앱 foreground시 호출
     @objc func willEnterForeground() {
         print("willEnterForeground")
         setTimerProcess()
     }
-  
-
+    
+    
     deinit{
         NotificationCenter.default.removeObserver(self)
     }
@@ -270,7 +292,7 @@ class TimerViewController: BaseViewController {
             leftTimeInterval = onePomoInterval
             let endTime = Date(timeInterval: onePomoInterval, since: Date.now)
             UserDefaultsHelper.standard.endTime = DateFormatter.convertFromDateToString(date:endTime)
-            
+            reSetNotification()
             
             timer = Timer.scheduledTimer(timeInterval: timeUnit, target: self, selector: #selector(timerTimeChanged), userInfo: nil, repeats: true)
             startLiveActivity()
@@ -282,6 +304,7 @@ class TimerViewController: BaseViewController {
             self.leftTimeInterval = leftTimeInterval
             let endTime = Date.now.addingTimeInterval(leftTimeInterval)
             UserDefaultsHelper.standard.endTime = DateFormatter.convertFromDateToString(date:endTime)
+            reSetNotification()
             print(#function)
             print(endTime)
             print(leftTimeInterval)
@@ -316,7 +339,7 @@ class TimerViewController: BaseViewController {
         timer.invalidate()
         Task{ await pauseLiveActivity()}
         circularProgressView.setPauseStatus()
-        
+        removePendingNotification()
     }
     @objc private func resetButtonDidTap() {
         let alert = UIAlertController(title: "뽀모도로 초기화", message: "측정 중인 시간이 사라지게 됩니다. 초기화 하시겠습니까?", preferredStyle: .alert)
@@ -330,7 +353,7 @@ class TimerViewController: BaseViewController {
         alert.addAction(cancel)
         alert.addAction(ok)
         present(alert, animated: true)
-        
+     
     }
     private func setReset() {
         timerStatus = .reset
@@ -340,8 +363,9 @@ class TimerViewController: BaseViewController {
         timer.invalidate()
         timeLabel.text = leftTimeInterval.timeFormatString
         circularProgressView.resetStatus()
+        removePendingNotification()
         Task{ await endLiveActivity() }
-     
+        
     }
     
     @objc func timerTimeChanged() {
@@ -366,18 +390,10 @@ class TimerViewController: BaseViewController {
             leftTimeInterval -= timeUnit
             timeLabel.text = leftTimeInterval.timeFormatString
             circularProgressView.progress = leftTimeInterval/onePomoInterval
-
+            
         }
         
     }
-    @objc private func liveActivityButtonDidTap(){
-        startLiveActivity()
-    }
-    @objc private func endLiveActivityButtonDidTap()  {
-        Task{ await endLiveActivity() }
-    }
-    
-    
     
     private func startLiveActivity() {
         if #available(iOS 16.2, *) {
