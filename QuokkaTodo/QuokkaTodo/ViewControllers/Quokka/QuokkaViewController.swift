@@ -147,12 +147,12 @@ class QuokkaViewController: BaseViewController {
         expLabel.text = "\(String(format: "%.2f",exp))%"
     }
     @objc private func feedLeafButtonTapped(){
-
-
-        if(!leafRepository.checkHasFeedableLeaf()) {return}
+        if(!leafRepository.checkHasFeedableLeaf()) {
+            view.makeToastAnimation(message: "나뭇잎이 부족해요🥲\n타이머를 완료하면 나뭇잎을 얻을 수 있어요!")
+            return
+        }
         leafRepository.feedLeaf()
-
-       
+        
         let (level,exp) = getLevelAndExp()
         if(level>nowLevel){
             view.makeToastAnimation(message: "Level Up! 새로운 악세사리를 확인해보세요!✨")

@@ -48,6 +48,7 @@ class CircularProgressView: BaseView {
         layer.fillColor = UIColor.clear.cgColor
         layer.strokeColor = QColor.subLightColor.cgColor
         layer.lineWidth = 15
+        layer.strokeEnd = 1
         return layer
     }()
     
@@ -57,6 +58,7 @@ class CircularProgressView: BaseView {
         layer.fillColor = UIColor.clear.cgColor
         layer.strokeColor = QColor.accentColor.cgColor
         layer.lineWidth = 15
+        layer.strokeEnd = 1
         return layer
     }()
        
