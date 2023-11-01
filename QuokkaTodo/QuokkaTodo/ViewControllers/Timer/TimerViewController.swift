@@ -27,7 +27,7 @@ class TimerViewController: BaseViewController {
     var timer = Timer()
     let todoRepository = TodoRepository()
     var leftTimeInterval = TimeInterval()
-    let onePomoInterval:TimeInterval = 60*25
+    let onePomoInterval:TimeInterval = 30//60*25
     var todoType: TodoType = .todayTodo
     var selectedTodoId: ObjectId?
     var selectedTodoContents = "" {
@@ -184,8 +184,10 @@ class TimerViewController: BaseViewController {
             } catch {
                 print(error)
             }
+            
             let item = self.todoRepository.readTodo(_id:self.selectedTodoId ?? ObjectId())
             self.selectedTodoContents = item.contents
+            
             
         }
         else if(endTime.compare(.now) == .orderedAscending || endTime.compare(.now) == .orderedSame) {// 타이머 돌려놓은 상태이고 시간 지났을 때
@@ -249,7 +251,7 @@ class TimerViewController: BaseViewController {
     private func sendNotification() {
         
         let content = UNMutableNotificationContent()
-        content.title = "나뭇잎을 획득하였습니다🌱"
+        content.title = "🌱나뭇잎 획득을 완료하였습니다"
         content.body = "잠시 휴식을 취한 뒤 새 뽀모도로를 시작해주세요!"
         
         let alertTime = DateFormatter.convertFromStringToDate(date: UserDefaultsHelper.standard.endTime ?? "") ?? Date()
