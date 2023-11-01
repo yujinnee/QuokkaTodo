@@ -22,7 +22,7 @@ class SettingTableViewCell: BaseTableViewCell {
     }()
     let versionLabel = {
         let view = UILabel()
-        view.text = "v1.0.0"
+        view.text = "v1.0.1"
         view.font = Pretendard.size14.medium()
         view.textColor = QColor.fontColor
         return view
