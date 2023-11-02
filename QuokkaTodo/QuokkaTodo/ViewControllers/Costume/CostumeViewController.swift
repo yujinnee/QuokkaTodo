@@ -125,9 +125,6 @@ extension CostumeViewController {
 extension CostumeViewController: UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         var item = costumeArray[indexPath.row]
-
-     
-        
         switch item.isLocked {
         case true:
             print("잠겨있는 아이템 입니다.")
@@ -137,8 +134,7 @@ extension CostumeViewController: UICollectionViewDelegate{
             UserDefaultsHelper.standard.selectedCostume = indexPath.row
             collectionView.reloadData()
         }
-        
-        print("dd")
+
         
     }
 }

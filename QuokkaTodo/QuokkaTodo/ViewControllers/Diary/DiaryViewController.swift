@@ -27,8 +27,6 @@ class DiaryViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-     
     }
     override func configureView() {
         navigationItem.title = "올해의 행복 일기🤎"
