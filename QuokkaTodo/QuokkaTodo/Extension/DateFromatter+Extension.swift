@@ -50,14 +50,7 @@ extension DateFormatter {
     }
     
     static func getKoreanWeekDay(from date: Date) -> String {
-        let format = DateFormatter()
-        format.locale = Locale(identifier: "ko_KR")
-        format.timeZone = TimeZone(abbreviation: "KST")
-        let convertedKoreanDateString = format.string(from: date)
-        let convertedKoreanDate = format.date(from: convertedKoreanDateString) ?? Date()
-        
-        let currentDay = Calendar.current.component(.weekday, from: convertedKoreanDate)
-        
+        let currentDay = Calendar.current.component(.weekday, from: date)
         switch currentDay {
         case 1:
             return "일"

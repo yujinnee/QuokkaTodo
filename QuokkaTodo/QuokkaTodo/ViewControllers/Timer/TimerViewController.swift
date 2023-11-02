@@ -83,10 +83,10 @@ class TimerViewController: BaseViewController {
     private let resetButton = {
         let view = UIButton()
         view.setImage(UIImage(systemName: "arrow.circlepath"), for: .normal)
-        view.tintColor = .systemGray2
+        view.tintColor = .lightGray
         view.layer.borderWidth = 1.0
         view.layer.cornerRadius = 5
-        view.layer.borderColor = UIColor.systemGray2.cgColor
+        view.layer.borderColor = UIColor.lightGray.cgColor
         return view
     }()
     
