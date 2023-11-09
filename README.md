@@ -104,8 +104,6 @@ private func setTimerProcess() {
     }
    ```
 
-3. 라이브액티비티
-  
 
 </br>
 
