@@ -3,7 +3,8 @@
 >
 > 📅 2023.09.25 ~ 2023.10.25
 > [🔗 쿼카투두 - 앱 스토어 링크 바로 가기](https://apps.apple.com/app/id6470385256) </br>
-![Group 70 (1)](https://github.com/yujinnee/QuokkaTodo/assets/51031771/1dd665a3-0a6c-4f0c-a7bc-3c8c81af4226)
+![Group 70 (1)](https://github.com/yujinnee/QuokkaTodo/assets/51031771/866296b2-ab31-4465-a2ea-2f9fc53ca5df)
+
 
 ## 🌱 Introduction
 "쿼카투두" - 뽀모도로 타이머를 기반으로 쿼카와 함께 성장해 나갈 수 있는 투두 앱
