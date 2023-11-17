@@ -81,7 +81,7 @@
 		6AE6206A2AE8196000791480 /* Nutrition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE620692AE8196000791480 /* Nutrition.swift */; };
 		6AE6206C2AE81D2E00791480 /* LeafRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6206B2AE81D2E00791480 /* LeafRepository.swift */; };
 		6AE6206E2AE81E3D00791480 /* NutritionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */; };
-		6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */; };
+		6AEE64E42AC585A600C502E4 /* DateFormatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E32AC585A600C502E4 /* DateFormatter+Extension.swift */; };
 		6AEE64E72AC5B0AE00C502E4 /* TodoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -183,7 +183,7 @@
 		6AE620692AE8196000791480 /* Nutrition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nutrition.swift; sourceTree = "<group>"; };
 		6AE6206B2AE81D2E00791480 /* LeafRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeafRepository.swift; sourceTree = "<group>"; };
 		6AE6206D2AE81E3D00791480 /* NutritionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionRepository.swift; sourceTree = "<group>"; };
-		6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFromatter+Extension.swift"; sourceTree = "<group>"; };
+		6AEE64E32AC585A600C502E4 /* DateFormatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extension.swift"; sourceTree = "<group>"; };
 		6AEE64E62AC5B0AE00C502E4 /* TodoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -382,7 +382,7 @@
 			isa = PBXGroup;
 			children = (
 				6AB2B89B2AC3418D00830760 /* UIFont+Extension.swift */,
-				6AEE64E32AC585A600C502E4 /* DateFromatter+Extension.swift */,
+				6AEE64E32AC585A600C502E4 /* DateFormatter+Extension.swift */,
 				6A0916442AC6A44C0014FE2D /* UIView+Extension.swift */,
 				6A6ED6632ACDD39B00CD902B /* Int+Extension.swift */,
 			);
@@ -692,7 +692,7 @@
 				6AE6206E2AE81E3D00791480 /* NutritionRepository.swift in Sources */,
 				6AB2B8A72AC3465A00830760 /* BaseView.swift in Sources */,
 				6A2C231C2AE176B7007807EF /* UserDefaultsHelper.swift in Sources */,
-				6AEE64E42AC585A600C502E4 /* DateFromatter+Extension.swift in Sources */,
+				6AEE64E42AC585A600C502E4 /* DateFormatter+Extension.swift in Sources */,
 				6ABF94EB2ADE10D70038F075 /* Leaf.swift in Sources */,
 				6A1FCC732AE2954300345E8D /* DiaryTableViewCell.swift in Sources */,
 				6A09164F2AC720020014FE2D /* TodoRepository.swift in Sources */,
