@@ -11,7 +11,7 @@ import RealmSwift
 class DiaryViewController: BaseViewController {
     let diaryRepository = DiaryRepository()
     var diaryArray: Results<Diary>?
-//    var diaryArray = ["오늘 아침에 산책하면서 맑은 공기를 맡아 행복했다.🤎","오늘 오랜만에 중학교 친구들 만나서 놀았다!! 방어회🐟를 먹어서 기분이 좋다!","공원에 앉아 있었는데 강아지가 갑자기 나한테 뛰어왔다.그런데 옆에 눈 땡그란 귀여운 아기도 나한테 와서 아가랑 강아지가  같이 있었는데 둘 다 너무 귀여워서 행복했다! ><","오늘 계획 한 일을 다 끝내서 기분이 좋다.😆","공원에 앉아 있었는데 강아지가 갑자기 나한테 뛰어왔다.그런데 옆에 눈 땡그란 귀여운 아기도 나한테 와서 아가랑 강아지가  같이 있었는데 둘 다 너무 귀여워서 행복했다! ><","공원에 앉아 있었는데 강아지가 갑자기 나한테 뛰어왔다.그런데 옆에 눈 땡그란 귀여운 아기도 나한테 와서 아가랑 강아지가  같이 있었는데 둘 다 너무 귀여워서 행복했다! ><","공원에 앉아 있었는데 강아지가 갑자기 나한테 뛰어왔다.그런데 옆에 눈 땡그란 귀여운 아기도 나한테 와서 아가랑 강아지가  같이 있었는데 둘 다 너무 귀여워서 행복했다! ><","좋았다"]
+
     private let diaryTableView = {
         let view = UITableView()
         view.separatorStyle = .none
@@ -29,14 +29,14 @@ class DiaryViewController: BaseViewController {
         super.viewDidLoad()
     }
     override func configureView() {
-        navigationItem.title = "올해의 행복 일기🤎"
+        navigationItem.title = "한 해의 행복 일기🤎"
         view.backgroundColor = QColor.backgroundColor
         diaryTableView.register(DiaryTableViewCell.self, forCellReuseIdentifier: DiaryTableViewCell.identifier)
         diaryTableView.delegate = self
         diaryTableView.dataSource = self
-        
-        
-        diaryArray = diaryRepository.fetchAll()
+
+        diaryLockedImageView.isHidden = false
+        setInitialView()
     }
     override func setConstraints() {
         view.addSubviews([diaryTableView,diaryLockedImageView])
@@ -48,6 +48,29 @@ class DiaryViewController: BaseViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
+    private func setInitialView() {
+        
+        let format = DateFormatter()
+        format.dateFormat = "yyyy"
+        let thisYearString = format.string(from: Date())
+        let thisYearNum = Int(thisYearString) ?? 2010
+      
+        if(DateFormatter.islastDayOfThisYesr()){
+            diaryLockedImageView.isHidden = true
+            diaryArray = diaryRepository.fetchAnnuallyDiary(year: thisYearNum)
+        }else {
+            diaryLockedImageView.isHidden = false
+            if(diaryRepository.hasPreviousDiary()){
+                diaryLockedImageView.isHidden = true
+               
+                let lastYearNum = thisYearNum - 1
+                diaryArray = diaryRepository.fetchAnnuallyDiary(year: lastYearNum)
+            }else{
+                diaryLockedImageView.isHidden = false
+            }
+        }
+
+    }
     
 
 }
@@ -55,7 +78,9 @@ class DiaryViewController: BaseViewController {
 extension DiaryViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell  = tableView.dequeueReusableCell(withIdentifier: DiaryTableViewCell.identifier, for: indexPath) as? DiaryTableViewCell else {return UITableViewCell()}
-        cell.setData(item: diaryArray?[indexPath.row] ?? Diary())
+        let isFirst = indexPath.row == 0 ? true : false
+        let isLast = indexPath.row == diaryArray!.count - 1  ? true : false
+        cell.setData(item: diaryArray?[indexPath.row] ?? Diary(),isFirst: isFirst,isLast: isLast)
         
         return cell
     }

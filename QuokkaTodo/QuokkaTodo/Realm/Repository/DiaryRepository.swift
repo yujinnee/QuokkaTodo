@@ -48,7 +48,34 @@ class DiaryRepository: diaryRepositoryType{
         }
         return result
         
+    }
+    func fetchAnnuallyDiary(year:Int) -> Results<Diary>{
+        let startOfYearDate = DateFormatter.getStartOfYear(year: year)
+        let startOfNextYearDate = DateFormatter.getStartOfYear(year: year+1)
+
+        var result = realm.objects(Diary.self).sorted(byKeyPath:"createdDate", ascending: true)
+        result = result.where{
+            $0.createdDate >= startOfYearDate && $0.createdDate <= startOfNextYearDate
+        }
+        return result
+    }
+    func hasPreviousDiary() -> Bool{
+        let format = DateFormatter()
+        format.dateFormat = "yyyy"
+        let thisYear = format.string(from: Date())
+        let startOfYearDate = DateFormatter.getStartOfYear(year: Int(thisYear) ?? 2010)
         
+        var result = realm.objects(Diary.self).sorted(byKeyPath:"createdDate", ascending: false)
+        result = result.where{
+            $0.createdDate < startOfYearDate
+        }
+        
+        if result.count > 0 {
+            return true
+        }else {
+            return false
+        }
+   
     }
     
     func createDiary(_ item: Diary) {
