@@ -21,6 +21,13 @@ extension DateFormatter {
         format.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return format.string(from:date)
     }
+    
+    static func convertFromDateToDiaryString(date: Date) -> String {
+        let format = DateFormatter()
+        format.dateFormat = "MM/dd"
+        return format.string(from:date)
+    }
+    
     static func convertFromStringToDate(date: String) -> Date? {
         let format = DateFormatter()
         format.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -39,7 +46,41 @@ extension DateFormatter {
         format.timeZone = TimeZone(abbreviation: "KST")
         return format.string(from: date)
     }
-    
+    static func getYear(date: Date) -> String{
+        let format = DateFormatter()
+        format.dateFormat = "yyyy"
+        format.locale = Locale(identifier: "ko_KR")
+        format.timeZone = TimeZone(abbreviation: "KST")
+        return format.string(from: date)
+    }
+    static func getStartOfYear(year: Int) -> Date{
+        let startDayString = "\(year)년 1월 1일"
+        let format = DateFormatter()
+        format.dateFormat = "yyyy년 M월 dd일"
+        format.locale = Locale(identifier: "ko_KR")
+        format.timeZone = TimeZone(abbreviation: "KST")
+        return format.date(from: startDayString) ?? Date()
+    }
+    static func islastDayOfThisYesr()->Bool{
+        let now = Calendar.current.startOfDay(for: Date())
+        let thisyear = DateFormatter.getYear(date: Date())
+        
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        format.locale = Locale(identifier: "ko_KR")
+        format.timeZone = TimeZone(abbreviation: "KST")
+        
+        let lastDay = format.date(from: "\(thisyear)-12-31 00:00:00") ?? Date()
+        if now == lastDay{
+            print(now)
+            print(lastDay)
+            return true
+        }else {
+            print(now)
+            print(lastDay)
+            return false
+        }
+    }
     static func getMonthDayWeekDay(date: Date) -> String{
         let format = DateFormatter()
         format.locale = Locale(identifier: "ko_KR")
