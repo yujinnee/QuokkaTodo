@@ -17,6 +17,7 @@ class DiaryViewController: BaseViewController {
         view.separatorStyle = .none
         view.rowHeight = UITableView.automaticDimension
         view.estimatedRowHeight = 500
+        view.isUserInteractionEnabled = false
         return view
     }()
     private let diaryLockedImageView = {
