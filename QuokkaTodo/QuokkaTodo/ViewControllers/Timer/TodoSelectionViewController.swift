@@ -163,12 +163,12 @@ extension TodoSelectionViewController: UICollectionViewDelegate,UICollectionView
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TodoHeaderView.identifier, for: indexPath) as? TodoHeaderView else {return UICollectionReusableView()}
         switch indexPath.section {
         case 0:
-            header.setTitle(text: "곧 할 일")
+            header.setTitle(text: "할 일 저장소")
             header.setFocused(isEditing: true)
             header.hideAddButton()
     
         case 1:
-            header.setTitle(text: "오늘 할 일")
+            header.setTitle(text: "오늘의 할 일")
             header.setFocused(isEditing: true)
             header.hideAddButton()
         

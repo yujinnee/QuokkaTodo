@@ -9,11 +9,17 @@ import UIKit
 import RealmSwift
 
 class MenuViewController: BaseViewController {
+    enum ColorConstants {
+        static let orangeColor = UIColor(red: 253/255, green: 122/255, blue: 0/255, alpha: 1.0)
+        static let purpleColor = UIColor(red: 177/255, green: 159/255, blue: 239/255, alpha: 1.0)
+    }
     let todoRepository = TodoRepository()
     var todoType: TodoType? {
         didSet {
             changeToSoonButton.isHidden = todoType == .spareTodo
-            setDateButton.title = todoType == .spareTodo ? "이 날 할일로 옮기기" : "날짜 바꾸기"
+            setDateButton.title = todoType == .spareTodo ? "오늘의 할 일로 옮기기" : "날짜 바꾸기"
+            setDateButton.iconImageView.image = todoType == .spareTodo ? UIImage(systemName: "arrow.down.to.line.square.fill") : UIImage(systemName: "calendar")
+            setDateButton.iconImageView.tintColor = todoType == .spareTodo ?  ColorConstants.purpleColor : ColorConstants.orangeColor
         }
     }
     var deleteButtonTappedClosure: (() -> Void)?
@@ -78,9 +84,9 @@ class MenuViewController: BaseViewController {
         view.distribution = .fillEqually
         return view
     }()
-    private let setDateButton = menuButton(image: UIImage(systemName: "calendar.circle.fill")!, title: "날짜 지정하기", tintColor: QColor.subDeepColor)
+    private let setDateButton = menuButton(image: UIImage(systemName: "calendar")!, title: "날짜 지정하기", tintColor: ColorConstants.orangeColor)
     
-    private let changeToSoonButton = menuButton(image: UIImage(systemName: "arrow.up.to.line.square.fill")!, title: "곧 할일로 옮기기", tintColor: QColor.subDeepColor)
+    private let changeToSoonButton = menuButton(image: UIImage(systemName: "arrow.up.to.line.square.fill")!, title: "할 일 저장소로 옮기기", tintColor: ColorConstants.purpleColor)
     
     private let calendarView = {
         let view = UIView()
@@ -120,9 +126,9 @@ class MenuViewController: BaseViewController {
     private func setTodoTypeLabel() {
         switch todoType {
         case .spareTodo:
-            todoTypeLabel.text = "곧 할 일"
+            todoTypeLabel.text = "할 일 저장소"
         case .todayTodo:
-            todoTypeLabel.text = "이날 할 일"
+            todoTypeLabel.text = "오늘의 할 일"
         default :
             break
         }
@@ -182,9 +188,9 @@ class MenuViewController: BaseViewController {
         calendarView.addSubviews([datePicker,completeEditingDateButton])
         mainButtonsStackView.addArrangedSubview(reviseButton)
         mainButtonsStackView.addArrangedSubview(deleteButton)
-        
-        buttonListStackView.addArrangedSubview(setDateButton)
+    
         buttonListStackView.addArrangedSubview(changeToSoonButton)
+        buttonListStackView.addArrangedSubview(setDateButton)
         todoLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(30)
@@ -230,10 +236,10 @@ private class menuButton: UIControl {
         }
     }
     
-    private var iconImageView = UIImageView()
+    var iconImageView = UIImageView()
     private var titleLabel = {
         let view = UILabel()
-        view.font = Pretendard.size12.medium()
+        view.font = Pretendard.size14.light()
         view.isUserInteractionEnabled = false
         return view
     }()

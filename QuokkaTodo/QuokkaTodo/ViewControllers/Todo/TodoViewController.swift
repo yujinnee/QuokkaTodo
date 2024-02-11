@@ -399,7 +399,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         switch indexPath.section{
         case 0:
             item = soonArray?[indexPath.row] ?? Todo()
-            let alert = UIAlertController(title: "곧 할일을 완료 하셨나요?", message: "오늘 한 일로 이동합니다", preferredStyle: .alert)
+            let alert = UIAlertController(title: "저장소의 할 일을 완료 하셨나요?", message: "오늘 한 일로 이동됩니다", preferredStyle: .alert)
             let cancel = UIAlertAction(title: "취소", style: .cancel)
             let ok = UIAlertAction(title: "네", style: .default) { _ in
                 self.todoRepository.updateCompleted(_id: item._id, isCompleted: !item.isCompleted)
@@ -434,7 +434,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TodoHeaderView.identifier, for: indexPath) as? TodoHeaderView else {return UICollectionReusableView()}
         switch indexPath.section {
         case 0:
-            header.setTitle(text: "곧 할 일")
+            header.setTitle(text: "할 일 저장소")
             header.addButtonComletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
@@ -446,7 +446,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
             }
             header.setFocused(isEditing: soonEditing)
         case 1:
-            header.setTitle(text: "이날 할 일")
+            header.setTitle(text: "오늘의 할 일")
             header.addButtonComletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
