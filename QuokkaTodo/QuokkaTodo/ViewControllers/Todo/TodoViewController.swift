@@ -390,21 +390,31 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         switch indexPath.section{
         case 0:
             item = soonArray?[indexPath.row] ?? Todo()
+            let alert = UIAlertController(title: "곧 할일을 완료 하셨나요?", message: "오늘 한 일로 이동합니다", preferredStyle: .alert)
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            let ok = UIAlertAction(title: "네", style: .default) { _ in
+                self.todoRepository.updateCompleted(_id: item._id, isCompleted: !item.isCompleted)
+                self.todoRepository.updateDate(_id: item._id, date: Date())
+                self.todoRepository.updateTodoType(_id: item._id, todoType: .todayTodo)
+                
+                self.todoCollectionView.reloadData()
+            }
+            cancel.setValue(QColor.accentColor, forKey: "titleTextColor")
+            ok.setValue(QColor.accentColor, forKey: "titleTextColor")
+            
+            alert.addAction(cancel)
+            alert.addAction(ok)
+            present(alert, animated: true)
             
         case 1:
             item = todayArray?[indexPath.row] ?? Todo()
+            todoRepository.updateCompleted(_id: item._id, isCompleted: !item.isCompleted)
+            todoCollectionView.reloadData()
         default:
             break
         }
-        var isCompleted = false
-        if (item.isCompleted){
-            isCompleted = false
-        }else {
-            isCompleted = true
-        }
-        todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-        //        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
-        todoCollectionView.reloadData()
+
+       
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

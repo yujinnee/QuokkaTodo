@@ -20,7 +20,7 @@ protocol todoRepositoryType: AnyObject {
     func fetchSelectedDateSpareTodo(date: Date) -> Results<Todo>
     func createTodo(_ item: Todo)
     func updateContents(_id: ObjectId, contents: String)
-    func updateDate(_id: ObjectId, date: String)
+    func updateDate(_id: ObjectId, date: Date)
     func updateCompleted(_id: ObjectId, isCompleted: Bool)
     func deleteTodo(_id : ObjectId)
 }
@@ -119,7 +119,7 @@ class TodoRepository: todoRepositoryType{
         }
     }
     
-    func updateDate(_id: RealmSwift.ObjectId, date: String) {
+    func updateDate(_id: RealmSwift.ObjectId, date: Date) {
         do {
             try realm.write {
                 realm.create(Todo.self, value: ["_id": _id,"planDate": date], update:.modified)
@@ -133,6 +133,16 @@ class TodoRepository: todoRepositoryType{
         do {
             try realm.write {
                 realm.create(Todo.self, value: ["_id": _id,"isCompleted": isCompleted], update:.modified)
+            }
+        } catch {
+            print("error")
+        }
+    }
+    
+    func updateTodoType(_id: RealmSwift.ObjectId, todoType: TodoType) {
+        do {
+            try realm.write {
+                realm.create(Todo.self, value: ["_id": _id,"todoType": todoType.rawValue], update:.modified)
             }
         } catch {
             print("error")
