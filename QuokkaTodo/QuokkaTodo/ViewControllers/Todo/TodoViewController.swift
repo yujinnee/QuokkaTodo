@@ -335,7 +335,9 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 menuViewController.reviseButtonTappedClosure = {
                     cell.setRevising(isRevising: true)
                     cell.openKeyboard()
-                    
+                }
+                menuViewController.completeEditingDateButtonTappedClosure = {
+                    collectionView.reloadData()
                 }
                 self.present(menuViewController, animated: true)
                 
@@ -362,6 +364,12 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                     cell.setRevising(isRevising: true)
                     cell.openKeyboard()
                 }
+                menuViewController.changeToSoonButtonTappedClosure = {
+                    collectionView.reloadData()
+                }
+                menuViewController.completeEditingDateButtonTappedClosure = {
+                    collectionView.reloadData()
+                }
                 self.present(menuViewController, animated: true)
             }
             cell.reviseCompleteButtonTappedClosure = { todoText in
@@ -372,6 +380,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         default:
             break
         }
+        
         return cell
     }
     

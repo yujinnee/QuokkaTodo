@@ -16,9 +16,16 @@ class MenuViewController: BaseViewController {
             setDateButton.title = todoType == .spareTodo ? "이 날 할일로 옮기기" : "날짜 바꾸기"
         }
     }
-    var deleteButtonTappedClosure: (()->Void)?
-    var reviseButtonTappedClosure: (()->Void)?
+    var deleteButtonTappedClosure: (() -> Void)?
+    var reviseButtonTappedClosure: (() -> Void)?
+    var changeToSoonButtonTappedClosure: (() -> Void)?
+    var completeEditingDateButtonTappedClosure: (() -> Void)?
     
+    var isEditingDate = false {
+        didSet {
+            calendarView.isHidden = !isEditingDate
+        }
+    }
     var _id: ObjectId?
     
     private let todoLabel = {
@@ -71,10 +78,32 @@ class MenuViewController: BaseViewController {
         view.distribution = .fillEqually
         return view
     }()
-    private let setDateButton = menuButton(image: UIImage(systemName: "pencil.circle.fill")!, title: "날짜 지정하기", tintColor: QColor.subDeepColor)
+    private let setDateButton = menuButton(image: UIImage(systemName: "calendar.circle.fill")!, title: "날짜 지정하기", tintColor: QColor.subDeepColor)
     
-    private let changeToSoonButton = menuButton(image: UIImage(systemName: "calendar.circle.fill")!, title: "곧 할일로 옮기기", tintColor: QColor.subDeepColor)
+    private let changeToSoonButton = menuButton(image: UIImage(systemName: "arrow.up.to.line.square.fill")!, title: "곧 할일로 옮기기", tintColor: QColor.subDeepColor)
     
+    private let calendarView = {
+        let view = UIView()
+        view.isHidden = true
+        view.backgroundColor = QColor.backgroundColor
+        return view
+    }()
+    private let datePicker = {
+        let view = UIDatePicker()
+        view.datePickerMode = .date
+        view.preferredDatePickerStyle = .inline
+        view.tintColor = QColor.subLightColor
+        return view
+    }()
+    private let completeEditingDateButton = {
+        let view = UIButton()
+        view.setTitle("확인", for: .normal)
+        view.titleLabel?.font = Pretendard.size20.medium()
+        view.setTitleColor(QColor.fontColor, for: .normal)
+        view.backgroundColor = QColor.grayColor
+        view.layer.cornerRadius = 10
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,6 +137,7 @@ class MenuViewController: BaseViewController {
         reviseButton.addTarget(self, action: #selector(reviseButtonDidTapped), for: .touchUpInside)
         setDateButton.addTarget(self, action: #selector(setDateButtonDidTapped), for: .touchUpInside)
         changeToSoonButton.addTarget(self, action: #selector(setSoonButtonDidTapped), for: .touchUpInside)
+        completeEditingDateButton.addTarget(self, action: #selector(completeEditingDateButtonDidTapped), for: .touchUpInside)
     }
     @objc func deleteButtonDidTapped() {
         todoRepository.deleteTodo(_id: _id ?? ObjectId())
@@ -121,14 +151,35 @@ class MenuViewController: BaseViewController {
     }
     
     @objc func setDateButtonDidTapped() {
+//        calendarView.isHidden = false
+        isEditingDate = true
         print("setDataeButtonTapped")
+        
     }
     
     @objc func setSoonButtonDidTapped() {
-        print("soonButtonTapped")
+        dismiss(animated: true)
+        todoRepository.updateTodoType(_id: _id ?? ObjectId(), todoType: .spareTodo)
+        changeToSoonButtonTappedClosure?()
+    }
+    @objc func completeEditingDateButtonDidTapped() {
+        let revisedDate = Calendar.current.startOfDay(for: datePicker.date)
+        switch todoType {
+        case .spareTodo:
+            todoRepository.updateTodoType(_id: _id ?? ObjectId(), todoType: .todayTodo)
+            todoRepository.updateDate(_id: _id ?? ObjectId(), date: revisedDate)
+        case .todayTodo:
+            todoRepository.updateDate(_id: _id ?? ObjectId(), date: revisedDate)
+        case nil:
+            break
+        }
+        
+        completeEditingDateButtonTappedClosure?()
+        dismiss(animated: true)
     }
     override func setConstraints() {
-        view.addSubviews([todoLabel,todoTypeLabel,mainButtonsStackView,buttonListStackView])
+        view.addSubviews([todoLabel,todoTypeLabel,mainButtonsStackView,buttonListStackView,calendarView])
+        calendarView.addSubviews([datePicker,completeEditingDateButton])
         mainButtonsStackView.addArrangedSubview(reviseButton)
         mainButtonsStackView.addArrangedSubview(deleteButton)
         
@@ -153,6 +204,20 @@ class MenuViewController: BaseViewController {
             make.top.equalTo(mainButtonsStackView.snp.bottom).offset(20)
             make.horizontalEdges.equalToSuperview().inset(20)
         }
+        calendarView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        datePicker.snp.makeConstraints { make in
+            make.horizontalEdges.top.equalToSuperview().inset(30)
+            make.bottom.equalTo(completeEditingDateButton.snp.top).offset(-20)
+        }
+        completeEditingDateButton.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview().inset(20)
+            make.top.equalTo(datePicker.snp.bottom).offset(10)
+            make.height.equalTo(50)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
+        }
+        
     }
     
 }
@@ -208,7 +273,6 @@ private class menuButton: UIControl {
         
         stackView.snp.makeConstraints { make in
             make.centerY.horizontalEdges.equalToSuperview()
-//            make.edges.equalToSuperview()
         }
         iconImageView.snp.makeConstraints { make in
             make.height.equalTo(20)
