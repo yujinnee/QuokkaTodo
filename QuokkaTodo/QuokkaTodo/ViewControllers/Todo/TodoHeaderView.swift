@@ -18,7 +18,7 @@ class TodoHeaderView: BaseCollectionReusableView {
     }
     var isFolded: Bool = false {
         didSet {
-            let image = isFolded ? UIImage(systemName: "chevron.up") : UIImage(systemName: "chevron.down")
+            let image = isFolded ? UIImage(systemName: "chevron.down") : UIImage(systemName: "chevron.up")
             moreButton.setImage(image, for: .normal)
         }
     }
@@ -45,7 +45,7 @@ class TodoHeaderView: BaseCollectionReusableView {
     }()
     private let moreButton = {
         let view = UIButton()
-        view.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+        view.setImage(UIImage(systemName: "chevron.down"), for: .normal)
         view.tintColor = QColor.subLightColor
         return view
     }()
