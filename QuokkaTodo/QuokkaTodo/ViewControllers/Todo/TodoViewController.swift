@@ -60,7 +60,6 @@ class TodoViewController: BaseViewController{
         return label
     }()
     
-    
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -428,7 +427,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
             }
             header.setFocused(isEditing: soonEditing)
         case 1:
-            header.setTitle(text: "오늘 할 일")
+            header.setTitle(text: "이날 할 일")
             header.addButtonComletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()

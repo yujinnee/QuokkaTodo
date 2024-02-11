@@ -10,8 +10,12 @@ import RealmSwift
 
 class MenuViewController: BaseViewController {
     let todoRepository = TodoRepository()
-//    let spareTodoRepository = SpareTodoRepository()
-    var todoType: TodoType?
+    var todoType: TodoType? {
+        didSet {
+            changeToSoonButton.isHidden = todoType == .spareTodo
+            setDateButton.title = todoType == .spareTodo ? "이 날 할일로 옮기기" : "날짜 바꾸기"
+        }
+    }
     var deleteButtonTappedClosure: (()->Void)?
     var reviseButtonTappedClosure: (()->Void)?
     
@@ -34,7 +38,7 @@ class MenuViewController: BaseViewController {
         view.font = Pretendard.size11.medium()
         return view
     }()
-    let buttonStackView = {
+    let mainButtonsStackView = {
         let view = UIStackView()
         view.axis = .horizontal
         view.distribution = .fillEqually
@@ -44,31 +48,33 @@ class MenuViewController: BaseViewController {
     private let reviseButton = {
         let view = UIButton()
         view.setTitle("수정", for: .normal)
-//        view.setImage(UIImage(systemName: "pencil"), for: .normal)
         view.backgroundColor = QColor.subLightColor
         view.setTitleColor(QColor.backgroundColor, for: .normal)
         view.titleLabel?.font = Pretendard.size18.bold()
-//        view.setTitleColor(QColor.accentColor, for: .normal)
-//        view.tintColor = QColor.accentColor
         view.layer.cornerRadius = 10
-//        view.layer.borderColor = QColor.accentColor.cgColor
-//        view.layer.borderWidth = 1
         return view
     }()
     private let deleteButton = {
         let view = UIButton()
         view.setTitle("삭제", for: .normal)
-//        view.setImage(UIImage(systemName: "trash"), for: .normal)
         view.backgroundColor = UIColor(red: 255/255, green: 155/255, blue: 158/255, alpha: 1.0)
         view.titleLabel?.font = Pretendard.size18.bold()
         view.setTitleColor(QColor.backgroundColor, for: .normal)
-//        view.setTitleColor(QColor.accentColor, for: .normal)
-//        view.tintColor = QColor.accentColor
         view.layer.cornerRadius = 10
-//        view.layer.borderColor = QColor.accentColor.cgColor
-//        view.layer.borderWidth = 1
         return view
     }()
+    
+    private let buttonListStackView = {
+        let view = UIStackView()
+        view.spacing = 0
+        view.axis = .vertical
+        view.distribution = .fillEqually
+        return view
+    }()
+    private let setDateButton = menuButton(image: UIImage(systemName: "pencil.circle.fill")!, title: "날짜 지정하기", tintColor: QColor.subDeepColor)
+    
+    private let changeToSoonButton = menuButton(image: UIImage(systemName: "calendar.circle.fill")!, title: "곧 할일로 옮기기", tintColor: QColor.subDeepColor)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,7 +93,7 @@ class MenuViewController: BaseViewController {
         case .spareTodo:
             todoTypeLabel.text = "곧 할 일"
         case .todayTodo:
-            todoTypeLabel.text = "오늘 할 일"
+            todoTypeLabel.text = "이날 할 일"
         default :
             break
         }
@@ -96,30 +102,15 @@ class MenuViewController: BaseViewController {
     private func setTodoLabel() {
         guard let _id = _id else {return}
         todoLabel.text = todoRepository.readTodo(_id: _id).contents
-//        switch todoType {
-//        case .spareTodo:
-//            todoLabel.text = todoRepository.readTodo(_id: _id).contents
-//        case .todayTodo:
-//            todoLabel.text = todoRepository.readTodo(_id: _id).contents
-//        default :
-//            break
-//        }
-        
     }
     private func addTargets(){
         deleteButton.addTarget(self, action: #selector(deleteButtonDidTapped), for: .touchUpInside)
         reviseButton.addTarget(self, action: #selector(reviseButtonDidTapped), for: .touchUpInside)
+        setDateButton.addTarget(self, action: #selector(setDateButtonDidTapped), for: .touchUpInside)
+        changeToSoonButton.addTarget(self, action: #selector(setSoonButtonDidTapped), for: .touchUpInside)
     }
     @objc func deleteButtonDidTapped() {
         todoRepository.deleteTodo(_id: _id ?? ObjectId())
-//        switch todoType{
-//        case .spareTodo:
-//            todoRepository.deleteTodo(_id: _id ?? ObjectId())
-//        case .todayTodo:
-//            todoRepository.deleteTodo(_id: _id ?? ObjectId())
-//        default:
-//            break
-//        }
         dismiss(animated: true)
         deleteButtonTappedClosure?()
     }
@@ -128,10 +119,21 @@ class MenuViewController: BaseViewController {
         dismiss(animated: true)
         reviseButtonTappedClosure?()
     }
+    
+    @objc func setDateButtonDidTapped() {
+        print("setDataeButtonTapped")
+    }
+    
+    @objc func setSoonButtonDidTapped() {
+        print("soonButtonTapped")
+    }
     override func setConstraints() {
-        view.addSubviews([todoLabel,todoTypeLabel,buttonStackView])
-        buttonStackView.addArrangedSubview(reviseButton)
-        buttonStackView.addArrangedSubview(deleteButton)
+        view.addSubviews([todoLabel,todoTypeLabel,mainButtonsStackView,buttonListStackView])
+        mainButtonsStackView.addArrangedSubview(reviseButton)
+        mainButtonsStackView.addArrangedSubview(deleteButton)
+        
+        buttonListStackView.addArrangedSubview(setDateButton)
+        buttonListStackView.addArrangedSubview(changeToSoonButton)
         todoLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(30)
@@ -142,11 +144,76 @@ class MenuViewController: BaseViewController {
             make.top.equalTo(todoLabel.snp.bottom).offset(5)
             make.horizontalEdges.equalToSuperview()
         }
-        buttonStackView.snp.makeConstraints { make in
+        mainButtonsStackView.snp.makeConstraints { make in
             make.top.equalTo(todoTypeLabel.snp.bottom).offset(30)
             make.horizontalEdges.equalToSuperview().inset(20)
             make.height.equalTo(100)
         }
+        buttonListStackView.snp.makeConstraints { make in
+            make.top.equalTo(mainButtonsStackView.snp.bottom).offset(20)
+            make.horizontalEdges.equalToSuperview().inset(20)
+        }
     }
     
+}
+
+private class menuButton: UIControl {
+    
+    var title = "" {
+        didSet{
+            titleLabel.text = title
+        }
+    }
+    
+    private var iconImageView = UIImageView()
+    private var titleLabel = {
+        let view = UILabel()
+        view.font = Pretendard.size12.medium()
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    private var stackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.spacing = 15
+        view.distribution = .fillProportionally
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(image: UIImage,title: String,tintColor: UIColor) {
+        super.init(frame: CGRect())
+        iconImageView.image = image
+        iconImageView.tintColor = tintColor
+        titleLabel.text = title
+        setUI()
+    }
+    private func setUI() {
+        isUserInteractionEnabled = true
+        addSubview(stackView)
+        snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        stackView.addArrangedSubview(iconImageView)
+        stackView.addArrangedSubview(titleLabel)
+        
+        stackView.snp.makeConstraints { make in
+            make.centerY.horizontalEdges.equalToSuperview()
+//            make.edges.equalToSuperview()
+        }
+        iconImageView.snp.makeConstraints { make in
+            make.height.equalTo(20)
+            make.width.equalTo(iconImageView.snp.height)
+        }
+        
+    }
 }
