@@ -18,6 +18,7 @@ class TodoViewController: BaseViewController{
     var soonEditing = false
     var todayEditing = false
     let maxLength = 200
+    private var isSoonTodoFolded = true
     
     var selectedDate = Date() {
         didSet {
@@ -387,7 +388,16 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section{
         case 0:
-            return soonArray?.count ?? 0
+            switch isSoonTodoFolded {
+            case true:
+                if(soonArray?.count ?? 0 > 3){
+                    return 3
+                }else {
+                    return soonArray?.count ?? 0
+                }
+            case false:
+                return soonArray?.count ?? 0
+            }
         case 1:
             return todayArray?.count ?? 0
         default:
@@ -435,7 +445,8 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         switch indexPath.section {
         case 0:
             header.setTitle(text: "할 일 저장소")
-            header.addButtonComletionHandler = {
+            header.isFolded = isSoonTodoFolded
+            header.addButtonCompletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
                 self.todoType = .spareTodo
@@ -444,10 +455,15 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
                 
             }
+            header.hasMoreButton = soonArray?.count ?? 0 > 3
+            header.moreButtonCompletionHandler = { isFolded in
+                self.isSoonTodoFolded = isFolded
+                self.todoCollectionView.reloadData()
+            }
             header.setFocused(isEditing: soonEditing)
         case 1:
             header.setTitle(text: "오늘의 할 일")
-            header.addButtonComletionHandler = {
+            header.addButtonCompletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
                 self.todoType = .todayTodo
@@ -455,6 +471,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todayEditing = true
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
             }
+            header.hasMoreButton = false
             header.setFocused(isEditing: todayEditing)
         default:
             break

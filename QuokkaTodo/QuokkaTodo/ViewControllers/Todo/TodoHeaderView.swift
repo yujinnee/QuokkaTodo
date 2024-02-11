@@ -9,7 +9,19 @@ import UIKit
 
 class TodoHeaderView: BaseCollectionReusableView {
     
-    var addButtonComletionHandler: (()->Void)?
+    var addButtonCompletionHandler: (()->Void)?
+    var moreButtonCompletionHandler: ((Bool) -> Void)?
+    var hasMoreButton = false {
+        didSet {
+            moreButton.isHidden = !hasMoreButton
+        }
+    }
+    var isFolded: Bool = false {
+        didSet {
+            let image = isFolded ? UIImage(systemName: "chevron.up") : UIImage(systemName: "chevron.down")
+            moreButton.setImage(image, for: .normal)
+        }
+    }
     
     private let titleLabel = {
         let view = UILabel()
@@ -31,10 +43,17 @@ class TodoHeaderView: BaseCollectionReusableView {
         view.layer.cornerRadius = 15
         return view
     }()
+    private let moreButton = {
+        let view = UIButton()
+        view.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+        view.tintColor = QColor.subLightColor
+        return view
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
 
     }
 
@@ -43,10 +62,23 @@ class TodoHeaderView: BaseCollectionReusableView {
     }
     
     @objc func addButtonTapped() {
-        addButtonComletionHandler?()
+        addButtonCompletionHandler?()
+    }
+    @objc func moreButtonTapped() {
+        print("tapped")
+        print(isFolded)
+        switch isFolded {
+        case true:
+            isFolded = false
+            moreButtonCompletionHandler?(false)
+        case false:
+            isFolded = true
+            moreButtonCompletionHandler?(true)
+        }
+      
     }
     override func setConstraints() {
-        addSubviews([titleLabel,plusImageView,addButton])
+        addSubviews([titleLabel,plusImageView,addButton,moreButton])
         
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -64,6 +96,12 @@ class TodoHeaderView: BaseCollectionReusableView {
             make.leading.equalTo(titleLabel.snp.leading).offset(-7)
             make.trailing.equalTo(plusImageView.snp.trailing).offset(7)
             make.verticalEdges.equalToSuperview().inset(5)
+        }
+        moreButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(10)
+            make.verticalEdges.equalToSuperview()
+            make.width.equalTo(30)
         }
     }
     func hideAddButton(){
