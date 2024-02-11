@@ -154,7 +154,6 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             make.trailing.equalToSuperview().offset(-10)
             make.width.equalTo(30)
             make.verticalEdges.equalToSuperview()
-//            make.width.equalTo(menuButton.snp.height)
         }
         firstLeafImageView.snp.makeConstraints { make in
             make.width.equalTo(firstLeafImageView.snp.height)
@@ -214,7 +213,6 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
         switch leafNum{
         case 0:
             leafNumLabel.isHidden = true
-//            firstLeafImageView.isHidden = false
             secondLeafImageView.isHidden = false
             thirdLeafImageView.isHidden = false
             fourthLeafImageView.isHidden = false
@@ -226,8 +224,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             fifthLeafImageView.tintColor = QColor.subLightAlphaColor
         case 1:
             leafNumLabel.isHidden = true
-//            leafStackView.isHidden = false
-//            firstLeafImageView.isHidden = false
+
             secondLeafImageView.isHidden = false
             thirdLeafImageView.isHidden = false
             fourthLeafImageView.isHidden = false
@@ -237,13 +234,8 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             thirdLeafImageView.tintColor = QColor.subLightAlphaColor
             fourthLeafImageView.tintColor = QColor.subLightAlphaColor
             fifthLeafImageView.tintColor = QColor.subLightAlphaColor
-//            secondLeafImageView.isHidden = true
-//            thirdLeafImageView.isHidden = true
-//            fourthLeafImageView.isHidden = true
-//            fifthLeafImageView.isHidden = true
         case 2:
             leafNumLabel.isHidden = true
-//            leafStackView.isHidden = false
             secondLeafImageView.isHidden = false
             thirdLeafImageView.isHidden = false
             fourthLeafImageView.isHidden = false
@@ -253,12 +245,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             thirdLeafImageView.tintColor = QColor.subLightAlphaColor
             fourthLeafImageView.tintColor = QColor.subLightAlphaColor
             fifthLeafImageView.tintColor = QColor.subLightAlphaColor
-          
-//            firstLeafImageView.isHidden = false
-//            secondLeafImageView.isHidden = false
-//            thirdLeafImageView.isHidden = true
-//            fourthLeafImageView.isHidden = true
-//            fifthLeafImageView.isHidden = true
+
         case 3:
             leafNumLabel.isHidden = true
 //            leafStackView.isHidden = false
@@ -271,11 +258,7 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             thirdLeafImageView.tintColor = QColor.subLightColor
             fourthLeafImageView.tintColor = QColor.subLightAlphaColor
             fifthLeafImageView.tintColor = QColor.subLightAlphaColor
-//            firstLeafImageView.isHidden = false
-//            secondLeafImageView.isHidden = false
-//            thirdLeafImageView.isHidden = false
-//            fourthLeafImageView.isHidden = true
-//            fifthLeafImageView.isHidden = true
+
         case 4:
             leafNumLabel.isHidden = true
 //            leafStackView.isHidden = false
@@ -288,14 +271,9 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             thirdLeafImageView.tintColor = QColor.subLightColor
             fourthLeafImageView.tintColor = QColor.subLightColor
             fifthLeafImageView.tintColor = QColor.subLightAlphaColor
-//            firstLeafImageView.isHidden = false
-//            secondLeafImageView.isHidden = false
-//            thirdLeafImageView.isHidden = false
-//            fourthLeafImageView.isHidden = false
-//            fifthLeafImageView.isHidden = true
+
         case 5:
             leafNumLabel.isHidden = true
-//            leafStackView.isHidden = false
             secondLeafImageView.isHidden = false
             thirdLeafImageView.isHidden = false
             fourthLeafImageView.isHidden = false
@@ -305,17 +283,10 @@ class TodoCollectionViewCell: BaseCollectionViewCell {
             thirdLeafImageView.tintColor = QColor.subLightColor
             fourthLeafImageView.tintColor = QColor.subLightColor
             fifthLeafImageView.tintColor = QColor.subLightColor
-//            firstLeafImageView.isHidden = false
-//            secondLeafImageView.isHidden = false
-//            thirdLeafImageView.isHidden = false
-//            fourthLeafImageView.isHidden = false
-//            fifthLeafImageView.isHidden = false
             
         default:
             leafNumLabel.isHidden = false
             leafNumLabel.text = "\(leafNum)"
-//            leafStackView.isHidden = false
-//            firstLeafImageView.isHidden = false
             firstLeafImageView.tintColor = QColor.subLightColor
             secondLeafImageView.isHidden = true
             thirdLeafImageView.isHidden = true
