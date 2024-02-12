@@ -14,7 +14,7 @@ protocol diaryRepositoryType: AnyObject {
     func fetchSelectedDateDiary(date: Date) -> Results<Diary>
     func createDiary(_ item: Diary)
     func updateContents(_id: ObjectId, contents: String)
-    func updateDate(_id: ObjectId, date: String)
+    func updateDate(_id: ObjectId, date: Date)
     func deleteDiary(_id : ObjectId)
 }
 
@@ -99,7 +99,7 @@ class DiaryRepository: diaryRepositoryType{
         }
     }
     
-    func updateDate(_id: RealmSwift.ObjectId, date: String) {
+    func updateDate(_id: RealmSwift.ObjectId, date: Date) {
         do {
             try realm.write {
                 realm.create(Diary.self, value: ["_id": _id,"planDate": date], update:.modified)

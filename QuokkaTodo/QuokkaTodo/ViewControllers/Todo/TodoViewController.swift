@@ -18,6 +18,7 @@ class TodoViewController: BaseViewController{
     var soonEditing = false
     var todayEditing = false
     let maxLength = 200
+    private var isSoonTodoFolded = true
     
     var selectedDate = Date() {
         didSet {
@@ -59,7 +60,6 @@ class TodoViewController: BaseViewController{
         label.text = DateFormatter.getMonthDayWeekDay(date: now)
         return label
     }()
-    
     
     private lazy var todoCollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -336,7 +336,9 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 menuViewController.reviseButtonTappedClosure = {
                     cell.setRevising(isRevising: true)
                     cell.openKeyboard()
-                    
+                }
+                menuViewController.completeEditingDateButtonTappedClosure = {
+                    collectionView.reloadData()
                 }
                 self.present(menuViewController, animated: true)
                 
@@ -363,6 +365,12 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                     cell.setRevising(isRevising: true)
                     cell.openKeyboard()
                 }
+                menuViewController.changeToSoonButtonTappedClosure = {
+                    collectionView.reloadData()
+                }
+                menuViewController.completeEditingDateButtonTappedClosure = {
+                    collectionView.reloadData()
+                }
                 self.present(menuViewController, animated: true)
             }
             cell.reviseCompleteButtonTappedClosure = { todoText in
@@ -373,13 +381,23 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         default:
             break
         }
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section{
         case 0:
-            return soonArray?.count ?? 0
+            switch isSoonTodoFolded {
+            case true:
+                if(soonArray?.count ?? 0 > 3){
+                    return 3
+                }else {
+                    return soonArray?.count ?? 0
+                }
+            case false:
+                return soonArray?.count ?? 0
+            }
         case 1:
             return todayArray?.count ?? 0
         default:
@@ -391,21 +409,31 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         switch indexPath.section{
         case 0:
             item = soonArray?[indexPath.row] ?? Todo()
+            let alert = UIAlertController(title: "저장소의 할 일을 완료 하셨나요?", message: "오늘 한 일로 이동됩니다", preferredStyle: .alert)
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            let ok = UIAlertAction(title: "네", style: .default) { _ in
+                self.todoRepository.updateCompleted(_id: item._id, isCompleted: !item.isCompleted)
+                self.todoRepository.updateDate(_id: item._id, date: Date())
+                self.todoRepository.updateTodoType(_id: item._id, todoType: .todayTodo)
+                
+                self.todoCollectionView.reloadData()
+            }
+            cancel.setValue(QColor.accentColor, forKey: "titleTextColor")
+            ok.setValue(QColor.accentColor, forKey: "titleTextColor")
+            
+            alert.addAction(cancel)
+            alert.addAction(ok)
+            present(alert, animated: true)
             
         case 1:
             item = todayArray?[indexPath.row] ?? Todo()
+            todoRepository.updateCompleted(_id: item._id, isCompleted: !item.isCompleted)
+            todoCollectionView.reloadData()
         default:
             break
         }
-        var isCompleted = false
-        if (item.isCompleted){
-            isCompleted = false
-        }else {
-            isCompleted = true
-        }
-        todoRepository.updateCompleted(_id: item._id, isCompleted: isCompleted)
-        //        todoCollectionView.reloadItems(at: [indexPath])// 체크 설정해제가 애니메이션처럼 되어서 별로임
-        todoCollectionView.reloadData()
+
+       
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -416,8 +444,9 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TodoHeaderView.identifier, for: indexPath) as? TodoHeaderView else {return UICollectionReusableView()}
         switch indexPath.section {
         case 0:
-            header.setTitle(text: "곧 할 일")
-            header.addButtonComletionHandler = {
+            header.setTitle(text: "할 일 저장소")
+            header.isFolded = isSoonTodoFolded
+            header.addButtonCompletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
                 self.todoType = .spareTodo
@@ -426,10 +455,15 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
                 
             }
+            header.hasMoreButton = soonArray?.count ?? 0 > 3
+            header.moreButtonCompletionHandler = { isFolded in
+                self.isSoonTodoFolded = isFolded
+                self.todoCollectionView.reloadData()
+            }
             header.setFocused(isEditing: soonEditing)
         case 1:
-            header.setTitle(text: "오늘 할 일")
-            header.addButtonComletionHandler = {
+            header.setTitle(text: "오늘의 할 일")
+            header.addButtonCompletionHandler = {
                 self.setTextFieldIsHidden(isHidden: false)
                 self.textField.becomeFirstResponder()
                 self.todoType = .todayTodo
@@ -437,6 +471,7 @@ extension TodoViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.todayEditing = true
                 self.todoCollectionView.reloadData()// header.setFocused 적용하기 위해 호출. 헤더 둘다 커지고 작아지고를 설정해야되서 reloadSection 아니고 reloadData 해야함
             }
+            header.hasMoreButton = false
             header.setFocused(isEditing: todayEditing)
         default:
             break
