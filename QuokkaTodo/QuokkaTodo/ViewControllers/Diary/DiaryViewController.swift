@@ -17,7 +17,7 @@ class DiaryViewController: BaseViewController {
         view.separatorStyle = .none
         view.rowHeight = UITableView.automaticDimension
         view.estimatedRowHeight = 500
-        view.isUserInteractionEnabled = false
+        view.isUserInteractionEnabled = true
         return view
     }()
     private let diaryLockedImageView = {
@@ -82,7 +82,7 @@ extension DiaryViewController: UITableViewDelegate,UITableViewDataSource{
         let isFirst = indexPath.row == 0 ? true : false
         let isLast = indexPath.row == diaryArray!.count - 1  ? true : false
         cell.setData(item: diaryArray?[indexPath.row] ?? Diary(),isFirst: isFirst,isLast: isLast)
-        
+        cell.selectionStyle = .none
         return cell
     }
 

@@ -80,6 +80,16 @@ class DiaryTableViewCell: BaseTableViewCell  {
             make.verticalEdges.equalToSuperview().inset(10)
         }
     }
+    override func prepareForReuse() {
+        diaryLabel.text = nil
+        verticalLineView.backgroundColor = QColor.grayColor
+        verticalLineView.snp.remakeConstraints { make in
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.leading.equalToSuperview().inset(20)
+            make.width.equalTo(3)
+        }
+    }
     func setData(item: Diary,isFirst: Bool,isLast: Bool ){
         designGrayline(isFirst: isFirst, isLast: isLast)
         let dateFormatter = DateFormatter()
@@ -89,15 +99,17 @@ class DiaryTableViewCell: BaseTableViewCell  {
     }
     private func designGrayline(isFirst: Bool, isLast: Bool){
         if isFirst {
-            verticalLineView.snp.updateConstraints { make in
+            verticalLineView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(13)
                 make.bottom.equalToSuperview()
+                make.leading.equalToSuperview().inset(20)
+                make.width.equalTo(3)
             }
         }
         if isLast {
             verticalLineView.snp.remakeConstraints { make in
                 make.top.equalToSuperview()
-                make.bottom.equalTo(verticalLineView.snp.top).offset(13)
+                make.height.equalTo(13)
                 make.leading.equalToSuperview().inset(20)
                 make.width.equalTo(3)
             }
